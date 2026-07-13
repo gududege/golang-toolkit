@@ -1,0 +1,103 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "*/v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Parse tag
+        id: tag
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          MODULE=${TAG%/*}
+          VERSION=${TAG#*/}
+          echo "module=$MODULE" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate module
+        run: |
+          MODULE="${{ steps.tag.outputs.module }}"
+          if [ ! -d "$MODULE" ] || [ ! -f "$MODULE/.goreleaser.yaml" ]; then
+            echo "error: invalid module '$MODULE'"
+            exit 1
+          fi
+
+      - name: Resolve previous tag
+        id: prev
+        env:
+          MODULE: ${{ steps.tag.outputs.module }}
+        run: |
+          CURRENT_TAG="${{ github.ref_name }}"
+          PREV_TAG=$(git tag --list "$MODULE/v*" --sort=v:refname | grep -B1 "$CURRENT_TAG" | head -1)
+          if [ -z "$PREV_TAG" ] || [ "$PREV_TAG" = "$CURRENT_TAG" ]; then
+            echo "previous_tag=" >> "$GITHUB_OUTPUT"
+          else
+            echo "previous_tag=$PREV_TAG" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.25"
+
+      - name: Install UPX
+        run: sudo apt-get update && sudo apt-get install -y upx-ucl
+
+      - uses: goreleaser/goreleaser-action@v6
+        with:
+          version: "~> v2"
+          args: release --clean
+          workdir: ${{ steps.tag.outputs.module }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GORELEASER_CURRENT_TAG: ${{ github.ref_name }}
+          GORELEASER_PREVIOUS_TAG: ${{ steps.prev.outputs.previous_tag }}
+
+      - name: Generate CHANGELOG.md
+        env:
+          MODULE: ${{ steps.tag.outputs.module }}
+          VERSION: ${{ steps.tag.outputs.version }}
+          PREV_TAG: ${{ steps.prev.outputs.previous_tag }}
+        run: |
+          {
+            echo "# Changelog"
+            echo ""
+            echo "## $VERSION"
+            echo ""
+          } > "$MODULE/CHANGELOG.md"
+
+          if [ -n "$PREV_TAG" ]; then
+            git log "$PREV_TAG.." --pretty=format:"- %s" -- "$MODULE/" >> "$MODULE/CHANGELOG.md"
+          else
+            echo "- Initial release" >> "$MODULE/CHANGELOG.md"
+          fi
+
+      - name: Create GitHub Release
+        env:
+          MODULE: ${{ steps.tag.outputs.module }}
+          VERSION: ${{ steps.tag.outputs.version }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          shopt -s nullglob
+          ARTIFACTS=("$MODULE"/dist/*.{tar.gz,zip})
+          if [ ${#ARTIFACTS[@]} -eq 0 ]; then
+            echo "warning: no artifacts found, creating release without files"
+            gh release create "$GITHUB_REF_NAME" \
+              --title "$MODULE $VERSION" \
+              --notes-file "$MODULE"/CHANGELOG.md --verify-tag
+          else
+            gh release create "$GITHUB_REF_NAME" \
+              "${ARTIFACTS[@]}" \
+              --title "$MODULE $VERSION" \
+              --notes-file "$MODULE"/CHANGELOG.md --verify-tag
+          fi

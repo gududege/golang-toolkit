@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+version: 2
+
+project_name: tia-tree-calls
+monorepo:
+  tag_prefix: tia-tree-calls/
+  dir: .
+
+builds:
+  - main: .
+    binary: tia-tree-calls
+    targets: [windows_amd64, linux_amd64, darwin_arm64]
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+
+archives:
+  - name_template: >-
+      {{ .Binary }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}
+    formats: [tar.gz]
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+
+upx:
+  - enabled: true
+    compress: best
+    goos: [linux, windows]
+    goarch: [amd64]
+
+release:
+  disable: true
+
+changelog:
+  disable: true
