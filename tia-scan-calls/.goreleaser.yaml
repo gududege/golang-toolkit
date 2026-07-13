@@ -2,9 +2,6 @@
 version: 2
 
 project_name: tia-scan-calls
-monorepo:
-  tag_prefix: tia-scan-calls/
-  dir: .
 
 builds:
   - main: .

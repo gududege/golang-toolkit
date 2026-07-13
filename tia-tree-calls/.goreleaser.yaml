@@ -2,9 +2,6 @@
 version: 2
 
 project_name: tia-tree-calls
-monorepo:
-  tag_prefix: tia-tree-calls/
-  dir: .
 
 builds:
   - main: .

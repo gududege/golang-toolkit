@@ -42,8 +42,10 @@ jobs:
           PREV_TAG=$(git tag --list "$MODULE/v*" --sort=v:refname | grep -B1 "$CURRENT_TAG" | head -1)
           if [ -z "$PREV_TAG" ] || [ "$PREV_TAG" = "$CURRENT_TAG" ]; then
             echo "previous_tag=" >> "$GITHUB_OUTPUT"
+            echo "previous_version=" >> "$GITHUB_OUTPUT"
           else
             echo "previous_tag=$PREV_TAG" >> "$GITHUB_OUTPUT"
+            echo "previous_version=${PREV_TAG#*/}" >> "$GITHUB_OUTPUT"
           fi
 
       - uses: actions/setup-go@v5
@@ -53,6 +55,16 @@ jobs:
       - name: Install UPX
         run: sudo apt-get update && sudo apt-get install -y upx-ucl
 
+      - name: Create local semver tags for GoReleaser
+        env:
+          VERSION: ${{ steps.tag.outputs.version }}
+          PREVIOUS_VERSION: ${{ steps.prev.outputs.previous_version }}
+        run: |
+          git tag "$VERSION" HEAD --force
+          if [ -n "$PREVIOUS_VERSION" ]; then
+            git tag "$PREVIOUS_VERSION" "${{ steps.prev.outputs.previous_tag }}" --force
+          fi
+
       - uses: goreleaser/goreleaser-action@v6
         with:
           version: "~> v2"
@@ -60,8 +72,8 @@ jobs:
           workdir: ${{ steps.tag.outputs.module }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GORELEASER_CURRENT_TAG: ${{ github.ref_name }}
-          GORELEASER_PREVIOUS_TAG: ${{ steps.prev.outputs.previous_tag }}
+          GORELEASER_CURRENT_TAG: ${{ steps.tag.outputs.version }}
+          GORELEASER_PREVIOUS_TAG: ${{ steps.prev.outputs.previous_version }}
 
       - name: Generate CHANGELOG.md
         env:

@@ -2,9 +2,6 @@
 version: 2
 
 project_name: cli-print
-monorepo:
-  tag_prefix: cli-print/
-  dir: .
 
 builds:
   - main: .

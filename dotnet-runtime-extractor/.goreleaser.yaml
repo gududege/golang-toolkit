@@ -2,9 +2,6 @@
 version: 2
 
 project_name: dotnet-runtime-extractor
-monorepo:
-  tag_prefix: dotnet-runtime-extractor/
-  dir: .
 
 builds:
   - main: .
