@@ -1,8 +1,9 @@
-go 1.25
+go 1.25.0
 
 use (
-	./tia-scan-calls
-	./tia-tree-calls
 	./cli-print
 	./dotnet-runtime-extractor
+	./tia-scan-calls
+	./tia-tree-calls
+	./track-repository
 )

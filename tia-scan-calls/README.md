@@ -1,33 +1,27 @@
-# scan-calls
+# tia-scan-calls
 
 Scan Siemens TIA Portal block files and output a cross-reference call graph as JSON.
 
 ## Usage
 
 ```bash
-scan-calls [flags]
-```
-
-Scan the default directories (`udts/`, `blocks/`) and write `block_calls.json`:
-
-```bash
-scan-calls
+tia-scan-calls [flags]
 ```
 
 Scan custom directories and write to a specific file:
 
 ```bash
-scan-calls -p udts,blocks/Function -o result.json
+tia-scan-calls -p udts,blocks/Function -o result.json
 ```
 
 ## Flags
 
-| Short | Long              | Default           | Description                              |
-|-------|-------------------|-------------------|------------------------------------------|
-| `-o`  | `--output-file`   | `block_calls.json`| Path to the output JSON file             |
-| `-p`  | `--scan-paths`    | `udts,blocks`     | Comma-separated directories to scan      |
-| `-v`  | `--version`       |                   | Show version                             |
-| `-h`  | `--help`          |                   | Show this help message                   |
+| Short | Long            | Description                         |
+|-------|-----------------|-------------------------------------|
+| `-p`  | `--scan-paths`  | Comma-separated directories to scan |
+| `-o`  | `--output-file` | Path to the output JSON file        |
+| `-v`  | `--version`     | Show version                        |
+| `-h`  | `--help`        | Show this help message              |
 
 ## Output
 
@@ -45,14 +39,14 @@ The output is a JSON array where each element represents a block:
 
 ### Block types
 
-| Type | Description                        |
-|------|------------------------------------|
-| OB   | Organization block                 |
-| FB   | Function block                     |
-| FC   | Function                           |
-| DB   | Data block (with VAR/STRUCT)       |
-| DI   | Instance data block                |
-| UDT  | User-defined type                  |
+| Type | Description                  |
+|------|------------------------------|
+| OB   | Organization block           |
+| FB   | Function block               |
+| FC   | Function                     |
+| DB   | Data block (with VAR/STRUCT) |
+| DI   | Instance data block          |
+| UDT  | User-defined type            |
 
 ## Version
 

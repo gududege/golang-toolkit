@@ -4,12 +4,13 @@ A collection of small Go utility programs, each in its own module under a shared
 
 ## Tools
 
-| Tool                                                    | Description                                                                           |
-|---------------------------------------------------------|---------------------------------------------------------------------------------------|
-| [tia-scan-calls](./tia-scan-calls/)                     | Scan Siemens TIA Portal block files, detect cross-references, output JSON call graph. |
-| [tia-tree-calls](./tia-tree-calls/)                     | Render a visual call hierarchy tree from the JSON produced by tia-scan-calls.         |
-| [cli-print](./cli-print/)                               | Test/debug tool that prints all CLI input: args, env, CWD, and exit code.             |
-| [dotnet-runtime-extractor](./dotnet-runtime-extractor/) | Download and extract .NET runtime from official SDK archives.                         |
+| Tool                                                    | Description                                                                             |
+|---------------------------------------------------------|-----------------------------------------------------------------------------------------|
+| [tia-scan-calls](./tia-scan-calls/)                     | Scan Siemens TIA Portal block files, detect cross-references, output JSON call graph.   |
+| [tia-tree-calls](./tia-tree-calls/)                     | Render a visual call hierarchy tree from the JSON produced by tia-scan-calls.           |
+| [cli-print](./cli-print/)                               | Test/debug tool that prints all CLI input: args, env, CWD, and exit code.               |
+| [dotnet-runtime-extractor](./dotnet-runtime-extractor/) | Download and extract .NET runtime from official SDK archives.                           |
+| [track-repository](./track-repository/)                 | Enrich GitHub repository metadata (stars, forks, languages) via GraphQL API.            |
 
 ## Project structure
 
@@ -54,11 +55,11 @@ go build -ldflags="-X main.version=1.0.0" ./tool
 
 ## Release
 
-On tag push (`v*`), the [release workflow](./.github/workflows/release.yml) builds all modules in parallel via a matrix strategy and publishes artifacts to GitHub Releases.
+On tag push (`{module}/v*`), the [release workflow](./.github/workflows/release.yml) builds the module, compresses with UPX, and publishes artifacts to GitHub Releases.
 
 ```bash
-git tag v1.0.0
-git push origin v1.0.0
+git tag tia-scan-calls/v1.0.0
+git push origin tia-scan-calls/v1.0.0
 ```
 
 Each module's `.goreleaser.yaml` independently controls its build, archive, and UPX compression settings.
