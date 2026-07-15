@@ -1,0 +1,3567 @@
+[
+  {
+    "name": "cytoscape.js",
+    "url": "https://github.com/cytoscape/cytoscape.js",
+    "type": ["sdk", "library"],
+    "category": "Data Visualization/Chart Libraries",
+    "tags": ["Data Visualization", "Graph Theory"]
+  },
+  {
+    "name": "antlr4",
+    "url": "https://github.com/antlr/antlr4",
+    "type": ["release", "cli"],
+    "category": "Development/Parsers",
+    "tags": ["ANTLR", "Parsing", "Parser Generator"]
+  },
+  {
+    "name": "SayIt",
+    "url": "https://github.com/crosswk/SayIt",
+    "type": ["release", "app"],
+    "category": "AI/Speech",
+    "tags": ["Speech Recognition", "Voice Input"]
+  },
+  {
+    "name": "userDefinedLanguages",
+    "url": "https://github.com/notepad-plus-plus/userDefinedLanguages",
+    "type": ["release", "config"],
+    "category": "Editors & IDEs/Notepad++",
+    "tags": ["Notepad++"]
+  },
+  {
+    "name": "AutoFixture",
+    "url": "https://github.com/AutoFixture/AutoFixture",
+    "type": ["sdk", "library"],
+    "category": "Development/Testing",
+    "tags": [".NET", "Testing", "Test Data"]
+  },
+  {
+    "name": "NSubstitute",
+    "url": "https://github.com/nsubstitute/NSubstitute",
+    "type": ["sdk", "library"],
+    "category": "Development/Testing",
+    "tags": [".NET", "Testing", "Mocking"]
+  },
+  {
+    "name": "fluentassertions",
+    "url": "https://github.com/fluentassertions/fluentassertions",
+    "type": ["sdk", "library"],
+    "category": "Development/Testing",
+    "tags": [".NET", "Testing", "Assertions"]
+  },
+  {
+    "name": "Verify",
+    "url": "https://github.com/VerifyTests/Verify",
+    "type": ["sdk", "library"],
+    "category": "Development/Testing",
+    "tags": [".NET", "Testing", "Snapshot Testing"]
+  },
+  {
+    "name": "rssh",
+    "url": "https://github.com/shihuili1218/rssh",
+    "type": ["release", "app"],
+    "category": "Networking/SSH",
+    "tags": ["SSH", "AI", "Terminal"]
+  },
+  {
+    "name": "awesome-design-md",
+    "url": "https://github.com/VoltAgent/awesome-design-md",
+    "type": ["release", "config"],
+    "category": "AI/Coding Agents",
+    "tags": ["Awesome List", "Design", "Coding Agent"]
+  },
+  {
+    "name": "GLM-OCR",
+    "url": "https://github.com/zai-org/GLM-OCR",
+    "type": ["sdk", "library"],
+    "category": "AI/OCR",
+    "tags": ["OCR", "Document Understanding"]
+  },
+  {
+    "name": "MinerU",
+    "url": "https://github.com/opendatalab/MinerU",
+    "type": ["sdk", "library"],
+    "category": "Data Processing/Document Conversion",
+    "tags": ["Document Processing", "PDF", "OCR"]
+  },
+  {
+    "name": "tiaportal-mcp",
+    "url": "https://github.com/DaMccRee/tiaportal-mcp",
+    "type": ["sdk", "plugin"],
+    "category": "AI/MCP",
+    "tags": ["MCP", "TIA Portal", "PLC"]
+  },
+  {
+    "name": "marker",
+    "url": "https://github.com/datalab-to/marker",
+    "type": ["sdk", "library"],
+    "category": "Data Processing/Document Conversion",
+    "tags": ["Document Processing", "PDF", "Markdown", "OCR"]
+  },
+  {
+    "name": "DirectoryOpus",
+    "url": "https://github.com/Chaoses-Ib/DirectoryOpus",
+    "type": ["release", "config"],
+    "category": "Windows/Tools",
+    "tags": ["Directory Opus", "File Manager"]
+  },
+  {
+    "name": "resourcelib",
+    "url": "https://github.com/resourcelib/resourcelib",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET",
+    "tags": [".NET", "Resources", "File Management"]
+  },
+  {
+    "name": "PS2EXE",
+    "url": "https://github.com/MScholtes/PS2EXE",
+    "type": ["release", "cli"],
+    "category": "Development/.NET",
+    "tags": [".NET"]
+  },
+  {
+    "name": "xunit",
+    "url": "https://github.com/xunit/xunit",
+    "type": ["sdk", "library"],
+    "category": "Development/Testing",
+    "tags": [".NET", "Testing"]
+  },
+  {
+    "name": "Shim",
+    "url": "https://github.com/ScoopInstaller/Shim",
+    "type": ["release", "cli"],
+    "category": "Windows/Package Managers",
+    "tags": ["Package Manager", "Scoop"]
+  },
+  {
+    "name": "bruno",
+    "url": "https://github.com/usebruno/bruno",
+    "type": ["release", "app"],
+    "category": "Development/Tools",
+    "tags": ["API Client", "HTTP"]
+  },
+  {
+    "name": "DotNetty",
+    "url": "https://github.com/Azure/DotNetty",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET",
+    "tags": [".NET", "Networking"]
+  },
+  {
+    "name": "kage",
+    "url": "https://github.com/tamnd/kage",
+    "type": ["release", "cli"],
+    "category": "Tools/Web Archiving",
+    "tags": ["Web Archiving"]
+  },
+  {
+    "name": "vibe",
+    "url": "https://github.com/thewh1teagle/vibe",
+    "type": ["release", "app"],
+    "category": "AI/Speech",
+    "tags": ["Speech Recognition", "Transcription"]
+  },
+  {
+    "name": "serena",
+    "url": "https://github.com/oraios/serena",
+    "type": ["sdk", "plugin"],
+    "category": "AI/MCP",
+    "tags": ["MCP", "Coding Agent"]
+  },
+  {
+    "name": "superpowers",
+    "url": "https://github.com/obra/superpowers",
+    "type": ["sdk", "framework"],
+    "category": "AI/Agent Frameworks",
+    "tags": ["Agent Framework"]
+  },
+  {
+    "name": "ui-ux-pro-max-skill",
+    "url": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+    "type": ["release", "config"],
+    "category": "AI/Coding Agents",
+    "tags": ["Coding Agent", "UI", "UX"]
+  },
+  {
+    "name": "xLua",
+    "url": "https://github.com/Tencent/xLua",
+    "type": ["sdk", "library"],
+    "category": "Game Development/Unity",
+    "tags": ["Unity", "Game Development"]
+  },
+  {
+    "name": "llcom",
+    "url": "https://github.com/chenxuuu/llcom",
+    "type": ["release", "app"],
+    "category": "Development/Tools",
+    "tags": ["Serial Port", "Debugging", "TCP", "MQTT"]
+  },
+  {
+    "name": "react-jsonschema-form",
+    "url": "https://github.com/rjsf-team/react-jsonschema-form",
+    "type": ["sdk", "library"],
+    "category": "Web Development/React",
+    "tags": ["React", "JSON Schema", "Forms"]
+  },
+  {
+    "name": "rustfs",
+    "url": "https://github.com/rustfs/rustfs",
+    "type": ["release", "service"],
+    "category": "Database/Distributed Storage",
+    "tags": ["Distributed Storage"]
+  },
+  {
+    "name": "scoop-proxy-cn",
+    "url": "https://github.com/lzwme/scoop-proxy-cn",
+    "type": ["release", "config"],
+    "category": "Windows/Package Managers",
+    "tags": ["Package Manager"]
+  },
+  {
+    "name": "eza",
+    "url": "https://github.com/eza-community/eza",
+    "type": ["release", "cli"],
+    "category": "Development/CLI",
+    "tags": []
+  },
+  {
+    "name": "winscp",
+    "url": "https://github.com/winscp/winscp",
+    "type": ["release", "app"],
+    "category": "Networking/File Transfer",
+    "tags": ["File Transfer"]
+  },
+  {
+    "name": "AuroraStore",
+    "url": "https://github.com/whyorean/AuroraStore",
+    "type": ["release", "app"],
+    "category": "Mobile/Android",
+    "tags": []
+  },
+  {
+    "name": "AnExplorer",
+    "url": "https://github.com/1hakr/AnExplorer",
+    "type": ["release", "app"],
+    "category": "Mobile/Android",
+    "tags": ["Android"]
+  },
+  {
+    "name": "BBLLV5",
+    "url": "https://github.com/swyefun/BBLLV5",
+    "type": ["release", "app"],
+    "category": "Mobile/Android",
+    "tags": ["Android"]
+  },
+  {
+    "name": "bv",
+    "url": "https://github.com/fantasytyx/bv",
+    "type": ["release", "app"],
+    "category": "Mobile/Android",
+    "tags": ["Android"]
+  },
+  {
+    "name": "xpipe",
+    "url": "https://github.com/xpipe-io/xpipe",
+    "type": ["release", "app"],
+    "category": "Development/Server Management",
+    "tags": ["SSH"]
+  },
+  {
+    "name": "ContextMenuManager",
+    "url": "https://github.com/BluePointLilac/ContextMenuManager",
+    "type": ["release", "app"],
+    "category": "Windows/File Explorer",
+    "tags": ["File Explorer"]
+  },
+  {
+    "name": "dnSpy",
+    "url": "https://github.com/dnSpyEx/dnSpy",
+    "type": ["release", "app"],
+    "category": "Development/.NET",
+    "tags": []
+  },
+  {
+    "name": "NetBeauty2",
+    "url": "https://github.com/nulastudio/NetBeauty2",
+    "type": ["release", "cli"],
+    "category": "Development/.NET",
+    "tags": [".NET"]
+  },
+  {
+    "name": "XmlNotepad",
+    "url": "https://github.com/microsoft/XmlNotepad",
+    "type": ["release", "app"],
+    "category": "Development/XML Tools",
+    "tags": ["XML", "Parsing"]
+  },
+  {
+    "name": "CommandLineUtils",
+    "url": "https://github.com/natemcmaster/CommandLineUtils",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET",
+    "tags": [".NET", "CLI"]
+  },
+  {
+    "name": "awesome-vba",
+    "url": "https://github.com/sancarn/awesome-vba",
+    "type": ["release", "config"],
+    "category": "Development/VBA",
+    "tags": []
+  },
+  {
+    "name": "VBA-JSON",
+    "url": "https://github.com/VBA-tools/VBA-JSON",
+    "type": ["sdk", "library"],
+    "category": "Development/VBA",
+    "tags": []
+  },
+  {
+    "name": "LunarParser",
+    "url": "https://github.com/Relfos/LunarParser",
+    "type": ["sdk", "library"],
+    "category": "Development/Parsing",
+    "tags": ["XML", "Parsing"]
+  },
+  {
+    "name": "Polly",
+    "url": "https://github.com/App-vNext/Polly",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET",
+    "tags": [".NET"]
+  },
+  {
+    "name": "GoGoGo",
+    "url": "https://github.com/ZCShou/GoGoGo",
+    "type": ["release", "app"],
+    "category": "Mobile/Android",
+    "tags": ["Android"]
+  },
+  {
+    "name": "LSPosed",
+    "url": "https://github.com/LSPosed/LSPosed",
+    "type": ["release", "app"],
+    "category": "Mobile/Android",
+    "tags": []
+  },
+  {
+    "name": "Hail",
+    "url": "https://github.com/aistra0528/Hail",
+    "type": ["release", "app"],
+    "category": "Mobile/Android",
+    "tags": ["Android"]
+  },
+  {
+    "name": "Shizuku",
+    "url": "https://github.com/RikkaApps/Shizuku",
+    "type": ["release", "app"],
+    "category": "Development/Android",
+    "tags": ["system-api", "root", "adb"]
+  },
+  {
+    "name": "markwhen",
+    "url": "https://github.com/mark-when/markwhen",
+    "type": ["release", "service"],
+    "category": "Tools/Productivity",
+    "tags": ["timeline", "markdown", "calendar"]
+  },
+  {
+    "name": "go-wxpush",
+    "url": "https://github.com/hezhizheng/go-wxpush",
+    "type": ["release", "service"],
+    "category": "Messaging/WeChat",
+    "tags": ["wechat", "message-push", "notification"]
+  },
+  {
+    "name": "bentopdf",
+    "url": "https://github.com/alam00000/bentopdf",
+    "type": ["release", "service"],
+    "category": "Tools/PDF",
+    "tags": ["pdf", "self-hosted", "privacy", "pdf-toolkit"]
+  },
+  {
+    "name": "venera",
+    "url": "https://github.com/venera-app/venera",
+    "type": ["release", "app"],
+    "category": "Media/Comics",
+    "tags": ["comics", "comic-reader"]
+  },
+  {
+    "name": "tcp-udp-tool",
+    "url": "https://github.com/danielnilsson9/tcp-udp-tool",
+    "type": ["release", "app"],
+    "category": "Networking/Tools",
+    "tags": ["tcp", "udp", "network-testing"]
+  },
+  {
+    "name": "swingmusic",
+    "url": "https://github.com/swingmx/swingmusic",
+    "type": ["release", "service"],
+    "category": "Media/Music",
+    "tags": ["music-streaming", "music-player", "self-hosted"]
+  },
+  {
+    "name": "fluentui-system-icons",
+    "url": "https://github.com/microsoft/fluentui-system-icons",
+    "type": ["release", "config"],
+    "category": "Design/Icons",
+    "tags": ["icons", "system-icons", "fluent-ui", "microsoft"]
+  },
+  {
+    "name": "awesome-avalonia",
+    "url": "https://github.com/AvaloniaCommunity/awesome-avalonia",
+    "type": ["release", "config"],
+    "category": "Development/.NET/Desktop",
+    "tags": ["awesome-list", "avalonia", "resources"]
+  },
+  {
+    "name": "MdXaml",
+    "url": "https://github.com/whistyun/MdXaml",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET/Desktop",
+    "tags": ["markdown", "wpf", "flowdocument"]
+  },
+  {
+    "name": "netbird",
+    "url": "https://github.com/netbirdio/netbird",
+    "type": ["release", "service"],
+    "category": "Networking/VPN",
+    "tags": ["vpn", "wireguard", "overlay-network", "zero-trust"]
+  },
+  {
+    "name": "SoftEtherVPN",
+    "url": "https://github.com/SoftEtherVPN/SoftEtherVPN",
+    "type": ["release", "service"],
+    "category": "Networking/VPN",
+    "tags": ["vpn", "multi-protocol", "softether"]
+  },
+  {
+    "name": "deploy-your-own-saas",
+    "url": "https://github.com/Atarity/deploy-your-own-saas",
+    "type": ["release", "config"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["awesome-list", "self-hosted", "saas"]
+  },
+  {
+    "name": "RyTuneX",
+    "url": "https://github.com/rayenghanmi/RyTuneX",
+    "type": ["release", "app"],
+    "category": "Windows/Optimization",
+    "tags": ["optimization", "debloat", "performance", "winui"]
+  },
+  {
+    "name": "winutil",
+    "url": "https://github.com/ChrisTitusTech/winutil",
+    "type": ["release", "cli"],
+    "category": "Windows/Optimization",
+    "tags": ["optimization", "tweaks", "debloat", "windows-utility"]
+  },
+  {
+    "name": "Ditto",
+    "url": "https://github.com/sabrogden/Ditto",
+    "type": ["release", "app"],
+    "category": "Utilities/Clipboard",
+    "tags": ["clipboard", "clipboard-manager"]
+  },
+  {
+    "name": "PicView",
+    "url": "https://github.com/Ruben2776/PicView",
+    "type": ["release", "app"],
+    "category": "Media/Image",
+    "tags": ["image-viewer", "photo-viewer", "picture-viewer"]
+  },
+  {
+    "name": "lada",
+    "url": "https://github.com/ladaapp/lada",
+    "type": ["release", "cli"],
+    "category": "Media/Video",
+    "tags": ["video-restoration", "ai", "mosaic-removal", "de-pixelate"]
+  },
+  {
+    "name": "fancywm",
+    "url": "https://github.com/FancyWM/fancywm",
+    "type": ["release", "app"],
+    "category": "Desktop/Window Management",
+    "tags": ["tiling-window-manager", "window-management", "dynamic-tiling"]
+  },
+  {
+    "name": "glazewm",
+    "url": "https://github.com/glzr-io/glazewm",
+    "type": ["release", "app"],
+    "category": "Desktop/Window Management",
+    "tags": ["tiling-window-manager", "window-management", "i3"]
+  },
+  {
+    "name": "PacketSender",
+    "url": "https://github.com/dannagle/PacketSender",
+    "type": ["release", "app"],
+    "category": "Networking/Tools",
+    "tags": ["tcp", "udp", "ssl", "http", "network-utility"]
+  },
+  {
+    "name": "niri",
+    "url": "https://github.com/niri-wm/niri",
+    "type": ["release", "app"],
+    "category": "Desktop/Wayland Compositors",
+    "tags": ["Wayland", "Tiling", "Compositor", "Scrollable"]
+  },
+  {
+    "name": "ZeroOmega",
+    "url": "https://github.com/zero-peak/ZeroOmega",
+    "type": ["sdk", "plugin"],
+    "category": "Browser Extensions/Proxy",
+    "tags": ["Proxy", "Browser Extension", "Proxy Management"]
+  },
+  {
+    "name": "CopyQ",
+    "url": "https://github.com/hluk/CopyQ",
+    "type": ["release", "app"],
+    "category": "Utilities/Clipboard",
+    "tags": ["Clipboard", "Clipboard Manager"]
+  },
+  {
+    "name": "OpenWrt-CI",
+    "url": "https://github.com/KFERMercer/OpenWrt-CI",
+    "type": ["release", "config"],
+    "category": "Networking/OpenWRT",
+    "tags": ["OpenWRT", "CI", "Firmware"]
+  },
+  {
+    "name": "Actions-OpenWrt",
+    "url": "https://github.com/P3TERX/Actions-OpenWrt",
+    "type": ["release", "config"],
+    "category": "Networking/OpenWRT",
+    "tags": ["OpenWRT", "GitHub Actions", "Firmware", "Build"]
+  },
+  {
+    "name": "Kwrt",
+    "url": "https://github.com/kiddin9/Kwrt",
+    "type": ["release", "config"],
+    "category": "Networking/OpenWRT",
+    "tags": ["OpenWRT", "Firmware", "Soft Router"]
+  },
+  {
+    "name": "immortalwrt",
+    "url": "https://github.com/immortalwrt/immortalwrt",
+    "type": ["release", "app"],
+    "category": "Networking/OpenWRT",
+    "tags": ["OpenWRT", "Firmware", "Router"]
+  },
+  {
+    "name": "FreeCAD",
+    "url": "https://github.com/FreeCAD/FreeCAD",
+    "type": ["release", "app"],
+    "category": "Design/CAD",
+    "tags": ["CAD", "3D Modeling", "Parametric Design"]
+  },
+  {
+    "name": "Shell",
+    "url": "https://github.com/moudey/Shell",
+    "type": ["release", "app"],
+    "category": "Windows/File Explorer",
+    "tags": ["File Explorer", "Context Menu", "Windows"]
+  },
+  {
+    "name": "sing-box",
+    "url": "https://github.com/SagerNet/sing-box",
+    "type": ["release", "cli"],
+    "category": "Networking/Proxy",
+    "tags": ["Proxy", "Network", "VPN", "Universal"]
+  },
+  {
+    "name": "draw-io-obsidian",
+    "url": "https://github.com/somesanity/draw-io-obsidian",
+    "type": ["release", "config"],
+    "category": "Notes/Obsidian",
+    "tags": ["Obsidian", "Diagrams", "Plugin", "draw.io"]
+  },
+  {
+    "name": "immersive-translate",
+    "url": "https://github.com/immersive-translate/immersive-translate",
+    "type": ["sdk", "plugin"],
+    "category": "Browser Extensions/Translation",
+    "tags": ["Translation", "Browser Extension", "Bilingual"]
+  },
+  {
+    "name": "zed",
+    "url": "https://github.com/zed-industries/zed",
+    "type": ["release", "app"],
+    "category": "Editors & IDEs",
+    "tags": ["Code Editor", "IDE", "Multiplayer"]
+  },
+  {
+    "name": "ShareX",
+    "url": "https://github.com/ShareX/ShareX",
+    "type": ["release", "app"],
+    "category": "Windows/Screen Capture",
+    "tags": ["Screen Capture", "Screen Recording", "Screenshot", "File Sharing"]
+  },
+  {
+    "name": "outline",
+    "url": "https://github.com/outline/outline",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Knowledge Base",
+    "tags": ["Knowledge Base", "Wiki", "Documentation", "Collaboration"]
+  },
+  {
+    "name": "coder",
+    "url": "https://github.com/coder/coder",
+    "type": ["release", "service"],
+    "category": "Development/Cloud Environments",
+    "tags": [
+      "Cloud Development",
+      "Dev Environments",
+      "Remote Development",
+      "Terraform"
+    ]
+  },
+  {
+    "name": "Cap",
+    "url": "https://github.com/CapSoftware/Cap",
+    "type": ["release", "service"],
+    "category": "Utilities/Screen Recording",
+    "tags": ["Screen Recording", "Video Sharing", "Screen Capture"]
+  },
+  {
+    "name": "authentik",
+    "url": "https://github.com/goauthentik/authentik",
+    "type": ["release", "service"],
+    "category": "Security/Authentication",
+    "tags": ["Authentication", "SSO", "Identity Provider", "OAuth"]
+  },
+  {
+    "name": "ceph",
+    "url": "https://github.com/ceph/ceph",
+    "type": ["release", "service"],
+    "category": "Database/Distributed Storage",
+    "tags": [
+      "Distributed Storage",
+      "Object Storage",
+      "Block Storage",
+      "File Storage"
+    ]
+  },
+  {
+    "name": "dbeaver",
+    "url": "https://github.com/dbeaver/dbeaver",
+    "type": ["release", "app"],
+    "category": "Database/Tools",
+    "tags": ["Database", "SQL Client", "Database IDE"]
+  },
+  {
+    "name": "coolify",
+    "url": "https://github.com/coollabsio/coolify",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/PaaS",
+    "tags": ["Deployment", "PaaS", "Self-Hosted", "DevOps"]
+  },
+  {
+    "name": "docmost",
+    "url": "https://github.com/docmost/docmost",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Knowledge Base",
+    "tags": ["Knowledge Base", "Wiki", "Documentation", "Collaboration"]
+  },
+  {
+    "name": "onedev",
+    "url": "https://github.com/theonedev/onedev",
+    "type": ["release", "service"],
+    "category": "Development/Version Control",
+    "tags": ["git", "self-hosted", "ci-cd", "devops", "kanban", "packages"]
+  },
+  {
+    "name": "typst",
+    "url": "https://github.com/typst/typst",
+    "type": ["release", "cli"],
+    "category": "Documentation/Typesetting",
+    "tags": ["typesetting", "compiler", "markup"]
+  },
+  {
+    "name": "github-hosts",
+    "url": "https://github.com/maxiaof/github-hosts",
+    "type": ["release", "config"],
+    "category": "Network/DNS",
+    "tags": ["github", "hosts"]
+  },
+  {
+    "name": "mRemoteNG",
+    "url": "https://github.com/mRemoteNG/mRemoteNG",
+    "type": ["release", "app"],
+    "category": "Network/Remote Desktop",
+    "tags": [
+      "remote-desktop",
+      "rdp",
+      "ssh",
+      "multi-protocol",
+      "remote-access",
+      "windows"
+    ]
+  },
+  {
+    "name": "yq",
+    "url": "https://github.com/mikefarah/yq",
+    "type": ["release", "cli"],
+    "category": "Development/CLI",
+    "tags": [
+      "yaml",
+      "json",
+      "toml",
+      "xml",
+      "csv",
+      "yaml-processor",
+      "devops-tools"
+    ]
+  },
+  {
+    "name": "x-cmd",
+    "url": "https://github.com/x-cmd/x-cmd",
+    "type": ["release", "cli"],
+    "category": "Development/Tools",
+    "tags": ["shell", "cli", "cloud", "ai", "agent"]
+  },
+  {
+    "name": "HuYaTv",
+    "url": "https://github.com/jayjd/HuYaTv",
+    "type": ["release", "app"],
+    "category": "Mobile/Android",
+    "tags": ["huya", "douyu", "twitch", "douyin", "kuaishou", "tvlive"]
+  },
+  {
+    "name": "FlareSolverr",
+    "url": "https://github.com/FlareSolverr/FlareSolverr",
+    "type": ["release", "service"],
+    "category": "Networking/Proxy",
+    "tags": ["proxy", "cloudflare", "puppeteer"]
+  },
+  {
+    "name": "taosync",
+    "url": "https://github.com/dr34m-cn/taosync",
+    "type": ["release", "cli"],
+    "category": "Cloud/Sync",
+    "tags": ["alist", "sync", "openlist"]
+  },
+  {
+    "name": "meilisearch",
+    "url": "https://github.com/meilisearch/meilisearch",
+    "type": ["release", "service"],
+    "category": "Database/Search Engines",
+    "tags": [
+      "search",
+      "full-text-search",
+      "search-engine",
+      "vector-search",
+      "typo-tolerance"
+    ]
+  },
+  {
+    "name": "CloudSaver",
+    "url": "https://github.com/jiangrui1994/CloudSaver",
+    "type": ["release", "service"],
+    "category": "Cloud/Storage",
+    "tags": ["cloud", "storage", "search", "transfer"]
+  },
+  {
+    "name": "PairDrop",
+    "url": "https://github.com/schlagmichdoch/PairDrop",
+    "type": ["release", "service"],
+    "category": "Networking/File Transfer",
+    "tags": ["file-sharing", "webrtc", "pwa"]
+  },
+  {
+    "name": "NBping",
+    "url": "https://github.com/hanshuaikang/NBping",
+    "type": ["release", "cli"],
+    "category": "Network/Utilities",
+    "tags": ["network", "ping", "real-time", "visualization"]
+  },
+  {
+    "name": "etcher",
+    "url": "https://github.com/balena-io/etcher",
+    "type": ["release", "app"],
+    "category": "Tools/OS Imaging",
+    "tags": ["usb-drives", "sd-cards", "cross-platform"]
+  },
+  {
+    "name": "fort",
+    "url": "https://github.com/tnodir/fort",
+    "type": ["release", "app"],
+    "category": "Networking/Firewall",
+    "tags": ["firewall", "windows", "bandwidth-limiting"]
+  },
+  {
+    "name": "FiraCode",
+    "url": "https://github.com/tonsky/FiraCode",
+    "type": ["release", "config"],
+    "category": "Fonts/Programming Fonts",
+    "tags": ["font", "ligatures", "monospaced", "programming"]
+  },
+  {
+    "name": "JetBrainsMono",
+    "url": "https://github.com/JetBrains/JetBrainsMono",
+    "type": ["release", "config"],
+    "category": "Fonts/Programming Fonts",
+    "tags": ["font", "monospaced", "typeface", "developer"]
+  },
+  {
+    "name": "drawio-obsidian",
+    "url": "https://github.com/zapthedingbat/drawio-obsidian",
+    "type": ["release", "config"],
+    "category": "Notes/Obsidian",
+    "tags": ["draw-io", "obsidian-plugin"]
+  },
+  {
+    "name": "drawio-desktop",
+    "url": "https://github.com/jgraph/drawio-desktop",
+    "type": ["release", "app"],
+    "category": "Design/Diagramming",
+    "tags": ["diagramming", "drawio", "electron"]
+  },
+  {
+    "name": "f2",
+    "url": "https://github.com/ayoisaiah/f2",
+    "type": ["release", "cli"],
+    "category": "Development/CLI",
+    "tags": ["batch-rename", "file-renaming", "cross-platform"]
+  },
+  {
+    "name": "notepad-plus-plus",
+    "url": "https://github.com/notepad-plus-plus/notepad-plus-plus",
+    "type": ["release", "app"],
+    "category": "Editors & IDEs/Notepad++",
+    "tags": ["editor", "notepad", "windows"]
+  },
+  {
+    "name": "go-echarts",
+    "url": "https://github.com/go-echarts/go-echarts",
+    "type": ["sdk", "library"],
+    "category": "Data Visualization/Chart Libraries",
+    "tags": ["Data Visualization"]
+  },
+  {
+    "name": "roundcubemail",
+    "url": "https://github.com/roundcube/roundcubemail",
+    "type": ["release", "service"],
+    "category": "Email/Clients",
+    "tags": ["Email", "Webmail"]
+  },
+  {
+    "name": "snappymail",
+    "url": "https://github.com/the-djmaze/snappymail",
+    "type": ["release", "service"],
+    "category": "Email/Clients",
+    "tags": ["Email", "Webmail"]
+  },
+  {
+    "name": "remotely-save",
+    "url": "https://github.com/remotely-save/remotely-save",
+    "type": ["sdk", "plugin"],
+    "category": "Productivity/Notes",
+    "tags": []
+  },
+  {
+    "name": "ProxmoxVE",
+    "url": "https://github.com/community-scripts/ProxmoxVE",
+    "type": ["release", "cli"],
+    "category": "Cloud/Virtualization",
+    "tags": ["Virtualization"]
+  },
+  {
+    "name": "dnsmgr",
+    "url": "https://github.com/netcccyun/dnsmgr",
+    "type": ["release", "service"],
+    "category": "Networking/DNS",
+    "tags": ["DNS"]
+  },
+  {
+    "name": "Marzban",
+    "url": "https://github.com/Gozargah/Marzban",
+    "type": ["release", "service"],
+    "category": "Networking/Proxy/Xray",
+    "tags": ["Xray", "Proxy"]
+  },
+  {
+    "name": "SSPanel-UIM",
+    "url": "https://github.com/Anankke/SSPanel-UIM",
+    "type": ["release", "service"],
+    "category": "Networking/Proxy/Xray",
+    "tags": ["Xray", "Proxy"]
+  },
+  {
+    "name": "Hiddify-Manager",
+    "url": "https://github.com/hiddify/Hiddify-Manager",
+    "type": ["release", "service"],
+    "category": "Networking/Proxy/Panels",
+    "tags": ["Proxy"]
+  },
+  {
+    "name": "3x-ui",
+    "url": "https://github.com/MHSanaei/3x-ui",
+    "type": ["release", "service"],
+    "category": "Networking/Proxy/Xray",
+    "tags": ["Xray", "Proxy"]
+  },
+  {
+    "name": "HotPEToolBox",
+    "url": "https://github.com/VirtualHotBar/HotPEToolBox",
+    "type": ["release", "cli"],
+    "category": "Windows/PE Tools",
+    "tags": ["PE Tools"]
+  },
+  {
+    "name": "docker-systemctl-replacement",
+    "url": "https://github.com/gdraheim/docker-systemctl-replacement",
+    "type": ["release", "cli"],
+    "category": "Cloud/Containers",
+    "tags": ["Container", "Docker"]
+  },
+  {
+    "name": "vitepress",
+    "url": "https://github.com/vuejs/vitepress",
+    "type": ["release", "cli"],
+    "category": "Documentation/Static Sites",
+    "tags": ["Static Site"]
+  },
+  {
+    "name": "Fabric",
+    "url": "https://github.com/danielmiessler/Fabric",
+    "type": ["release", "cli"],
+    "category": "AI/Prompts",
+    "tags": ["Prompts"]
+  },
+  {
+    "name": "goaccess",
+    "url": "https://github.com/allinurl/goaccess",
+    "type": ["release", "cli"],
+    "category": "Observability/Web Analytics",
+    "tags": ["Web Analytics"]
+  },
+  {
+    "name": "nginx-prometheus-exporter",
+    "url": "https://github.com/nginx/nginx-prometheus-exporter",
+    "type": ["release", "service"],
+    "category": "Observability/Metrics",
+    "tags": ["Metrics"]
+  },
+  {
+    "name": "node_exporter",
+    "url": "https://github.com/prometheus/node_exporter",
+    "type": ["release", "service"],
+    "category": "Observability/Metrics",
+    "tags": ["Metrics"]
+  },
+  {
+    "name": "Sarasa-Gothic",
+    "url": "https://github.com/be5invis/Sarasa-Gothic",
+    "type": ["release", "config"],
+    "category": "Fonts/Programming Fonts",
+    "tags": ["Font"]
+  },
+  {
+    "name": "gkd",
+    "url": "https://github.com/gkd-kit/gkd",
+    "type": ["release", "app"],
+    "category": "Mobile/Android",
+    "tags": ["Android"]
+  },
+  {
+    "name": "hugo",
+    "url": "https://github.com/gohugoio/hugo",
+    "type": ["release", "cli"],
+    "category": "Documentation/Static Sites",
+    "tags": []
+  },
+  {
+    "name": "bpkg",
+    "url": "https://github.com/bpkg/bpkg",
+    "type": ["release", "cli"],
+    "category": "Development/Package Managers",
+    "tags": ["Package Manager"]
+  },
+  {
+    "name": "ui",
+    "url": "https://github.com/shadcn-ui/ui",
+    "type": ["release", "config"],
+    "category": "Design/UI Libraries",
+    "tags": ["UI Library"]
+  },
+  {
+    "name": "influxdb",
+    "url": "https://github.com/influxdata/influxdb",
+    "type": ["release", "service"],
+    "category": "Data Storage/Databases",
+    "tags": ["Time Series Database", "Monitoring", "Metrics"]
+  },
+  {
+    "name": "redroid-doc",
+    "url": "https://github.com/remote-android/redroid-doc",
+    "type": ["release", "config"],
+    "category": "Mobile/Android",
+    "tags": ["Android", "Cloud Gaming", "Virtualization"]
+  },
+  {
+    "name": "LuaJIT",
+    "url": "https://github.com/LuaJIT/LuaJIT",
+    "type": ["sdk", "library"],
+    "category": "Development/Languages",
+    "tags": ["JIT Compiler"]
+  },
+  {
+    "name": "gopher-lua",
+    "url": "https://github.com/yuin/gopher-lua",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": ["Lua VM", "Scripting"]
+  },
+  {
+    "name": "upx",
+    "url": "https://github.com/upx/upx",
+    "type": ["release", "cli"],
+    "category": "Development/Tools",
+    "tags": ["Executable Packer", "Compression"]
+  },
+  {
+    "name": "go-bindata",
+    "url": "https://github.com/go-bindata/go-bindata",
+    "type": ["release", "cli"],
+    "category": "Development/Go",
+    "tags": ["Data Embedding", "Code Generation"]
+  },
+  {
+    "name": "vector",
+    "url": "https://github.com/vectordotdev/vector",
+    "type": ["release", "service"],
+    "category": "Observability/Platforms",
+    "tags": ["Observability", "Monitoring", "Data Pipeline"]
+  },
+  {
+    "name": "blinko",
+    "url": "https://github.com/blinkospace/blinko",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["AI", "Note Taking", "Self-Hosted"]
+  },
+  {
+    "name": "telegraf",
+    "url": "https://github.com/influxdata/telegraf",
+    "type": ["release", "service"],
+    "category": "Observability/Platforms",
+    "tags": ["Metrics Collection", "Monitoring", "Data Pipeline"]
+  },
+  {
+    "name": "v2ray-rules-dat",
+    "url": "https://github.com/Loyalsoldier/v2ray-rules-dat",
+    "type": ["release", "config"],
+    "category": "Networking/Proxy/Xray",
+    "tags": ["Proxy", "Routing Rules", "V2Ray"]
+  },
+  {
+    "name": "bl-mt798x",
+    "url": "https://github.com/hanwckf/bl-mt798x",
+    "type": ["release", "app"],
+    "category": "Development/Tools",
+    "tags": ["Bootloader", "Firmware", "Router"]
+  },
+  {
+    "name": "vaultwarden",
+    "url": "https://github.com/dani-garcia/vaultwarden",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["Password Manager", "Self-Hosted", "Bitwarden"]
+  },
+  {
+    "name": "uptime-kuma",
+    "url": "https://github.com/louislam/uptime-kuma",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["Monitoring", "Uptime", "Self-Hosted"]
+  },
+  {
+    "name": "changedetection.io",
+    "url": "https://github.com/dgtlmoon/changedetection.io",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["Web Monitoring", "Change Detection", "Self-Hosted"]
+  },
+  {
+    "name": "server",
+    "url": "https://github.com/gotify/server",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["Push Notifications", "WebSocket", "Self-Hosted"]
+  },
+  {
+    "name": "git",
+    "url": "https://github.com/git-for-windows/git",
+    "type": ["release", "cli"],
+    "category": "Development/Tools",
+    "tags": ["Git", "Windows", "Version Control"]
+  },
+  {
+    "name": "awesome-vscode",
+    "url": "https://github.com/viatsko/awesome-vscode",
+    "type": ["release", "config"],
+    "category": "Editors & IDEs/VS Code",
+    "tags": ["VS Code", "Awesome List", "Extensions"]
+  },
+  {
+    "name": "vscode-scl",
+    "url": "https://github.com/Gunders89/vscode-scl",
+    "type": ["release", "config"],
+    "category": "Editors & IDEs/VS Code",
+    "tags": ["VS Code", "SCL", "Siemens", "Language Support"]
+  },
+  {
+    "name": "ini",
+    "url": "https://github.com/go-ini/ini",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": ["INI File", "Configuration"]
+  },
+  {
+    "name": "Scoop",
+    "url": "https://github.com/ScoopInstaller/Scoop",
+    "type": ["release", "cli"],
+    "category": "Windows/Package Managers",
+    "tags": ["Package Manager", "Windows", "Installer"]
+  },
+  {
+    "name": "logrus",
+    "url": "https://github.com/sirupsen/logrus",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": ["Logging"]
+  },
+  {
+    "name": "vhs",
+    "url": "https://github.com/charmbracelet/vhs",
+    "type": ["release", "cli"],
+    "category": "Development/CLI",
+    "tags": ["CLI", "Terminal Recording", "GIF"]
+  },
+  {
+    "name": "stringy",
+    "url": "https://github.com/gobeam/stringy",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": ["String Manipulation"]
+  },
+  {
+    "name": "dozzle",
+    "url": "https://github.com/amir20/dozzle",
+    "type": ["release", "service"],
+    "category": "Cloud/Containers",
+    "tags": ["Docker", "Log Viewer", "Container"]
+  },
+  {
+    "name": "waveterm",
+    "url": "https://github.com/wavetermdev/waveterm",
+    "type": ["release", "app"],
+    "category": "Development/Tools",
+    "tags": ["Terminal", "AI", "Cross-Platform"]
+  },
+  {
+    "name": "dcm",
+    "url": "https://github.com/ajnart/dcm",
+    "type": ["release", "service"],
+    "category": "Cloud/Containers",
+    "tags": ["Docker Compose", "Self-Hosted", "Deployment"]
+  },
+  {
+    "name": "bark-server",
+    "url": "https://github.com/Finb/bark-server",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["Push Notifications", "iOS", "Self-Hosted"]
+  },
+  {
+    "name": "kutt",
+    "url": "https://github.com/thedevs-network/kutt",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["URL Shortener", "Self-Hosted"]
+  },
+  {
+    "name": "gh-proxy",
+    "url": "https://github.com/hunshcn/gh-proxy",
+    "type": ["release", "service"],
+    "category": "Development/Tools",
+    "tags": ["Proxy", "GitHub", "Cloudflare Workers"]
+  },
+  {
+    "name": "rustdesk-api",
+    "url": "https://github.com/lejianwen/rustdesk-api",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["Remote Desktop", "RustDesk", "Self-Hosted"]
+  },
+  {
+    "name": "Dism-Multi-language",
+    "url": "https://github.com/Chuyu-Team/Dism-Multi-language",
+    "type": ["release", "cli"],
+    "category": "Windows/Tools",
+    "tags": ["System Tools"]
+  },
+  {
+    "name": "7zip",
+    "url": "https://github.com/ip7z/7zip",
+    "type": ["release", "app"],
+    "category": "Windows/Tools",
+    "tags": ["Compression"]
+  },
+  {
+    "name": "cascadia-code",
+    "url": "https://github.com/microsoft/cascadia-code",
+    "type": ["release", "config"],
+    "category": "Fonts/Programming Fonts",
+    "tags": ["Font"]
+  },
+  {
+    "name": "stalwart",
+    "url": "https://github.com/stalwartlabs/stalwart",
+    "type": ["release", "service"],
+    "category": "Email/Servers",
+    "tags": ["Sieve", "Email Server"]
+  },
+  {
+    "name": "goreleaser",
+    "url": "https://github.com/goreleaser/goreleaser",
+    "type": ["release", "cli"],
+    "category": "Development/Build & CI",
+    "tags": ["Build"]
+  },
+  {
+    "name": "codex",
+    "url": "https://github.com/openai/codex",
+    "type": ["release", "cli"],
+    "category": "AI/Coding Agents",
+    "tags": ["Coding Agent"]
+  },
+  {
+    "name": "cline",
+    "url": "https://github.com/cline/cline",
+    "type": ["release", "cli"],
+    "category": "AI/Coding Agents",
+    "tags": ["Coding Agent"]
+  },
+  {
+    "name": "opencode",
+    "url": "https://github.com/anomalyco/opencode",
+    "type": ["release", "cli"],
+    "category": "AI/Coding Agents",
+    "tags": ["Coding Agent"]
+  },
+  {
+    "name": "ExHyperV",
+    "url": "https://github.com/Justsenger/ExHyperV",
+    "type": ["release", "cli"],
+    "category": "Windows/Virtualization",
+    "tags": ["Virtualization"]
+  },
+  {
+    "name": "bleve",
+    "url": "https://github.com/blevesearch/bleve",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": ["Search", "Indexing"]
+  },
+  {
+    "name": "streamlit",
+    "url": "https://github.com/streamlit/streamlit",
+    "type": ["sdk", "library"],
+    "category": "Data Visualization/Dashboards",
+    "tags": ["Data Visualization"]
+  },
+  {
+    "name": "gradio",
+    "url": "https://github.com/gradio-app/gradio",
+    "type": ["sdk", "library"],
+    "category": "Data Visualization/Dashboards",
+    "tags": ["Data Visualization"]
+  },
+  {
+    "name": "giscus",
+    "url": "https://github.com/giscus/giscus",
+    "type": ["release", "service"],
+    "category": "Web Development/Commenting",
+    "tags": ["Comments"]
+  },
+  {
+    "name": "lazydocker",
+    "url": "https://github.com/jesseduffield/lazydocker",
+    "type": ["release", "cli"],
+    "category": "Cloud/Containers",
+    "tags": ["Docker", "Container"]
+  },
+  {
+    "name": "dive",
+    "url": "https://github.com/wagoodman/dive",
+    "type": ["release", "cli"],
+    "category": "Cloud/Containers",
+    "tags": ["Docker", "Container", "Image Analysis"]
+  },
+  {
+    "name": "SJTUThesis",
+    "url": "https://github.com/sjtug/SJTUThesis",
+    "type": ["release", "config"],
+    "category": "Development/Tools",
+    "tags": ["Thesis Template", "LaTeX"]
+  },
+  {
+    "name": "Microsoft-Activation-Scripts",
+    "url": "https://github.com/massgravel/Microsoft-Activation-Scripts",
+    "type": ["release", "cli"],
+    "category": "Development/Tools",
+    "tags": ["Windows Activation", "Office Activation"]
+  },
+  {
+    "name": "fastfetch",
+    "url": "https://github.com/fastfetch-cli/fastfetch",
+    "type": ["release", "cli"],
+    "category": "Development/Tools",
+    "tags": ["System Information"]
+  },
+  {
+    "name": "wavedrom",
+    "url": "https://github.com/wavedrom/wavedrom",
+    "type": ["release", "cli"],
+    "category": "Development/Tools",
+    "tags": ["Digital Timing Diagram", "Waveform", "SVG"]
+  },
+  {
+    "name": "wpfui",
+    "url": "https://github.com/lepoco/wpfui",
+    "type": ["sdk", "framework"],
+    "category": "Development/.NET/Desktop",
+    "tags": ["WPF", "UI", ".NET", "Desktop"]
+  },
+  {
+    "name": "IoTSharp",
+    "url": "https://github.com/IoTSharp/IoTSharp",
+    "type": ["release", "service"],
+    "category": "Development/.NET",
+    "tags": ["IoT", "Platform", ".NET"]
+  },
+  {
+    "name": "sh",
+    "url": "https://github.com/mvdan/sh",
+    "type": ["release", "cli"],
+    "category": "Development/Tools",
+    "tags": ["Shell Parser", "Formatter"]
+  },
+  {
+    "name": "shellcheck",
+    "url": "https://github.com/koalaman/shellcheck",
+    "type": ["release", "cli"],
+    "category": "Development/Tools",
+    "tags": ["Static Analysis", "Linter"]
+  },
+  {
+    "name": "pure-bash-bible",
+    "url": "https://github.com/dylanaraps/pure-bash-bible",
+    "type": ["release", "config"],
+    "category": "Development/Tools",
+    "tags": ["Bash", "Reference"]
+  },
+  {
+    "name": "code-server",
+    "url": "https://github.com/coder/code-server",
+    "type": ["release", "service"],
+    "category": "Development/Tools",
+    "tags": ["VS Code", "Code Editor", "Browser IDE"]
+  },
+  {
+    "name": "is.sh",
+    "url": "https://github.com/qzb/is.sh",
+    "type": ["release", "cli"],
+    "category": "Development/Tools",
+    "tags": ["Bash", "Testing"]
+  },
+  {
+    "name": "oh-my-bash",
+    "url": "https://github.com/ohmybash/oh-my-bash",
+    "type": ["release", "config"],
+    "category": "Development/Tools",
+    "tags": ["Bash", "Framework"]
+  },
+  {
+    "name": "bashly",
+    "url": "https://github.com/bashly-framework/bashly",
+    "type": ["release", "cli"],
+    "category": "Development/Tools",
+    "tags": ["CLI Generator", "Bash"]
+  },
+  {
+    "name": "gum",
+    "url": "https://github.com/charmbracelet/gum",
+    "type": ["release", "cli"],
+    "category": "Development/Tools",
+    "tags": ["Shell Scripting", "UI"]
+  },
+  {
+    "name": "tabler",
+    "url": "https://github.com/tabler/tabler",
+    "type": ["sdk", "library"],
+    "category": "Web Development/Frontend",
+    "tags": ["Dashboard", "UI Kit", "Bootstrap"]
+  },
+  {
+    "name": "nginx-proxy-manager",
+    "url": "https://github.com/NginxProxyManager/nginx-proxy-manager",
+    "type": ["release", "service"],
+    "category": "Cloud/Containers",
+    "tags": ["Nginx", "Proxy", "Reverse Proxy", "SSL"]
+  },
+  {
+    "name": "webhookd",
+    "url": "https://github.com/ncarlier/webhookd",
+    "type": ["release", "service"],
+    "category": "Development/Tools",
+    "tags": ["Webhook", "Server"]
+  },
+  {
+    "name": "webhook",
+    "url": "https://github.com/adnanh/webhook",
+    "type": ["release", "service"],
+    "category": "Development/Tools",
+    "tags": ["Webhook", "Server"]
+  },
+  {
+    "name": "awesome-ansible",
+    "url": "https://github.com/ansible-community/awesome-ansible",
+    "type": ["release", "config"],
+    "category": "Development/Tools",
+    "tags": ["Awesome List", "Ansible"]
+  },
+  {
+    "name": "scriban",
+    "url": "https://github.com/scriban/scriban",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET",
+    "tags": ["Templating", "Scripting", ".NET"]
+  },
+  {
+    "name": "dockge",
+    "url": "https://github.com/louislam/dockge",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["Self-Hosted", "Docker", "Compose"]
+  },
+  {
+    "name": "1Panel",
+    "url": "https://github.com/1Panel-dev/1Panel",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["Server Management", "Docker", "Control Panel"]
+  },
+  {
+    "name": "ddns-go",
+    "url": "https://github.com/jeessy2/ddns-go",
+    "type": ["release", "service"],
+    "category": "Networking/DNS",
+    "tags": ["DDNS", "DNS"]
+  },
+  {
+    "name": "DDNS",
+    "url": "https://github.com/NewFuture/DDNS",
+    "type": ["release", "service"],
+    "category": "Networking/DNS",
+    "tags": ["DDNS", "DNS", "Dynamic DNS"]
+  },
+  {
+    "name": "ScottPlot",
+    "url": "https://github.com/ScottPlot/ScottPlot",
+    "type": ["sdk", "library"],
+    "category": "Data Visualization/Chart Libraries",
+    "tags": ["Data Visualization", "Plotting", "Charts", ".NET"]
+  },
+  {
+    "name": "acme.sh",
+    "url": "https://github.com/acmesh-official/acme.sh",
+    "type": ["release", "cli"],
+    "category": "Development/Tools",
+    "tags": ["SSL", "TLS", "ACME", "Certificate"]
+  },
+  {
+    "name": "docker-socket-proxy",
+    "url": "https://github.com/Tecnativa/docker-socket-proxy",
+    "type": ["release", "service"],
+    "category": "Cloud/Containers",
+    "tags": ["Docker", "Security", "Proxy"]
+  },
+  {
+    "name": "Costura",
+    "url": "https://github.com/Fody/Costura",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET",
+    "tags": ["Assembly Merging", "Fody", ".NET"]
+  },
+  {
+    "name": "CliFx",
+    "url": "https://github.com/Tyrrrz/CliFx",
+    "type": ["sdk", "framework"],
+    "category": "Development/.NET",
+    "tags": ["CLI", "Command-Line", "Framework", ".NET"]
+  },
+  {
+    "name": "FluentDocker",
+    "url": "https://github.com/mariotoffia/FluentDocker",
+    "type": ["release", "service"],
+    "category": "Cloud/Containers",
+    "tags": ["Docker", "Podman", "Container", "Testing"]
+  },
+  {
+    "name": "vs-streamjsonrpc",
+    "url": "https://github.com/microsoft/vs-streamjsonrpc",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET",
+    "tags": ["JSON-RPC", "RPC", "Stream", "WebSocket", ".NET"]
+  },
+  {
+    "name": "TouchSocket",
+    "url": "https://github.com/RRQM/TouchSocket",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET",
+    "tags": ["Networking", "TCP", "UDP", "WebSocket", "RPC", ".NET"]
+  },
+  {
+    "name": "MoreLINQ",
+    "url": "https://github.com/morelinq/MoreLINQ",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET",
+    "tags": ["LINQ", "Query", ".NET"]
+  },
+  {
+    "name": "homepage",
+    "url": "https://github.com/gethomepage/homepage",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Dashboards",
+    "tags": ["Dashboard", "Homepage", "Docker"]
+  },
+  {
+    "name": "prompts.chat",
+    "url": "https://github.com/f/prompts.chat",
+    "type": ["release", "service"],
+    "category": "AI/Prompts",
+    "tags": ["Prompts", "AI", "Prompt Engineering", "Self-Hosted"]
+  },
+  {
+    "name": "apprise",
+    "url": "https://github.com/caronc/apprise",
+    "type": ["release", "cli"],
+    "category": "Development/Tools",
+    "tags": ["Notifications", "Push Notifications", "Alerting"]
+  },
+  {
+    "name": "ILSpy",
+    "url": "https://github.com/icsharpcode/ILSpy",
+    "type": ["release", "app"],
+    "category": "Development/.NET",
+    "tags": ["Decompiler", "Reverse Engineering", ".NET"]
+  },
+  {
+    "name": "Avalonia",
+    "url": "https://github.com/AvaloniaUI/Avalonia",
+    "type": ["sdk", "framework"],
+    "category": "Development/.NET/Desktop",
+    "tags": ["UI Framework", "Cross-Platform", "Desktop", "XAML", ".NET"]
+  },
+  {
+    "name": "diff-match-patch",
+    "url": "https://github.com/google/diff-match-patch",
+    "type": ["sdk", "library"],
+    "category": "Development/Libraries",
+    "tags": ["Diff", "Match", "Patch", "Text Processing"]
+  },
+  {
+    "name": "EPPlus",
+    "url": "https://github.com/EPPlusSoftware/EPPlus",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET",
+    "tags": ["Excel", "Spreadsheet", "OOXML", ".NET"]
+  },
+  {
+    "name": "virtual-dsm",
+    "url": "https://github.com/vdsm/virtual-dsm",
+    "type": ["release", "service"],
+    "category": "Cloud/Containers",
+    "tags": ["DSM", "NAS", "Virtualization", "Docker"]
+  },
+  {
+    "name": "csharp-jmespath",
+    "url": "https://github.com/jmespath-community/csharp-jmespath",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET",
+    "tags": ["JMESPath", "Query", "JSON", "Parsing", ".NET"]
+  },
+  {
+    "name": "graphql-dotnet",
+    "url": "https://github.com/graphql-dotnet/graphql-dotnet",
+    "type": ["sdk", "api-client"],
+    "category": "Development/.NET",
+    "tags": ["API", "GraphQL", ".NET"]
+  },
+  {
+    "name": "aws-vault",
+    "url": "https://github.com/99designs/aws-vault",
+    "type": ["release", "cli"],
+    "category": "Development/CLI",
+    "tags": ["AWS", "CLI", "Credentials", "IAM", "MFA", "Keychain"]
+  },
+  {
+    "name": "Flurl",
+    "url": "https://github.com/tmenier/Flurl",
+    "type": ["sdk", "api-client"],
+    "category": "Development/.NET",
+    "tags": ["HTTP", "REST Client", "URL Builder", ".NET"]
+  },
+  {
+    "name": "RestSharp",
+    "url": "https://github.com/restsharp/RestSharp",
+    "type": ["sdk", "api-client"],
+    "category": "Development/.NET",
+    "tags": ["REST", "HTTP", "API Client", ".NET"]
+  },
+  {
+    "name": "aws-signature-version-4",
+    "url": "https://github.com/FantasticFiasco/aws-signature-version-4",
+    "type": ["sdk", "api-client"],
+    "category": "Development/.NET",
+    "tags": ["AWS", "SigV4", "HTTP", ".NET"]
+  },
+  {
+    "name": "aws-doc-sdk-examples",
+    "url": "https://github.com/awsdocs/aws-doc-sdk-examples",
+    "type": ["release", "config"],
+    "category": "Development/Documentation",
+    "tags": ["AWS", "Documentation", "Code Examples"]
+  },
+  {
+    "name": "interactive",
+    "url": "https://github.com/dotnet/interactive",
+    "type": ["release", "cli"],
+    "category": "Development/.NET",
+    "tags": [
+      "Data Science",
+      "Jupyter",
+      "Notebooks",
+      "Interactive Programming",
+      ".NET"
+    ]
+  },
+  {
+    "name": "spectre.console",
+    "url": "https://github.com/spectreconsole/spectre.console",
+    "type": ["sdk", "framework"],
+    "category": "Development/.NET",
+    "tags": ["Console", "CLI Parser", "Console Visualization", ".NET"]
+  },
+  {
+    "name": "dotnet-script",
+    "url": "https://github.com/dotnet-script/dotnet-script",
+    "type": ["release", "cli"],
+    "category": "Development/.NET",
+    "tags": ["C# Script", "Roslyn", ".NET"]
+  },
+  {
+    "name": "harbor",
+    "url": "https://github.com/goharbor/harbor",
+    "type": ["release", "service"],
+    "category": "Cloud/Containers",
+    "tags": [
+      "Container Registry",
+      "Cloud Native",
+      "CNCF",
+      "Kubernetes",
+      "Docker",
+      "Helm"
+    ]
+  },
+  {
+    "name": "LinuxMirrors",
+    "url": "https://github.com/SuperManito/LinuxMirrors",
+    "type": ["release", "cli"],
+    "category": "Development/Tools",
+    "tags": ["Linux", "Mirror", "Package Manager"]
+  },
+  {
+    "name": "FluentValidation",
+    "url": "https://github.com/FluentValidation/FluentValidation",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET",
+    "tags": ["Validation", ".NET"]
+  },
+  {
+    "name": "C-Sharp",
+    "url": "https://github.com/TheAlgorithms/C-Sharp",
+    "type": ["release", "config"],
+    "category": "Development/Tools",
+    "tags": ["Algorithms", "Data Structures"]
+  },
+  {
+    "name": "C-Sharp-Algorithms",
+    "url": "https://github.com/aalhour/C-Sharp-Algorithms",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET",
+    "tags": ["Algorithms", "Data Structures", ".NET"]
+  },
+  {
+    "name": "CliWrap",
+    "url": "https://github.com/Tyrrrz/CliWrap",
+    "type": ["sdk", "framework"],
+    "category": "Development/.NET",
+    "tags": ["CLI", "Process", "Piping", ".NET"]
+  },
+  {
+    "name": "commandline",
+    "url": "https://github.com/commandlineparser/commandline",
+    "type": ["sdk", "framework"],
+    "category": "Development/.NET",
+    "tags": ["Command Line", "CLI Parser", ".NET"]
+  },
+  {
+    "name": "awesome-dotnet",
+    "url": "https://github.com/quozd/awesome-dotnet",
+    "type": ["release", "config"],
+    "category": "Development/Tools",
+    "tags": ["Awesome List", ".NET"]
+  },
+  {
+    "name": "LiveCharts2",
+    "url": "https://github.com/Live-Charts/LiveCharts2",
+    "type": ["sdk", "library"],
+    "category": "Data Visualization/Chart Libraries",
+    "tags": ["Charts", "Data Visualization", ".NET"]
+  },
+  {
+    "name": "s7netplus",
+    "url": "https://github.com/S7NetPlus/s7netplus",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET",
+    "tags": ["Siemens", "PLC", "S7", "Industrial Automation", ".NET"]
+  },
+  {
+    "name": "Sharp7",
+    "url": "https://github.com/fbarresi/Sharp7",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET",
+    "tags": ["PLC", "S7", "Siemens", "Industrial Automation", ".NET"]
+  },
+  {
+    "name": "serilog",
+    "url": "https://github.com/serilog/serilog",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET",
+    "tags": ["Structured Logging", ".NET"]
+  },
+  {
+    "name": "HandyControl",
+    "url": "https://github.com/HandyOrg/HandyControl",
+    "type": ["sdk", "framework"],
+    "category": "Development/.NET/Desktop",
+    "tags": ["WPF", "WPF Controls", "XAML", "Desktop", ".NET"]
+  },
+  {
+    "name": "awesome-actions",
+    "url": "https://github.com/sdras/awesome-actions",
+    "type": ["release", "config"],
+    "category": "Development/Tools",
+    "tags": ["Awesome List", "GitHub Actions"]
+  },
+  {
+    "name": "gfwlist",
+    "url": "https://github.com/gfwlist/gfwlist",
+    "type": ["release", "config"],
+    "category": "Networking/Proxy",
+    "tags": ["GFW", "Anti-Censorship", "Proxy"]
+  },
+  {
+    "name": "openai-cookbook",
+    "url": "https://github.com/openai/openai-cookbook",
+    "type": ["release", "config"],
+    "category": "Development/Tools",
+    "tags": ["OpenAI", "ChatGPT", "GPT-4"]
+  },
+  {
+    "name": "weekly",
+    "url": "https://github.com/ruanyf/weekly",
+    "type": ["release", "config"],
+    "category": "Development/Tools",
+    "tags": ["Newsletter"]
+  },
+  {
+    "name": "gitea",
+    "url": "https://github.com/go-gitea/gitea",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["Self-Hosted", "Git", "Git Server", "CI/CD", "DevOps"]
+  },
+  {
+    "name": "shadowsocks-rust",
+    "url": "https://github.com/shadowsocks/shadowsocks-rust",
+    "type": ["release", "cli"],
+    "category": "Networking/Proxy",
+    "tags": ["Proxy", "Shadowsocks", "SOCKS5", "Security"]
+  },
+  {
+    "name": "next-terminal",
+    "url": "https://github.com/next-terminal/next-terminal",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["RDP", "SSH", "VNC", "Remote Access", "Guacamole", "Docker"]
+  },
+  {
+    "name": "awesome",
+    "url": "https://github.com/sindresorhus/awesome",
+    "type": ["release", "config"],
+    "category": "Development/Tools",
+    "tags": ["Awesome List"]
+  },
+  {
+    "name": "awesome-cli-apps",
+    "url": "https://github.com/agarrharr/awesome-cli-apps",
+    "type": ["release", "config"],
+    "category": "Development/Tools",
+    "tags": ["Awesome List", "CLI"]
+  },
+  {
+    "name": "awesome-dotnet-core",
+    "url": "https://github.com/thangchung/awesome-dotnet-core",
+    "type": ["release", "config"],
+    "category": "Development/.NET",
+    "tags": ["Awesome List", ".NET Core", ".NET"]
+  },
+  {
+    "name": "awesome-docker",
+    "url": "https://github.com/veggiemonk/awesome-docker",
+    "type": ["release", "config"],
+    "category": "Cloud/Containers",
+    "tags": ["Awesome List", "Docker", "Container"]
+  },
+  {
+    "name": "awesome-shell",
+    "url": "https://github.com/alebcay/awesome-shell",
+    "type": ["release", "config"],
+    "category": "Development/Tools",
+    "tags": ["Awesome List", "CLI"]
+  },
+  {
+    "name": "awesome-selfhosted",
+    "url": "https://github.com/awesome-selfhosted/awesome-selfhosted",
+    "type": ["release", "config"],
+    "category": "Development/Tools",
+    "tags": ["Awesome List", "Self-Hosted", "Privacy"]
+  },
+  {
+    "name": "memos",
+    "url": "https://github.com/usememos/memos",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["Self-Hosted", "Note-Taking", "Markdown", "Docker", "SQLite"]
+  },
+  {
+    "name": "awesome-programming-books",
+    "url": "https://github.com/jobbole/awesome-programming-books",
+    "type": ["release", "config"],
+    "category": "Development/Tools",
+    "tags": ["Awesome List", "Programming Books"]
+  },
+  {
+    "name": "less.js",
+    "url": "https://github.com/less/less.js",
+    "type": ["sdk", "library"],
+    "category": "Web Development/Frontend",
+    "tags": ["CSS Preprocessor", "Stylesheet Language"]
+  },
+  {
+    "name": "wpftoolkit",
+    "url": "https://github.com/xceedsoftware/wpftoolkit",
+    "type": ["sdk", "framework"],
+    "category": "Development/.NET/Desktop",
+    "tags": [".NET", "Desktop"]
+  },
+  {
+    "name": "nuke",
+    "url": "https://github.com/nuke-build/nuke",
+    "type": ["release", "cli"],
+    "category": "Development/Build & CI",
+    "tags": ["Build"]
+  },
+  {
+    "name": "python-docx-template",
+    "url": "https://github.com/elapouya/python-docx-template",
+    "type": ["sdk", "library"],
+    "category": "Development/Templating",
+    "tags": ["Templating"]
+  },
+  {
+    "name": "docusaurus",
+    "url": "https://github.com/facebook/docusaurus",
+    "type": ["sdk", "framework"],
+    "category": "Documentation/Static Sites",
+    "tags": ["Document Processing"]
+  },
+  {
+    "name": "crosspaste-desktop",
+    "url": "https://github.com/CrossPaste/crosspaste-desktop",
+    "type": ["release", "app"],
+    "category": "Utilities/Clipboard",
+    "tags": ["Clipboard"]
+  },
+  {
+    "name": "SenseVoice",
+    "url": "https://github.com/FunAudioLLM/SenseVoice",
+    "type": ["sdk", "library"],
+    "category": "AI/Speech",
+    "tags": ["Speech Recognition"]
+  },
+  {
+    "name": "FunASR",
+    "url": "https://github.com/modelscope/FunASR",
+    "type": ["sdk", "library"],
+    "category": "AI/Speech",
+    "tags": ["Speech Recognition"]
+  },
+  {
+    "name": "magicui",
+    "url": "https://github.com/magicuidesign/magicui",
+    "type": ["sdk", "library"],
+    "category": "Design/UI Libraries",
+    "tags": ["UI Library"]
+  },
+  {
+    "name": "monaco-editor",
+    "url": "https://github.com/microsoft/monaco-editor",
+    "type": ["sdk", "library"],
+    "category": "Web Development/Editor Components",
+    "tags": ["Code Editor"]
+  },
+  {
+    "name": "liquidjs",
+    "url": "https://github.com/harttle/liquidjs",
+    "type": ["sdk", "library"],
+    "category": "Development/Templating",
+    "tags": ["Liquid", "Templating"]
+  },
+  {
+    "name": "miller",
+    "url": "https://github.com/johnkerl/miller",
+    "type": ["release", "cli"],
+    "category": "Data Processing/CLI Tools",
+    "tags": ["Data Processing"]
+  },
+  {
+    "name": "markdig",
+    "url": "https://github.com/xoofx/markdig",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET",
+    "tags": [".NET", "Markdown"]
+  },
+  {
+    "name": "pdfcraft",
+    "url": "https://github.com/PDFCraftTool/pdfcraft",
+    "type": ["release", "app"],
+    "category": "Tools/PDF",
+    "tags": ["PDF"]
+  },
+  {
+    "name": "sprig",
+    "url": "https://github.com/Masterminds/sprig",
+    "type": ["sdk", "library"],
+    "category": "Development/Templating",
+    "tags": ["Templating"]
+  },
+  {
+    "name": "xid",
+    "url": "https://github.com/rs/xid",
+    "type": ["sdk", "library"],
+    "category": "Development/ID Generation",
+    "tags": ["ID Generation"]
+  },
+  {
+    "name": "ulid",
+    "url": "https://github.com/oklog/ulid",
+    "type": ["sdk", "library"],
+    "category": "Development/ID Generation",
+    "tags": ["ID Generation"]
+  },
+  {
+    "name": "context-mode",
+    "url": "https://github.com/mksglu/context-mode",
+    "type": ["sdk", "plugin"],
+    "category": "AI/MCP",
+    "tags": ["MCP"]
+  },
+  {
+    "name": "signoz",
+    "url": "https://github.com/SigNoz/signoz",
+    "type": ["release", "service"],
+    "category": "Observability/Platforms",
+    "tags": ["Observability", "Monitoring"]
+  },
+  {
+    "name": "openobserve",
+    "url": "https://github.com/openobserve/openobserve",
+    "type": ["release", "service"],
+    "category": "Observability/Platforms",
+    "tags": ["LLM"]
+  },
+  {
+    "name": "dbx",
+    "url": "https://github.com/t8y2/dbx",
+    "type": ["release", "service"],
+    "category": "Database/DuckDB",
+    "tags": ["Database", "SQL"]
+  },
+  {
+    "name": "strftime",
+    "url": "https://github.com/lestrrat-go/strftime",
+    "type": ["sdk", "library"],
+    "category": "Development/Date & Time",
+    "tags": ["Date & Time"]
+  },
+  {
+    "name": "jint",
+    "url": "https://github.com/sebastienros/jint",
+    "type": ["sdk", "library"],
+    "category": "Development/Scripting/JavaScript",
+    "tags": [".NET"]
+  },
+  {
+    "name": "neolua",
+    "url": "https://github.com/neolithos/neolua",
+    "type": ["sdk", "library"],
+    "category": "Development/Scripting/Lua",
+    "tags": [".NET"]
+  },
+  {
+    "name": "NLua",
+    "url": "https://github.com/NLua/NLua",
+    "type": ["sdk", "library"],
+    "category": "Development/Scripting/Lua",
+    "tags": [".NET"]
+  },
+  {
+    "name": "tengo",
+    "url": "https://github.com/d5/tengo",
+    "type": ["sdk", "library"],
+    "category": "Development/Scripting",
+    "tags": ["Scripting"]
+  },
+  {
+    "name": "goja",
+    "url": "https://github.com/dop251/goja",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "wazero",
+    "url": "https://github.com/wazero/wazero",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": ["WebAssembly"]
+  },
+  {
+    "name": "go-sqlite3",
+    "url": "https://github.com/ncruces/go-sqlite3",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": ["WebAssembly"]
+  },
+  {
+    "name": "CLIProxyAPI",
+    "url": "https://github.com/router-for-me/CLIProxyAPI",
+    "type": ["release", "service"],
+    "category": "AI/API Gateways",
+    "tags": ["LLM"]
+  },
+  {
+    "name": "sub2api",
+    "url": "https://github.com/Wei-Shaw/sub2api",
+    "type": ["release", "service"],
+    "category": "Networking/Proxy",
+    "tags": []
+  },
+  {
+    "name": "new-api",
+    "url": "https://github.com/QuantumNous/new-api",
+    "type": ["release", "service"],
+    "category": "AI/API Gateways",
+    "tags": ["LLM"]
+  },
+  {
+    "name": "Umi-OCR",
+    "url": "https://github.com/hiroi-sora/Umi-OCR",
+    "type": ["release", "app"],
+    "category": "AI/OCR",
+    "tags": ["OCR"]
+  },
+  {
+    "name": "DNSHE-FreeDomains",
+    "url": "https://github.com/dnshe/DNSHE-FreeDomains",
+    "type": ["release", "config"],
+    "category": "Networking/DNS",
+    "tags": ["DNS"]
+  },
+  {
+    "name": "ProxyBridge",
+    "url": "https://github.com/InterceptSuite/ProxyBridge",
+    "type": ["release", "service"],
+    "category": "Networking/Proxy",
+    "tags": ["Proxy"]
+  },
+  {
+    "name": "meta-rules-dat",
+    "url": "https://github.com/MetaCubeX/meta-rules-dat",
+    "type": ["release", "config"],
+    "category": "Networking/Proxy",
+    "tags": ["Proxy"]
+  },
+  {
+    "name": "Xray-core",
+    "url": "https://github.com/XTLS/Xray-core",
+    "type": ["release", "service"],
+    "category": "Networking/Proxy/Xray",
+    "tags": ["Xray", "Proxy"]
+  },
+  {
+    "name": "panel",
+    "url": "https://github.com/remnawave/panel",
+    "type": ["release", "service"],
+    "category": "Networking/Proxy/Xray",
+    "tags": ["Xray", "Proxy"]
+  },
+  {
+    "name": "pongo2",
+    "url": "https://github.com/flosch/pongo2",
+    "type": ["sdk", "library"],
+    "category": "Development/Templating",
+    "tags": ["Templating"]
+  },
+  {
+    "name": "goversioninfo",
+    "url": "https://github.com/josephspurrier/goversioninfo",
+    "type": ["release", "cli"],
+    "category": "Development/Go",
+    "tags": ["Icons"]
+  },
+  {
+    "name": "markitdown",
+    "url": "https://github.com/microsoft/markitdown",
+    "type": ["sdk", "library"],
+    "category": "Data Processing/Document Conversion",
+    "tags": []
+  },
+  {
+    "name": "cc-switch",
+    "url": "https://github.com/farion1231/cc-switch",
+    "type": ["release", "app"],
+    "category": "AI/LLM",
+    "tags": ["Frontend"]
+  },
+  {
+    "name": "FlClash",
+    "url": "https://github.com/chen08209/FlClash",
+    "type": ["release", "app"],
+    "category": "Networking/Proxy",
+    "tags": ["Proxy"]
+  },
+  {
+    "name": "uPlot",
+    "url": "https://github.com/leeoniya/uPlot",
+    "type": ["sdk", "library"],
+    "category": "Data Visualization/Chart Libraries",
+    "tags": ["Data Visualization"]
+  },
+  {
+    "name": "fast-note-sync-service",
+    "url": "https://github.com/haierkeys/fast-note-sync-service",
+    "type": ["release", "service"],
+    "category": "Notes/Synchronization",
+    "tags": ["Synchronization"]
+  },
+  {
+    "name": "obsidian-fast-note-sync",
+    "url": "https://github.com/haierkeys/obsidian-fast-note-sync",
+    "type": ["sdk", "plugin"],
+    "category": "Notes/Obsidian",
+    "tags": ["Obsidian"]
+  },
+  {
+    "name": "memreduct",
+    "url": "https://github.com/henrypp/memreduct",
+    "type": ["release", "app"],
+    "category": "Windows/Tools",
+    "tags": ["Memory Management"]
+  },
+  {
+    "name": "cypht",
+    "url": "https://github.com/cypht-org/cypht",
+    "type": ["release", "service"],
+    "category": "Email/Clients",
+    "tags": ["Email", "Webmail"]
+  },
+  {
+    "name": "tcping",
+    "url": "https://github.com/pouriyajamshidi/tcping",
+    "type": ["release", "cli"],
+    "category": "Networking/Tools",
+    "tags": []
+  },
+  {
+    "name": "Office-Tool",
+    "url": "https://github.com/YerongAI/Office-Tool",
+    "type": ["release", "app"],
+    "category": "Windows/Tools",
+    "tags": []
+  },
+  {
+    "name": "basex",
+    "url": "https://github.com/BaseXdb/basex",
+    "type": ["release", "service"],
+    "category": "Database/Servers",
+    "tags": [".NET"]
+  },
+  {
+    "name": "wireshark",
+    "url": "https://github.com/wireshark/wireshark",
+    "type": ["release", "app"],
+    "category": "Networking/Tools",
+    "tags": ["Networking"]
+  },
+  {
+    "name": "duckdb",
+    "url": "https://github.com/duckdb/duckdb",
+    "type": ["release", "cli"],
+    "category": "Database/Tools",
+    "tags": ["Database", "SQL"]
+  },
+  {
+    "name": "vscode",
+    "url": "https://github.com/microsoft/vscode",
+    "type": ["release", "app"],
+    "category": "Editors & IDEs/VS Code",
+    "tags": ["VS Code"]
+  },
+  {
+    "name": "obsidian-releases",
+    "url": "https://github.com/obsidianmd/obsidian-releases",
+    "type": ["release", "config"],
+    "category": "Notes/Obsidian",
+    "tags": ["Obsidian"]
+  },
+  {
+    "name": "QuickLook",
+    "url": "https://github.com/QL-Win/QuickLook",
+    "type": ["release", "app"],
+    "category": "Windows/Tools",
+    "tags": ["Quick Look"]
+  },
+  {
+    "name": "Sunshine",
+    "url": "https://github.com/LizardByte/Sunshine",
+    "type": ["release", "service"],
+    "category": "Gaming/Streaming",
+    "tags": ["Game Streaming"]
+  },
+  {
+    "name": "ScreenToGif",
+    "url": "https://github.com/NickeManarin/ScreenToGif",
+    "type": ["release", "app"],
+    "category": "Windows/Screen Capture",
+    "tags": ["Screen Capture"]
+  },
+  {
+    "name": "obs-studio",
+    "url": "https://github.com/obsproject/obs-studio",
+    "type": ["release", "app"],
+    "category": "Windows/Screen Capture",
+    "tags": ["Screen Capture"]
+  },
+  {
+    "name": "mactype",
+    "url": "https://github.com/snowie2000/mactype",
+    "type": ["release", "app"],
+    "category": "Windows/Tools",
+    "tags": ["Font"]
+  },
+  {
+    "name": "greenshot",
+    "url": "https://github.com/greenshot/greenshot",
+    "type": ["release", "app"],
+    "category": "Windows/Screen Capture",
+    "tags": [".NET"]
+  },
+  {
+    "name": "CookLikeHOC",
+    "url": "https://github.com/Gar-b-age/CookLikeHOC",
+    "type": ["release", "cli"],
+    "category": "Development/Tools",
+    "tags": ["Docker"]
+  },
+  {
+    "name": "newsnow",
+    "url": "https://github.com/ourongxing/newsnow",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["Frontend"]
+  },
+  {
+    "name": "huntly",
+    "url": "https://github.com/lcomplete/huntly",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["LLM"]
+  },
+  {
+    "name": "Kazumi",
+    "url": "https://github.com/Predidit/Kazumi",
+    "type": ["release", "app"],
+    "category": "Mobile/Android",
+    "tags": ["Android"]
+  },
+  {
+    "name": "animeko",
+    "url": "https://github.com/open-ani/animeko",
+    "type": ["release", "app"],
+    "category": "Mobile/Android",
+    "tags": ["Android"]
+  },
+  {
+    "name": "transmission-next-ui",
+    "url": "https://github.com/hisproc/transmission-next-ui",
+    "type": ["sdk", "library"],
+    "category": "Design/UI Libraries",
+    "tags": ["UI Library"]
+  },
+  {
+    "name": "CookieCloud",
+    "url": "https://github.com/easychen/CookieCloud",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["Self-Hosted"]
+  },
+  {
+    "name": "docker-msedge",
+    "url": "https://github.com/linuxserver/docker-msedge",
+    "type": ["release", "service"],
+    "category": "Cloud/Containers",
+    "tags": ["Container", "Docker"]
+  },
+  {
+    "name": "TrackersListCollection",
+    "url": "https://github.com/XIU2/TrackersListCollection",
+    "type": ["release", "cli"],
+    "category": "Development/Tools",
+    "tags": ["BitTorrent"]
+  },
+  {
+    "name": "dashboard-icons",
+    "url": "https://github.com/homarr-labs/dashboard-icons",
+    "type": ["release", "config"],
+    "category": "Design/Icons",
+    "tags": ["Icons"]
+  },
+  {
+    "name": "flame",
+    "url": "https://github.com/pawelmalak/flame",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["Self-Hosted"]
+  },
+  {
+    "name": "PaddleOCR",
+    "url": "https://github.com/PaddlePaddle/PaddleOCR",
+    "type": ["sdk", "library"],
+    "category": "AI/OCR",
+    "tags": ["OCR"]
+  },
+  {
+    "name": "s6-overlay",
+    "url": "https://github.com/just-containers/s6-overlay",
+    "type": ["release", "service"],
+    "category": "Cloud/Containers",
+    "tags": ["Container", "Docker"]
+  },
+  {
+    "name": "gin",
+    "url": "https://github.com/gin-gonic/gin",
+    "type": ["sdk", "framework"],
+    "category": "Development/Go",
+    "tags": ["Web Framework"]
+  },
+  {
+    "name": "nginx-ui",
+    "url": "https://github.com/0xJacky/nginx-ui",
+    "type": ["release", "service"],
+    "category": "Networking/Web Servers",
+    "tags": []
+  },
+  {
+    "name": "HivisionIDPhotos",
+    "url": "https://github.com/Zeyi-Lin/HivisionIDPhotos",
+    "type": ["sdk", "library"],
+    "category": "AI/Photo",
+    "tags": []
+  },
+  {
+    "name": "UniGetUI",
+    "url": "https://github.com/Devolutions/UniGetUI",
+    "type": ["release", "app"],
+    "category": "Windows/Package Managers",
+    "tags": ["Package Manager"]
+  },
+  {
+    "name": "mdcx",
+    "url": "https://github.com/sqzw-x/mdcx",
+    "type": ["release", "app"],
+    "category": "Media/Metadata",
+    "tags": ["Metadata"]
+  },
+  {
+    "name": "AVDC",
+    "url": "https://github.com/moyy996/AVDC",
+    "type": ["release", "app"],
+    "category": "Media/Metadata",
+    "tags": ["Metadata"]
+  },
+  {
+    "name": "tiny11builder",
+    "url": "https://github.com/ntdevlabs/tiny11builder",
+    "type": ["release", "cli"],
+    "category": "Development/Tools",
+    "tags": []
+  },
+  {
+    "name": "ani-rss",
+    "url": "https://github.com/wushuo894/ani-rss",
+    "type": ["release", "app"],
+    "category": "Mobile/Android",
+    "tags": ["Android"]
+  },
+  {
+    "name": "i915-sriov-dkms",
+    "url": "https://github.com/strongtz/i915-sriov-dkms",
+    "type": ["release", "config"],
+    "category": "System/Drivers",
+    "tags": []
+  },
+  {
+    "name": "pve-diy",
+    "url": "https://github.com/xiangfeidexiaohuo/pve-diy",
+    "type": ["release", "service"],
+    "category": "Cloud/Virtualization",
+    "tags": ["Virtualization"]
+  },
+  {
+    "name": "pvetools",
+    "url": "https://github.com/ivanhao/pvetools",
+    "type": ["release", "service"],
+    "category": "Cloud/Virtualization",
+    "tags": ["Virtualization"]
+  },
+  {
+    "name": "MoviePilot",
+    "url": "https://github.com/jxxghp/MoviePilot",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": []
+  },
+  {
+    "name": "docker-steam-headless",
+    "url": "https://github.com/Steam-Headless/docker-steam-headless",
+    "type": ["release", "service"],
+    "category": "Gaming/Streaming",
+    "tags": ["Game Streaming"]
+  },
+  {
+    "name": "One-KVM",
+    "url": "https://github.com/mofeng-git/One-KVM",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": []
+  },
+  {
+    "name": "copyparty",
+    "url": "https://github.com/9001/copyparty",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": []
+  },
+  {
+    "name": "go-exiftool",
+    "url": "https://github.com/barasher/go-exiftool",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "tablewriter",
+    "url": "https://github.com/olekukonko/tablewriter",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "go-pretty",
+    "url": "https://github.com/jedib0t/go-pretty",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "AppFlowy",
+    "url": "https://github.com/AppFlowy-IO/AppFlowy",
+    "type": ["release", "app"],
+    "category": "Productivity/Notes",
+    "tags": []
+  },
+  {
+    "name": "tia-portal-openness-code-snippets",
+    "url": "https://github.com/siemens/tia-portal-openness-code-snippets",
+    "type": ["release", "config"],
+    "category": "Development/.NET",
+    "tags": [".NET"]
+  },
+  {
+    "name": "NLog",
+    "url": "https://github.com/NLog/NLog",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET",
+    "tags": [".NET"]
+  },
+  {
+    "name": "tia-portal-openness-unified-library",
+    "url": "https://github.com/tia-portal-applications/tia-portal-openness-unified-library",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET",
+    "tags": [".NET"]
+  },
+  {
+    "name": "NetPad",
+    "url": "https://github.com/tareqimbasher/NetPad",
+    "type": ["release", "app"],
+    "category": "Development/.NET",
+    "tags": [".NET"]
+  },
+  {
+    "name": "awesome_docker_cn",
+    "url": "https://github.com/coracoo/awesome_docker_cn",
+    "type": ["release", "config"],
+    "category": "Cloud/Containers",
+    "tags": ["Container", "Docker"]
+  },
+  {
+    "name": "reference",
+    "url": "https://github.com/jaywcjlove/reference",
+    "type": ["release", "config"],
+    "category": "Development/Reference",
+    "tags": ["Docker"]
+  },
+  {
+    "name": "send",
+    "url": "https://github.com/timvisee/send",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["Frontend"]
+  },
+  {
+    "name": "lazygit",
+    "url": "https://github.com/jesseduffield/lazygit",
+    "type": ["release", "cli"],
+    "category": "Development/Git",
+    "tags": []
+  },
+  {
+    "name": "legado",
+    "url": "https://github.com/gedoor/legado",
+    "type": ["release", "app"],
+    "category": "Mobile/Android",
+    "tags": []
+  },
+  {
+    "name": "linkwarden",
+    "url": "https://github.com/linkwarden/linkwarden",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["Self-Hosted"]
+  },
+  {
+    "name": "ModbusTool",
+    "url": "https://github.com/ClassicDIY/ModbusTool",
+    "type": ["release", "app"],
+    "category": "Development/.NET",
+    "tags": [".NET"]
+  },
+  {
+    "name": "OpenSpeedy",
+    "url": "https://github.com/game1024/OpenSpeedy",
+    "type": ["release", "app"],
+    "category": "Gaming/Tools",
+    "tags": []
+  },
+  {
+    "name": "automa",
+    "url": "https://github.com/AutomaApp/automa",
+    "type": ["sdk", "plugin"],
+    "category": "Browser Extensions/Automation",
+    "tags": ["Frontend"]
+  },
+  {
+    "name": "qd",
+    "url": "https://github.com/qd-today/qd",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": []
+  },
+  {
+    "name": "qinglong",
+    "url": "https://github.com/whyour/qinglong",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": []
+  },
+  {
+    "name": "docker-webtop",
+    "url": "https://github.com/linuxserver/docker-webtop",
+    "type": ["release", "service"],
+    "category": "Cloud/Containers",
+    "tags": []
+  },
+  {
+    "name": "Radarr",
+    "url": "https://github.com/Radarr/Radarr",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": []
+  },
+  {
+    "name": "dpanel",
+    "url": "https://github.com/donknap/dpanel",
+    "type": ["release", "service"],
+    "category": "Cloud/Containers",
+    "tags": ["Container", "Docker"]
+  },
+  {
+    "name": "winpython",
+    "url": "https://github.com/winpython/winpython",
+    "type": ["release", "app"],
+    "category": "Development/Python",
+    "tags": []
+  },
+  {
+    "name": "mkdocs",
+    "url": "https://github.com/mkdocs/mkdocs",
+    "type": ["release", "cli"],
+    "category": "Documentation/Static Sites",
+    "tags": []
+  },
+  {
+    "name": "OpenList",
+    "url": "https://github.com/OpenListTeam/OpenList",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": []
+  },
+  {
+    "name": "v2rayNG",
+    "url": "https://github.com/2dust/v2rayNG",
+    "type": ["release", "app"],
+    "category": "Mobile/Android",
+    "tags": ["Xray", "Proxy"]
+  },
+  {
+    "name": "pikapika",
+    "url": "https://github.com/ComicSparks/pikapika",
+    "type": ["release", "app"],
+    "category": "Mobile/Android",
+    "tags": ["Android"]
+  },
+  {
+    "name": "LiteDB",
+    "url": "https://github.com/litedb-org/LiteDB",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET",
+    "tags": [".NET"]
+  },
+  {
+    "name": "grafana",
+    "url": "https://github.com/grafana/grafana",
+    "type": ["release", "service"],
+    "category": "Observability/Platforms",
+    "tags": ["Observability", "Monitoring"]
+  },
+  {
+    "name": "prometheus",
+    "url": "https://github.com/prometheus/prometheus",
+    "type": ["release", "service"],
+    "category": "Observability/Platforms",
+    "tags": ["Data Visualization"]
+  },
+  {
+    "name": "stash",
+    "url": "https://github.com/stashapp/stash",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": []
+  },
+  {
+    "name": "mytv-android",
+    "url": "https://github.com/yaoxieyoulei/mytv-android",
+    "type": ["release", "app"],
+    "category": "Mobile/Android",
+    "tags": ["Android"]
+  },
+  {
+    "name": "live",
+    "url": "https://github.com/fanmingming/live",
+    "type": ["release", "config"],
+    "category": "Media/IPTV",
+    "tags": ["Frontend"]
+  },
+  {
+    "name": "LocalAI",
+    "url": "https://github.com/mudler/LocalAI",
+    "type": ["release", "service"],
+    "category": "AI/LLM",
+    "tags": []
+  },
+  {
+    "name": "opengist",
+    "url": "https://github.com/thomiceli/opengist",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["Self-Hosted"]
+  },
+  {
+    "name": "wiliwili",
+    "url": "https://github.com/xfangfang/wiliwili",
+    "type": ["release", "app"],
+    "category": "Media/Video",
+    "tags": []
+  },
+  {
+    "name": "tailwindcss",
+    "url": "https://github.com/tailwindlabs/tailwindcss",
+    "type": ["sdk", "library"],
+    "category": "Web Development/Frontend",
+    "tags": ["Frontend"]
+  },
+  {
+    "name": "LibreTV",
+    "url": "https://github.com/LibreSpark/LibreTV",
+    "type": ["release", "service"],
+    "category": "Cloud/Containers",
+    "tags": ["Container", "Docker"]
+  },
+  {
+    "name": "Suwayomi-Server",
+    "url": "https://github.com/Suwayomi/Suwayomi-Server",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": []
+  },
+  {
+    "name": "extensions",
+    "url": "https://github.com/keiyoushi/extensions",
+    "type": ["release", "config"],
+    "category": "Media/Manga",
+    "tags": []
+  },
+  {
+    "name": "ofelia",
+    "url": "https://github.com/mcuadros/ofelia",
+    "type": ["release", "service"],
+    "category": "Cloud/Containers",
+    "tags": ["Container", "Docker"]
+  },
+  {
+    "name": "calibre-web",
+    "url": "https://github.com/janeczku/calibre-web",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": []
+  },
+  {
+    "name": "navidrome",
+    "url": "https://github.com/navidrome/navidrome",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": []
+  },
+  {
+    "name": "music-tag-web",
+    "url": "https://github.com/xhongc/music-tag-web",
+    "type": ["release", "app"],
+    "category": "Media/Metadata",
+    "tags": ["Metadata"]
+  },
+  {
+    "name": "caddy",
+    "url": "https://github.com/caddyserver/caddy",
+    "type": ["release", "service"],
+    "category": "Networking/Web Servers",
+    "tags": []
+  },
+  {
+    "name": "windhawk",
+    "url": "https://github.com/ramensoftware/windhawk",
+    "type": ["release", "app"],
+    "category": "Windows/Tools",
+    "tags": ["Frontend"]
+  },
+  {
+    "name": "go-licenses",
+    "url": "https://github.com/google/go-licenses",
+    "type": ["release", "cli"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "fd",
+    "url": "https://github.com/sharkdp/fd",
+    "type": ["release", "cli"],
+    "category": "Development/CLI",
+    "tags": []
+  },
+  {
+    "name": "modern-go-application",
+    "url": "https://github.com/sagikazarmark/modern-go-application",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "gofumpt",
+    "url": "https://github.com/mvdan/gofumpt",
+    "type": ["release", "cli"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "wire",
+    "url": "https://github.com/google/wire",
+    "type": ["sdk", "framework"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "svelte",
+    "url": "https://github.com/sveltejs/svelte",
+    "type": ["sdk", "framework"],
+    "category": "Web Development/Frontend",
+    "tags": ["Frontend"]
+  },
+  {
+    "name": "godotenv",
+    "url": "https://github.com/joho/godotenv",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "github-local-actions",
+    "url": "https://github.com/SanjulaGanepola/github-local-actions",
+    "type": ["sdk", "plugin"],
+    "category": "Editors & IDEs/VS Code",
+    "tags": ["Frontend"]
+  },
+  {
+    "name": "act",
+    "url": "https://github.com/nektos/act",
+    "type": ["release", "cli"],
+    "category": "Development/CI",
+    "tags": []
+  },
+  {
+    "name": "Win11Debloat",
+    "url": "https://github.com/Raphire/Win11Debloat",
+    "type": ["release", "cli"],
+    "category": "Development/Tools",
+    "tags": []
+  },
+  {
+    "name": "github-issue-templates",
+    "url": "https://github.com/stevemao/github-issue-templates",
+    "type": ["release", "config"],
+    "category": "Development/Templates",
+    "tags": ["Template"]
+  },
+  {
+    "name": "gitignore",
+    "url": "https://github.com/github/gitignore",
+    "type": ["release", "config"],
+    "category": "Development/Templates",
+    "tags": ["Template"]
+  },
+  {
+    "name": "commitlint",
+    "url": "https://github.com/conventional-changelog/commitlint",
+    "type": ["sdk", "library"],
+    "category": "Web Development/Frontend",
+    "tags": ["Frontend"]
+  },
+  {
+    "name": "wails",
+    "url": "https://github.com/wailsapp/wails",
+    "type": ["sdk", "framework"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "fyne",
+    "url": "https://github.com/fyne-io/fyne",
+    "type": ["sdk", "framework"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "qt",
+    "url": "https://github.com/therecipe/qt",
+    "type": ["sdk", "library"],
+    "category": "Development/Qt",
+    "tags": ["Android"]
+  },
+  {
+    "name": "gnet",
+    "url": "https://github.com/panjf2000/gnet",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "WindTerm",
+    "url": "https://github.com/kingToolbox/WindTerm",
+    "type": ["release", "app"],
+    "category": "Networking/Terminal",
+    "tags": []
+  },
+  {
+    "name": "SerialTest",
+    "url": "https://github.com/wh201906/SerialTest",
+    "type": ["release", "app"],
+    "category": "Mobile/Android",
+    "tags": ["Android"]
+  },
+  {
+    "name": "handsontable",
+    "url": "https://github.com/handsontable/handsontable",
+    "type": ["sdk", "library"],
+    "category": "Web Development/Frontend",
+    "tags": ["Frontend"]
+  },
+  {
+    "name": "MyIP",
+    "url": "https://github.com/jason5ng32/MyIP",
+    "type": ["release", "service"],
+    "category": "Networking/DNS",
+    "tags": ["DNS"]
+  },
+  {
+    "name": "drawdb",
+    "url": "https://github.com/drawdb-io/drawdb",
+    "type": ["release", "app"],
+    "category": "Development/Database",
+    "tags": ["Frontend"]
+  },
+  {
+    "name": "Sandboxie",
+    "url": "https://github.com/sandboxie-plus/Sandboxie",
+    "type": ["release", "app"],
+    "category": "Windows/Security",
+    "tags": []
+  },
+  {
+    "name": "hoppscotch",
+    "url": "https://github.com/hoppscotch/hoppscotch",
+    "type": ["release", "service"],
+    "category": "Development/API",
+    "tags": ["Frontend"]
+  },
+  {
+    "name": "windows",
+    "url": "https://github.com/dockur/windows",
+    "type": ["release", "service"],
+    "category": "Cloud/Containers",
+    "tags": ["Container", "Docker"]
+  },
+  {
+    "name": "sokit",
+    "url": "https://github.com/sinpolib/sokit",
+    "type": ["release", "app"],
+    "category": "Networking/Tools",
+    "tags": []
+  },
+  {
+    "name": "tailscale",
+    "url": "https://github.com/tailscale/tailscale",
+    "type": ["release", "service"],
+    "category": "Networking/VPN",
+    "tags": ["VPN"]
+  },
+  {
+    "name": "cicada",
+    "url": "https://github.com/mebtte/cicada",
+    "type": ["release", "service"],
+    "category": "Networking/Proxy/Panels",
+    "tags": ["Proxy"]
+  },
+  {
+    "name": "supervisord",
+    "url": "https://github.com/ochinchina/supervisord",
+    "type": ["release", "service"],
+    "category": "System/Process Management",
+    "tags": []
+  },
+  {
+    "name": "sftpgo",
+    "url": "https://github.com/drakkan/sftpgo",
+    "type": ["release", "service"],
+    "category": "Networking/File Transfer",
+    "tags": []
+  },
+  {
+    "name": "chsrc",
+    "url": "https://github.com/RubyMetric/chsrc",
+    "type": ["release", "cli"],
+    "category": "Development/Tools",
+    "tags": []
+  },
+  {
+    "name": "mkcert",
+    "url": "https://github.com/FiloSottile/mkcert",
+    "type": ["release", "cli"],
+    "category": "Security/Certificates",
+    "tags": []
+  },
+  {
+    "name": "gotty",
+    "url": "https://github.com/yudai/gotty",
+    "type": ["release", "service"],
+    "category": "Development/Tools",
+    "tags": []
+  },
+  {
+    "name": "Macast",
+    "url": "https://github.com/xfangfang/Macast",
+    "type": ["release", "app"],
+    "category": "Media/Streaming",
+    "tags": []
+  },
+  {
+    "name": "ImHex",
+    "url": "https://github.com/WerWolv/ImHex",
+    "type": ["release", "app"],
+    "category": "Development/Hex Editor",
+    "tags": []
+  },
+  {
+    "name": "ollama",
+    "url": "https://github.com/ollama/ollama",
+    "type": ["release", "cli"],
+    "category": "AI/LLM",
+    "tags": ["Frontend"]
+  },
+  {
+    "name": "HD-Icons",
+    "url": "https://github.com/xushier/HD-Icons",
+    "type": ["release", "config"],
+    "category": "Design/Icons",
+    "tags": []
+  },
+  {
+    "name": "Moonlight-Switch",
+    "url": "https://github.com/XITRIX/Moonlight-Switch",
+    "type": ["release", "app"],
+    "category": "Gaming/Streaming",
+    "tags": ["Game Streaming"]
+  },
+  {
+    "name": "yet-another-bench-script",
+    "url": "https://github.com/masonr/yet-another-bench-script",
+    "type": ["release", "cli"],
+    "category": "Development/Tools",
+    "tags": []
+  },
+  {
+    "name": "nocodb",
+    "url": "https://github.com/nocodb/nocodb",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/PaaS",
+    "tags": ["Deployment"]
+  },
+  {
+    "name": "lossless-cut",
+    "url": "https://github.com/mifi/lossless-cut",
+    "type": ["release", "app"],
+    "category": "Media/Video",
+    "tags": ["Frontend"]
+  },
+  {
+    "name": "genact",
+    "url": "https://github.com/svenstaro/genact",
+    "type": ["release", "cli"],
+    "category": "Development/Fun",
+    "tags": []
+  },
+  {
+    "name": "syncthing",
+    "url": "https://github.com/syncthing/syncthing",
+    "type": ["release", "service"],
+    "category": "Networking/File Sync",
+    "tags": []
+  },
+  {
+    "name": "rclone",
+    "url": "https://github.com/rclone/rclone",
+    "type": ["release", "cli"],
+    "category": "Networking/File Sync",
+    "tags": []
+  },
+  {
+    "name": "iptv-api",
+    "url": "https://github.com/Guovin/iptv-api",
+    "type": ["release", "service"],
+    "category": "Cloud/Containers",
+    "tags": ["Container", "Docker"]
+  },
+  {
+    "name": "maple-font",
+    "url": "https://github.com/subframe7536/maple-font",
+    "type": ["release", "config"],
+    "category": "Fonts/Programming Fonts",
+    "tags": ["Font"]
+  },
+  {
+    "name": "TVBoxOSC",
+    "url": "https://github.com/j4Uq/TVBoxOSC",
+    "type": ["release", "app"],
+    "category": "Mobile/Android",
+    "tags": ["Android", "TV"]
+  },
+  {
+    "name": "sub-web",
+    "url": "https://github.com/CareyWang/sub-web",
+    "type": ["release", "app"],
+    "category": "Networking/Proxy",
+    "tags": ["Frontend"]
+  },
+  {
+    "name": "bash-oo-framework",
+    "url": "https://github.com/niieani/bash-oo-framework",
+    "type": ["release", "cli"],
+    "category": "Development/Tools",
+    "tags": []
+  },
+  {
+    "name": "starship",
+    "url": "https://github.com/starship/starship",
+    "type": ["release", "cli"],
+    "category": "Development/Shell",
+    "tags": []
+  },
+  {
+    "name": "bat",
+    "url": "https://github.com/sharkdp/bat",
+    "type": ["release", "cli"],
+    "category": "Development/CLI",
+    "tags": []
+  },
+  {
+    "name": "basher",
+    "url": "https://github.com/basherpm/basher",
+    "type": ["release", "cli"],
+    "category": "Windows/Package Managers",
+    "tags": ["Package Manager"]
+  },
+  {
+    "name": "keep",
+    "url": "https://github.com/keephq/keep",
+    "type": ["release", "service"],
+    "category": "Observability/Alerting",
+    "tags": []
+  },
+  {
+    "name": "reader",
+    "url": "https://github.com/hectorqin/reader",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["RSS"]
+  },
+  {
+    "name": "Ventoy",
+    "url": "https://github.com/ventoy/Ventoy",
+    "type": ["release", "app"],
+    "category": "Tools/OS Imaging",
+    "tags": []
+  },
+  {
+    "name": "dasel",
+    "url": "https://github.com/TomWright/dasel",
+    "type": ["release", "cli"],
+    "category": "Development/CLI",
+    "tags": []
+  },
+  {
+    "name": "rufus",
+    "url": "https://github.com/pbatard/rufus",
+    "type": ["release", "app"],
+    "category": "Tools/OS Imaging",
+    "tags": []
+  },
+  {
+    "name": "mermaid",
+    "url": "https://github.com/mermaid-js/mermaid",
+    "type": ["sdk", "library"],
+    "category": "Web Development/Frontend",
+    "tags": ["Frontend"]
+  },
+  {
+    "name": "layui",
+    "url": "https://github.com/layui/layui",
+    "type": ["sdk", "library"],
+    "category": "Web Development/Frontend",
+    "tags": ["Frontend"]
+  },
+  {
+    "name": "go-toml",
+    "url": "https://github.com/pelletier/go-toml",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "rustdesk-api-server",
+    "url": "https://github.com/kingmo888/rustdesk-api-server",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": []
+  },
+  {
+    "name": "githubv4",
+    "url": "https://github.com/shurcooL/githubv4",
+    "type": ["sdk", "api-client"],
+    "category": "Development/CLI",
+    "tags": ["CLI"]
+  },
+  {
+    "name": "gjson",
+    "url": "https://github.com/tidwall/gjson",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "jsonparser",
+    "url": "https://github.com/buger/jsonparser",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "genqlient",
+    "url": "https://github.com/Khan/genqlient",
+    "type": ["sdk", "api-client"],
+    "category": "Development/CLI",
+    "tags": ["Go Template", "CLI"]
+  },
+  {
+    "name": "awesome-go",
+    "url": "https://github.com/avelino/awesome-go",
+    "type": ["release", "config"],
+    "category": "Development/Awesome Lists",
+    "tags": []
+  },
+  {
+    "name": "seed",
+    "url": "https://github.com/golang-templates/seed",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "goldmark",
+    "url": "https://github.com/yuin/goldmark",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "graphql",
+    "url": "https://github.com/graphql-go/graphql",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "project-layout",
+    "url": "https://github.com/golang-standards/project-layout",
+    "type": ["release", "config"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "viper",
+    "url": "https://github.com/spf13/viper",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "cli",
+    "url": "https://github.com/urfave/cli",
+    "type": ["sdk", "framework"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "awesome-tuis",
+    "url": "https://github.com/rothgar/awesome-tuis",
+    "type": ["release", "config"],
+    "category": "Development/Awesome Lists",
+    "tags": ["Awesome List", "Tuis"]
+  },
+  {
+    "name": "yazi",
+    "url": "https://github.com/sxyazi/yazi",
+    "type": ["release", "app"],
+    "category": "Windows/File Management",
+    "tags": ["File Management"]
+  },
+  {
+    "name": "cobra",
+    "url": "https://github.com/spf13/cobra",
+    "type": ["sdk", "framework"],
+    "category": "Development/CLI",
+    "tags": ["CLI"]
+  },
+  {
+    "name": "lancet",
+    "url": "https://github.com/duke-git/lancet",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "go-tools",
+    "url": "https://github.com/dominikh/go-tools",
+    "type": ["sdk", "library"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "bubbletea",
+    "url": "https://github.com/charmbracelet/bubbletea",
+    "type": ["sdk", "framework"],
+    "category": "Development/Go",
+    "tags": []
+  },
+  {
+    "name": "v2rayN",
+    "url": "https://github.com/2dust/v2rayN",
+    "type": ["release", "service"],
+    "category": "Networking/Proxy/Xray",
+    "tags": ["Xray", "Proxy"]
+  },
+  {
+    "name": "Best-README-Template",
+    "url": "https://github.com/othneildrew/Best-README-Template",
+    "type": ["release", "config"],
+    "category": "Development/Templates",
+    "tags": ["Awesome List", "Best Readme Template"]
+  },
+  {
+    "name": "excalidraw",
+    "url": "https://github.com/excalidraw/excalidraw",
+    "type": ["sdk", "library"],
+    "category": "Web Development/Frontend",
+    "tags": ["Frontend"]
+  },
+  {
+    "name": "localsend",
+    "url": "https://github.com/localsend/localsend",
+    "type": ["release", "app"],
+    "category": "Networking/File Transfer",
+    "tags": []
+  },
+  {
+    "name": "FileCodeBox",
+    "url": "https://github.com/vastsa/FileCodeBox",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": []
+  },
+  {
+    "name": "neko",
+    "url": "https://github.com/m1k1o/neko",
+    "type": ["release", "service"],
+    "category": "Cloud/Containers",
+    "tags": ["Container", "Docker"]
+  },
+  {
+    "name": "GPT-SoVITS",
+    "url": "https://github.com/RVC-Boss/GPT-SoVITS",
+    "type": ["sdk", "library"],
+    "category": "AI/Speech",
+    "tags": []
+  },
+  {
+    "name": "UpSnap",
+    "url": "https://github.com/seriousm4x/UpSnap",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["WOL"]
+  },
+  {
+    "name": "Picsur",
+    "url": "https://github.com/CaramelFur/Picsur",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["Photo Management"]
+  },
+  {
+    "name": "immich",
+    "url": "https://github.com/immich-app/immich",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["Photo Management"]
+  },
+  {
+    "name": "hello-algo",
+    "url": "https://github.com/krahets/hello-algo",
+    "type": ["release", "config"],
+    "category": "Education/Algorithms",
+    "tags": []
+  },
+  {
+    "name": "halo",
+    "url": "https://github.com/halo-dev/halo",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": []
+  },
+  {
+    "name": "siyuan",
+    "url": "https://github.com/siyuan-note/siyuan",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": ["Self-Hosted"]
+  },
+  {
+    "name": "AFFiNE",
+    "url": "https://github.com/toeverything/AFFiNE",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Knowledge Base",
+    "tags": ["Knowledge Base"]
+  },
+  {
+    "name": "ntfy",
+    "url": "https://github.com/binwiederhier/ntfy",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": []
+  },
+  {
+    "name": "showdoc",
+    "url": "https://github.com/star7th/showdoc",
+    "type": ["release", "service"],
+    "category": "Self-Hosted/Platforms",
+    "tags": []
+  },
+  {
+    "name": "linux-command",
+    "url": "https://github.com/jaywcjlove/linux-command",
+    "type": ["release", "config"],
+    "category": "Education/Linux",
+    "tags": ["Frontend"]
+  },
+  {
+    "name": "public-apis",
+    "url": "https://github.com/public-apis/public-apis",
+    "type": ["release", "config"],
+    "category": "Development/Awesome Lists",
+    "tags": []
+  },
+  {
+    "name": "public-apis",
+    "url": "https://github.com/toddmotto/public-apis",
+    "type": ["release", "config"],
+    "category": "Development/Awesome Lists",
+    "tags": []
+  },
+  {
+    "name": "tabby",
+    "url": "https://github.com/Eugeny/tabby",
+    "type": ["release", "app"],
+    "category": "Networking/Terminal",
+    "tags": ["Frontend"]
+  },
+  {
+    "name": "envsubst",
+    "url": "https://github.com/a8m/envsubst",
+    "type": ["release", "cli"],
+    "category": "Development/CLI",
+    "tags": []
+  },
+  {
+    "name": "Docker-OSX",
+    "url": "https://github.com/sickcodes/Docker-OSX",
+    "type": ["release", "service"],
+    "category": "Cloud/Containers",
+    "tags": ["Container", "Docker"]
+  },
+  {
+    "name": "RazorEngine",
+    "url": "https://github.com/Antaris/RazorEngine",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET",
+    "tags": [".NET"]
+  },
+  {
+    "name": "fluid",
+    "url": "https://github.com/sebastienros/fluid",
+    "type": ["sdk", "library"],
+    "category": "Development/Templating",
+    "tags": ["Liquid", "Templating"]
+  },
+  {
+    "name": "Etl.Net",
+    "url": "https://github.com/paillave/Etl.Net",
+    "type": ["sdk", "library"],
+    "category": "Development/.NET",
+    "tags": [".NET"]
+  },
+  {
+    "name": "package-manager-proxy-settings",
+    "url": "https://github.com/comwrg/package-manager-proxy-settings",
+    "type": ["release", "config"],
+    "category": "Development/Config",
+    "tags": ["Package Manager"]
+  },
+  {
+    "name": "Docker-Proxy",
+    "url": "https://github.com/dqzboy/Docker-Proxy",
+    "type": ["release", "service"],
+    "category": "Cloud/Containers",
+    "tags": ["Container", "Docker"]
+  },
+  {
+    "name": "Thanks-Mirror",
+    "url": "https://github.com/opsre/Thanks-Mirror",
+    "type": ["release", "config"],
+    "category": "Development/Awesome Lists",
+    "tags": ["Mirror"]
+  },
+  {
+    "name": "Flow.Launcher",
+    "url": "https://github.com/Flow-Launcher/Flow.Launcher",
+    "type": ["release", "app"],
+    "category": "Windows/Productivity",
+    "tags": [".NET"]
+  },
+  {
+    "name": "SukiUI",
+    "url": "https://github.com/kikipoulet/SukiUI",
+    "type": ["sdk", "framework"],
+    "category": "Development/.NET/Desktop",
+    "tags": [".NET", "Desktop"]
+  }
+]

@@ -1,0 +1,1872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Star Repository</title>
+  <script src="https://cdn.jsdelivr.net/npm/alasql@4/dist/alasql.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --background: 0 0% 100%;
+      --foreground: 240 10% 3.9%;
+      --card: 0 0% 100%;
+      --card-foreground: 240 10% 3.9%;
+      --popover: 0 0% 100%;
+      --popover-foreground: 240 10% 3.9%;
+      --primary: 240 5.9% 10%;
+      --primary-foreground: 0 0% 98%;
+      --secondary: 240 4.8% 95.9%;
+      --secondary-foreground: 240 5.9% 10%;
+      --muted: 240 4.8% 95.9%;
+      --muted-foreground: 240 3.8% 46.1%;
+      --accent: 240 4.8% 95.9%;
+      --accent-foreground: 240 5.9% 10%;
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 0 0% 98%;
+      --border: 240 5.9% 90%;
+      --input: 240 5.9% 90%;
+      --ring: 240 5.9% 10%;
+      --radius: 0.5rem;
+      --sidebar-width: 280px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --background: 240 10% 3.9%;
+        --foreground: 0 0% 98%;
+        --card: 240 10% 3.9%;
+        --card-foreground: 0 0% 98%;
+        --popover: 240 10% 3.9%;
+        --popover-foreground: 0 0% 98%;
+        --primary: 0 0% 98%;
+        --primary-foreground: 240 5.9% 10%;
+        --secondary: 240 3.7% 15.9%;
+        --secondary-foreground: 0 0% 98%;
+        --muted: 240 3.7% 15.9%;
+        --muted-foreground: 240 5% 64.9%;
+        --accent: 240 3.7% 15.9%;
+        --accent-foreground: 0 0% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 240 3.7% 15.9%;
+        --input: 240 3.7% 15.9%;
+        --ring: 240 4.9% 83.9%;
+      }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      background-color: hsl(var(--background));
+      color: hsl(var(--foreground));
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      width: 100%;
+      border-bottom: 1px solid hsl(var(--border));
+      background-color: hsl(var(--background) / 0.95);
+      backdrop-filter: blur(8px);
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      white-space: nowrap;
+    }
+
+    .stats {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      font-size: 0.875rem;
+      color: hsl(var(--muted-foreground));
+    }
+
+    .stats span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      background-color: hsl(var(--secondary));
+      color: hsl(var(--secondary-foreground));
+      font-weight: 500;
+    }
+
+    .search-input {
+      margin-left: auto;
+      width: 100%;
+      max-width: 320px;
+      padding: 0.5rem 0.875rem;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+      border: 1px solid hsl(var(--input));
+      border-radius: calc(var(--radius) - 2px);
+      background-color: hsl(var(--background));
+      color: hsl(var(--foreground));
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .search-input::placeholder {
+      color: hsl(var(--muted-foreground));
+    }
+
+    .search-input:focus {
+      border-color: hsl(var(--ring));
+      box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring) / 0.25);
+    }
+
+    .view-switcher {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .view-switcher-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.875rem;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+      border: 1px solid hsl(var(--input));
+      border-radius: calc(var(--radius) - 2px);
+      background-color: hsl(var(--background));
+      color: hsl(var(--foreground));
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .view-switcher-btn:hover {
+      background-color: hsl(var(--accent));
+    }
+
+    .view-switcher-btn:focus {
+      border-color: hsl(var(--ring));
+      box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring) / 0.25);
+    }
+
+    .view-switcher-menu {
+      position: absolute;
+      top: calc(100% + 0.25rem);
+      right: 0;
+      min-width: 140px;
+      background-color: hsl(var(--popover));
+      color: hsl(var(--popover-foreground));
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      box-shadow: 0 10px 15px -3px hsl(var(--foreground) / 0.1), 0 4px 6px -4px hsl(var(--foreground) / 0.1);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-0.25rem);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      z-index: 100;
+      padding: 0.25rem;
+    }
+
+    .view-switcher.open .view-switcher-menu {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .view-switcher-option {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+      border: none;
+      border-radius: calc(var(--radius) - 4px);
+      background-color: transparent;
+      color: hsl(var(--popover-foreground));
+      cursor: pointer;
+      text-align: left;
+      transition: background-color 0.15s ease;
+    }
+
+    .view-switcher-option:hover {
+      background-color: hsl(var(--accent));
+    }
+
+    .view-switcher-option.active {
+      background-color: hsl(var(--secondary));
+      font-weight: 500;
+    }
+
+    .main {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      gap: 2rem;
+      padding: 1.5rem;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      position: sticky;
+      top: calc(73px + 1.5rem);
+      height: calc(100vh - 73px - 3rem);
+      overflow-y: auto;
+      border-radius: var(--radius);
+      border: 1px solid hsl(var(--border));
+      background-color: hsl(var(--card));
+      padding: 1rem;
+    }
+
+    .sidebar-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: hsl(var(--muted-foreground));
+      margin-bottom: 0.75rem;
+      padding: 0 0.5rem;
+    }
+
+    .toc {
+      font-size: 0.875rem;
+    }
+
+    .toc-item {
+      border-radius: calc(var(--radius) - 2px);
+    }
+
+    .toc-row {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .toc-toggle {
+      width: 0.875rem;
+      height: 0.875rem;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      color: hsl(var(--muted-foreground));
+      transition: transform 0.15s ease;
+    }
+
+    .toc-toggle.open {
+      transform: rotate(90deg);
+    }
+
+    .toc-toggle i {
+      width: 12px;
+      height: 12px;
+    }
+
+    .toc-indent {
+      width: 0.875rem;
+      height: 0.875rem;
+      flex-shrink: 0;
+    }
+
+    .toc-link {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.375rem 0.5rem;
+      border-radius: calc(var(--radius) - 2px);
+      transition: background-color 0.15s ease, color 0.15s ease;
+      text-decoration: none;
+      color: hsl(var(--muted-foreground));
+      flex: 1;
+      min-width: 0;
+    }
+
+    .toc-link:hover {
+      background-color: hsl(var(--accent));
+      color: hsl(var(--accent-foreground));
+    }
+
+    .toc-link.active {
+      background-color: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+      font-weight: 500;
+    }
+
+    .toc-label {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .toc-count {
+      font-size: 0.75rem;
+      color: hsl(var(--muted-foreground));
+      background-color: hsl(var(--secondary));
+      padding: 0.125rem 0.375rem;
+      border-radius: 9999px;
+      font-weight: 500;
+      min-width: 1.75rem;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+    }
+
+    .toc-children {
+      margin-left: 0.75rem;
+      padding-left: 0.5rem;
+      border-left: 1px solid hsl(var(--border));
+    }
+
+    .toc-children.hidden {
+      display: none;
+    }
+
+    .category-section {
+      margin-bottom: 2.5rem;
+      content-visibility: auto;
+      contain-intrinsic-size: auto 500px;
+    }
+
+    .category-section.hidden {
+      display: none;
+    }
+
+    .category-header {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid hsl(var(--border));
+    }
+
+    .category-header h2,
+    .category-header h3,
+    .category-header h4 {
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      scroll-margin-top: 100px;
+    }
+
+    .category-header h2 {
+      font-size: 1.5rem;
+    }
+
+    .category-header h3 {
+      font-size: 1.25rem;
+    }
+
+    .category-header h4 {
+      font-size: 1.125rem;
+    }
+
+    .category-count {
+      font-size: 0.875rem;
+      color: hsl(var(--muted-foreground));
+      font-weight: 500;
+    }
+
+    .repo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+    }
+
+    .repo-simple-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .repo-card,
+    .repo-simple-item {
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      background-color: hsl(var(--card));
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      transition: box-shadow 0.15s ease, border-color 0.15s ease;
+      contain: layout style paint;
+    }
+
+    .repo-card:hover,
+    .repo-simple-item:hover {
+      border-color: hsl(var(--ring) / 0.5);
+      box-shadow: 0 4px 6px -1px hsl(var(--foreground) / 0.05), 0 2px 4px -2px hsl(var(--foreground) / 0.05);
+    }
+
+    .repo-card.hidden,
+    .repo-simple-item.hidden {
+      display: none;
+    }
+
+    .repo-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .repo-header-badges {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .repo-title {
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: hsl(var(--foreground));
+      word-break: break-word;
+    }
+
+    .repo-title:hover {
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .repo-archived {
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.25rem 0.5rem;
+      border-radius: calc(var(--radius) - 2px);
+      border: 1px solid hsl(var(--border));
+      background-color: hsl(var(--secondary));
+      color: hsl(var(--secondary-foreground));
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .repo-type-badge {
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.25rem 0.5rem;
+      border-radius: calc(var(--radius) - 2px);
+      border: 1px solid hsl(var(--border));
+      background-color: hsl(var(--secondary));
+      color: hsl(var(--secondary-foreground));
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .repo-desc {
+      font-size: 0.875rem;
+      color: hsl(var(--muted-foreground));
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .repo-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: auto;
+      font-size: 0.8125rem;
+      color: hsl(var(--muted-foreground));
+    }
+
+    .repo-stat {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-weight: 500;
+    }
+
+    .repo-tags {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .repo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.125rem;
+      padding: 0.125rem 0.625rem;
+      border-radius: 9999px;
+      background-color: hsl(var(--secondary));
+      color: hsl(var(--secondary-foreground));
+      font-size: 0.75rem;
+      font-weight: 500;
+      border: 1px solid hsl(var(--border) / 0.6);
+      line-height: 1.25rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 1.5rem;
+      color: hsl(var(--muted-foreground));
+    }
+
+    .loading {
+      text-align: center;
+      padding: 4rem 1.5rem;
+      color: hsl(var(--muted-foreground));
+    }
+
+    .error {
+      text-align: center;
+      padding: 4rem 1.5rem;
+      color: hsl(var(--destructive));
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      margin-left: auto;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid hsl(var(--border));
+      border-radius: calc(var(--radius) - 2px);
+      background-color: hsl(var(--secondary));
+      color: hsl(var(--secondary-foreground));
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    @media (max-width: 1024px) {
+      .main {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+        max-height: 60vh;
+        display: none;
+      }
+
+      .sidebar.open {
+        display: block;
+      }
+
+      .mobile-menu-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .repo-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .search-input {
+        order: 3;
+        max-width: 100%;
+        margin-left: 0;
+        flex: 1;
+      }
+
+      .view-switcher {
+        order: 4;
+      }
+
+      .view-switcher-menu {
+        right: 0;
+      }
+    }
+
+    .icon-14 { width: 14px; height: 14px; }
+    .icon-12 { width: 12px; height: 12px; }
+    .icon-10 { width: 10px; height: 10px; vertical-align: middle; }
+    .icon-dim { color: hsl(var(--muted-foreground)); }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      padding: 0.625rem;
+      border-radius: var(--radius);
+      background-color: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+      border: 1px solid hsl(var(--border));
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      box-shadow: 0 4px 6px -1px hsl(var(--foreground) / 0.1);
+      z-index: 50;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .back-to-top:hover {
+      transform: translateY(-2px);
+    }
+
+    .footer {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 3rem;
+      text-align: center;
+      font-size: 0.875rem;
+      color: hsl(var(--muted-foreground));
+      border-top: 1px solid hsl(var(--border));
+    }
+    .search-wrapper {
+      position: relative;
+      margin-left: auto;
+      max-width: 320px;
+      width: 100%;
+    }
+
+    .search-clear-btn {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      padding: 0 0.625rem;
+      border: none;
+      background: transparent;
+      color: hsl(var(--muted-foreground));
+      font-size: 1.125rem;
+      line-height: 1;
+      cursor: pointer;
+      border-radius: 0 calc(var(--radius) - 2px) calc(var(--radius) - 2px) 0;
+      transition: color 0.15s ease;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-clear-btn:hover {
+      color: hsl(var(--destructive));
+    }
+
+    .adv-search-btn {
+      flex-shrink: 0;
+      padding: 0.5rem 0.875rem;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+      font-weight: 500;
+      border: 1px solid hsl(var(--input));
+      border-radius: calc(var(--radius) - 2px);
+      background-color: hsl(var(--secondary));
+      color: hsl(var(--secondary-foreground));
+      cursor: pointer;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .adv-search-btn:hover {
+      border-color: hsl(var(--ring));
+      background-color: hsl(var(--accent));
+    }
+
+    .adv-search-btn.has-filter {
+      border-color: hsl(217.2 91.2% 59.8%);
+      color: hsl(217.2 91.2% 59.8%);
+      background-color: hsl(217.2 91.2% 59.8% / 0.1);
+    }
+
+    .clear-all-btn {
+      flex-shrink: 0;
+      padding: 0.5rem 0.875rem;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+      font-weight: 500;
+      border: 1px solid hsl(var(--destructive) / 0.3);
+      border-radius: calc(var(--radius) - 2px);
+      background: transparent;
+      color: hsl(var(--destructive));
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.15s ease;
+    }
+
+    .clear-all-btn:hover {
+      background-color: hsl(var(--destructive) / 0.1);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background-color: rgba(0,0,0,0.5);
+      backdrop-filter: blur(2px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-backdrop[hidden] {
+      display: none;
+    }
+
+    .modal-dialog {
+      width: 100%;
+      max-width: 820px;
+      max-height: 90vh;
+      background-color: hsl(var(--background));
+      border: 1px solid hsl(var(--border));
+      border-radius: calc(var(--radius) + 2px);
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid hsl(var(--border));
+    }
+
+    .modal-header h2 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .modal-close-btn {
+      border: none;
+      background: transparent;
+      color: hsl(var(--muted-foreground));
+      cursor: pointer;
+      font-size: 1.25rem;
+      line-height: 1;
+      padding: 0.25rem;
+      border-radius: calc(var(--radius) - 2px);
+      transition: color 0.15s ease, background-color 0.15s ease;
+      display: flex;
+      align-items: center;
+    }
+
+    .modal-close-btn:hover {
+      color: hsl(var(--foreground));
+      background-color: hsl(var(--secondary));
+    }
+
+    .modal-body {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .modal-body-left {
+      width: 35%;
+      flex-shrink: 0;
+      border-right: 1px solid hsl(var(--border));
+      overflow-y: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .modal-body-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+      min-width: 0;
+    }
+
+    .field-ref-title,
+    .presets-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: hsl(var(--muted-foreground));
+      margin: 0 0 0.375rem 0;
+    }
+
+    .field-ref-table {
+      width: 100%;
+      font-size: 0.75rem;
+      border-collapse: collapse;
+    }
+
+    .field-ref-table th,
+    .field-ref-table td {
+      padding: 0.25rem 0.5rem;
+      text-align: left;
+      border-bottom: 1px solid hsl(var(--border) / 0.5);
+    }
+
+    .field-ref-table th {
+      font-weight: 600;
+      color: hsl(var(--muted-foreground));
+      font-size: 0.6875rem;
+    }
+
+    .field-ref-table td:first-child {
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-weight: 500;
+    }
+
+    .field-ref-table td:last-child {
+      color: hsl(var(--muted-foreground));
+      font-style: italic;
+    }
+
+    .preset-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+    }
+
+    .preset-btn {
+      text-align: left;
+      padding: 0.375rem 0.625rem;
+      font-size: 0.75rem;
+      line-height: 1.3;
+      border: 1px solid hsl(var(--border));
+      border-radius: calc(var(--radius) - 2px);
+      background-color: hsl(var(--background));
+      color: hsl(var(--foreground));
+      cursor: pointer;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+
+    .preset-btn:hover {
+      border-color: hsl(var(--ring));
+      background-color: hsl(var(--secondary));
+    }
+
+    .preset-btn code {
+      display: block;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 0.6875rem;
+      color: hsl(var(--muted-foreground));
+      margin-top: 0.125rem;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .sql-textarea {
+      flex: 1;
+      min-height: 200px;
+      padding: 0.75rem;
+      font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, monospace;
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      border: 1px solid hsl(var(--input));
+      border-radius: calc(var(--radius) - 2px);
+      background-color: hsl(var(--secondary) / 0.5);
+      color: hsl(var(--foreground));
+      outline: none;
+      resize: vertical;
+      tab-size: 2;
+    }
+
+    .sql-textarea:focus {
+      border-color: hsl(var(--ring));
+      box-shadow: 0 0 0 2px hsl(var(--ring) / 0.15);
+    }
+
+    .sql-textarea::placeholder {
+      color: hsl(var(--muted-foreground));
+      opacity: 0.6;
+    }
+
+    .sql-error {
+      margin-top: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: calc(var(--radius) - 2px);
+      background-color: hsl(0 84.2% 60.2% / 0.1);
+      color: hsl(var(--destructive));
+      font-size: 0.8125rem;
+      line-height: 1.4;
+    }
+
+    .sql-error[hidden] {
+      display: none;
+    }
+
+    .modal-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      border-top: 1px solid hsl(var(--border));
+    }
+
+    .modal-footer .btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      line-height: 1.25rem;
+      border-radius: calc(var(--radius) - 2px);
+      cursor: pointer;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+
+    .btn-clear {
+      border: 1px solid hsl(var(--input));
+      background-color: hsl(var(--background));
+      color: hsl(var(--foreground));
+      margin-right: auto;
+    }
+
+    .btn-clear:hover {
+      background-color: hsl(var(--secondary));
+    }
+
+    .btn-cancel {
+      border: 1px solid hsl(var(--input));
+      background-color: hsl(var(--background));
+      color: hsl(var(--foreground));
+    }
+
+    .btn-cancel:hover {
+      background-color: hsl(var(--secondary));
+    }
+
+    .btn-submit {
+      border: 1px solid hsl(var(--primary));
+      background-color: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+    }
+
+    .btn-submit:hover {
+      opacity: 0.9;
+    }
+
+    @media (max-width: 1024px) {
+      .search-wrapper {
+        order: 3;
+        flex: 1;
+      }
+
+      .adv-search-btn {
+        order: 5;
+      }
+
+      .clear-all-btn {
+        order: 6;
+      }
+
+      .modal-body {
+        flex-direction: column;
+      }
+
+      .modal-body-left {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid hsl(var(--border));
+        max-height: 200px;
+      }
+
+      .modal-body-right {
+        min-height: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <h1>⭐ Star Repository</h1>
+      <div class="stats" id="stats">
+        <span>Loading...</span>
+      </div>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        Menu
+      </button>
+      <div class="search-wrapper">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search repositories..." autocomplete="off">
+        <button class="search-clear-btn" id="searchClearBtn" aria-label="Clear search" hidden>&times;</button>
+      </div>
+      <button class="adv-search-btn" id="advSearchBtn" title="Advanced SQL search">Advanced</button>
+      <button class="clear-all-btn" id="clearAllBtn">Clear</button>
+      <div class="view-switcher" id="viewSwitcher">
+        <button class="view-switcher-btn" id="viewSwitcherBtn" aria-haspopup="listbox" aria-expanded="false">
+          <span id="viewSwitcherLabel">Card</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="view-switcher-menu" id="viewSwitcherMenu" role="listbox" aria-label="View options">
+          <button class="view-switcher-option active" data-view="card" role="option" aria-selected="true">Card</button>
+          <button class="view-switcher-option" data-view="simple" role="option" aria-selected="false">Simple</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-title">Table of Contents</div>
+      <nav class="toc" id="toc"></nav>
+    </aside>
+
+    <main class="content" id="content">
+      <div class="loading">Loading repositories...</div>
+    </main>
+  </div>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+  </button>
+
+  <footer class="footer">
+    Generated by <a href="https://github.com/gududege/golang-toolkit/tree/main/track-repository" style="text-decoration: underline;">track repository</a> tool.
+  </footer>
+
+  <div class="modal-backdrop" id="advSearchModal" hidden>
+    <div class="modal-dialog" role="dialog" aria-labelledby="advSearchModalTitle">
+      <div class="modal-header">
+        <h2 id="advSearchModalTitle">Advanced Search</h2>
+        <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-body-left">
+          <div>
+            <p class="field-ref-title">Available Fields</p>
+            <table class="field-ref-table" id="fieldRefTable">
+              <thead><tr><th>Field</th><th>Type</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div>
+            <p class="presets-title">Preset Queries</p>
+            <div class="preset-list" id="presetList"></div>
+          </div>
+        </div>
+        <div class="modal-body-right">
+          <textarea class="sql-textarea" id="sqlTextarea" spellcheck="false"
+            placeholder="SELECT * FROM repos WHERE stars > 1000 AND languages LIKE '%TypeScript%' ORDER BY stars DESC&#10;&#10;Table name: repos&#10;Fields: name, description, stars, forks, category, tags, languages, url, archived, updatedat, createdat, pushedat, namewithowner"
+          ></textarea>
+          <div class="sql-error" id="sqlError" hidden></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-clear" id="sqlClearBtn">Clear</button>
+        <button class="btn btn-cancel" id="sqlCancelBtn">Cancel</button>
+        <button class="btn btn-submit" id="sqlSubmitBtn">Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // __REPO_DATA_START__
+    const REPO_DATA = [];
+    // __REPO_DATA_END__
+
+    (function() {
+      let allRepos = [];
+      let categoryTree = {};
+      let flatCategories = [];
+      let currentView = 'card';
+      let intersectionObserver = null;
+      let sortedEntries = [];
+
+      function normalizeRepo(raw) {
+        return {
+          name: raw.name || '',
+          url: raw.url || '',
+          type: raw.type || [],
+          category: raw.category || '',
+          tags: raw.tags || [],
+          nameWithOwner: raw.name_with_owner || '',
+          description: raw.description || '',
+          starCount: raw.star_count || 0,
+          forkCount: raw.fork_count || 0,
+          updatedAt: raw.updated_at || '',
+          createdAt: raw.created_at || '',
+          pushedAt: raw.pushed_at || '',
+          isArchived: raw.is_archived || false,
+          languages: raw.languages || [],
+        };
+      }
+
+      const contentEl = document.getElementById('content');
+      const tocEl = document.getElementById('toc');
+      const statsEl = document.getElementById('stats');
+      const searchInput = document.getElementById('searchInput');
+      const sidebar = document.getElementById('sidebar');
+      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+      const backToTop = document.getElementById('backToTop');
+      const viewSwitcher = document.getElementById('viewSwitcher');
+      const viewSwitcherBtn = document.getElementById('viewSwitcherBtn');
+      const viewSwitcherLabel = document.getElementById('viewSwitcherLabel');
+      const viewSwitcherMenu = document.getElementById('viewSwitcherMenu');
+      const viewOptions = viewSwitcherMenu.querySelectorAll('.view-switcher-option');
+      const advSearchBtn = document.getElementById('advSearchBtn');
+      const advSearchModal = document.getElementById('advSearchModal');
+      const sqlTextarea = document.getElementById('sqlTextarea');
+      const sqlError = document.getElementById('sqlError');
+      const sqlSubmitBtn = document.getElementById('sqlSubmitBtn');
+      const sqlCancelBtn = document.getElementById('sqlCancelBtn');
+      const sqlClearBtn = document.getElementById('sqlClearBtn');
+      const modalCloseBtn = document.getElementById('modalCloseBtn');
+      const fieldRefTable = document.getElementById('fieldRefTable');
+      const presetList = document.getElementById('presetList');
+      const clearAllBtn = document.getElementById('clearAllBtn');
+      const searchClearBtn = document.getElementById('searchClearBtn');
+      let advancedFilteredUrls = null;
+
+      const PRESET_QUERIES = [
+        { label: 'Popular TypeScript repos (stars > 5k)', sql: "SELECT * FROM repos WHERE stars > 5000 AND languages LIKE '%TypeScript%' ORDER BY stars DESC" },
+        { label: 'Active non-archived repos', sql: "SELECT * FROM repos WHERE archived = 0 ORDER BY stars DESC" },
+        { label: 'Recently updated (since 2025)', sql: "SELECT * FROM repos WHERE updatedat > '2025-01-01' ORDER BY updatedat DESC" },
+        { label: 'Frontend frameworks', sql: "SELECT * FROM repos WHERE category LIKE 'Frontend%' ORDER BY stars DESC" },
+        { label: 'AI / Machine Learning', sql: "SELECT * FROM repos WHERE category LIKE '%AI%' OR category LIKE '%ML%' OR description LIKE '%machine learning%' ORDER BY stars DESC" },
+        { label: 'HTTP / API tools', sql: "SELECT * FROM repos WHERE tags LIKE '%http%' OR tags LIKE '%api%' OR description LIKE '%api%' OR description LIKE '%http%' ORDER BY stars DESC" },
+        { label: 'New repos (since 2024)', sql: "SELECT * FROM repos WHERE createdat > '2024-01-01' ORDER BY createdat DESC" },
+        { label: 'Archived repos', sql: "SELECT * FROM repos WHERE archived = 1 ORDER BY stars DESC" }
+      ];
+
+      const starI = '<i data-lucide="star" class="icon-14"></i>';
+      const forkI = '<i data-lucide="git-fork" class="icon-14"></i>';
+      const calI = '<i data-lucide="calendar-fold" class="icon-14"></i>';
+      const chevI = '<i data-lucide="chevron-right" class="icon-12"></i>';
+
+      function debounce(fn, delay) {
+        let timer;
+        return function(...args) {
+          clearTimeout(timer);
+          timer = setTimeout(() => fn.apply(this, args), delay);
+        };
+      }
+
+      function formatNumber(num) {
+        if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + 'M';
+        if (num >= 1_000) return (num / 1_000).toFixed(1) + 'k';
+        return num.toString();
+      }
+
+      function formatDate(iso) {
+        if (!iso) return '';
+        const d = new Date(iso);
+        return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+      }
+
+      function slugify(text) {
+        return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      }
+
+      function buildCategoryTree(repos) {
+        const root = {};
+        repos.forEach(repo => {
+          const parts = (repo.category || 'Uncategorized').split('/').map(p => p.trim()).filter(Boolean);
+          let node = root;
+          parts.forEach((part, idx) => {
+            if (!node[part]) {
+              node[part] = { _children: {}, _repos: [], _depth: idx + 1, _path: parts.slice(0, idx + 1).join('/') };
+            }
+            if (idx === parts.length - 1) {
+              node[part]._repos.push(repo);
+            }
+            node = node[part]._children;
+          });
+        });
+        return root;
+      }
+
+      function sortTree(tree) {
+        const entries = Object.entries(tree).sort((a, b) => a[0].localeCompare(b[0]));
+        entries.forEach(([_, node]) => {
+          if (Object.keys(node._children).length) {
+            node._childrenSorted = sortTree(node._children);
+          }
+          node._repos.sort((a, b) => (b.starCount || 0) - (a.starCount || 0));
+        });
+        return entries;
+      }
+
+      function collectCategories(entries, list = []) {
+        entries.forEach(([name, node]) => {
+          list.push({ name, path: node._path, depth: node._depth, count: countRepos(node) });
+          if (node._childrenSorted) {
+            collectCategories(node._childrenSorted, list);
+          }
+        });
+        return list;
+      }
+
+      function countRepos(node) {
+        let total = node._repos.length;
+        for (const child of Object.values(node._children)) {
+          total += countRepos(child);
+        }
+        return total;
+      }
+
+      function getFirstLeafPath(node) {
+        let current = node;
+        while (Object.keys(current._children).length > 0) {
+          const firstChildName = Object.entries(current._children).sort((a, b) => a[0].localeCompare(b[0]))[0][0];
+          current = current._children[firstChildName];
+        }
+        return current._path;
+      }
+
+      function getTocHref(node) {
+        if (node._repos.length > 0) {
+          return '#cat-' + slugify(node._path);
+        }
+        if (Object.keys(node._children).length > 0) {
+          return '#cat-' + slugify(getFirstLeafPath(node));
+        }
+        return '#cat-' + slugify(node._path);
+      }
+
+      function renderTOC(entries, container, depth) {
+        if (!entries.length) return;
+        depth = depth || 0;
+
+        entries.forEach(([name, node]) => {
+          const hasChildren = node._childrenSorted && node._childrenSorted.length > 0;
+          const countHtml = `<span class="toc-count">${countRepos(node)}</span>`;
+
+          const item = document.createElement('div');
+          item.className = 'toc-item';
+          item.dataset.path = node._path;
+
+          const row = document.createElement('div');
+          row.className = 'toc-row';
+
+          if (hasChildren) {
+            const toggle = document.createElement('button');
+            toggle.className = 'toc-toggle';
+            if (node._depth <= 1) toggle.classList.add('open');
+            toggle.innerHTML = chevI;
+            toggle.addEventListener('click', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toggle.classList.toggle('open');
+              children.classList.toggle('hidden');
+            });
+            row.appendChild(toggle);
+          } else {
+            const indent = document.createElement('span');
+            indent.className = 'toc-indent';
+            row.appendChild(indent);
+          }
+
+          const link = document.createElement('a');
+          link.className = 'toc-link';
+          link.href = getTocHref(node);
+          link.innerHTML = `<span class="toc-label">${escapeHtml(name)}</span>${countHtml}`;
+          link.addEventListener('click', () => {
+            if (window.innerWidth <= 1024) {
+              sidebar.classList.remove('open');
+            }
+          });
+          row.appendChild(link);
+          item.appendChild(row);
+
+          if (hasChildren) {
+            const children = document.createElement('div');
+            children.className = 'toc-children';
+            if (node._depth > 1) children.classList.add('hidden');
+            renderTOC(node._childrenSorted, children, depth + 1);
+            item.appendChild(children);
+          }
+
+          container.appendChild(item);
+        });
+      }
+
+      function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      function renderRepoCard(repo) {
+        const card = document.createElement('article');
+        card.className = 'repo-card';
+        card.dataset.search = ((repo.name || '') + ' ' + (repo.description || '') + ' ' + (repo.category || '') + ' ' + (repo.tags || []).join(' ')).toLowerCase();
+        card.dataset.repoUrl = repo.url;
+
+        const typeDisplay = (repo.type || []).join('/');
+        const typeBadge = typeDisplay ? `<span class="repo-type-badge"><i data-lucide="layers" class="icon-10"></i> ${escapeHtml(typeDisplay)}</span>` : '';
+        const archivedBadge = repo.isArchived ? '<span class="repo-archived"><i data-lucide="archive" class="icon-10"></i> Archived</span>' : '';
+        const tagBadges = (repo.tags || []).map(tag => `<span class="repo-badge repo-tag"><i data-lucide="hash" class="icon-10"></i>${escapeHtml(tag)}</span>`).join('');
+        const langBadges = (repo.languages || []).slice(0, 3).map(lang => `<span class="repo-badge repo-lang"><i data-lucide="code" class="icon-10"></i>${escapeHtml(lang)}</span>`).join('');
+
+        card.innerHTML = `
+          <div class="repo-header">
+            <a href="${escapeHtml(repo.url)}" target="_blank" rel="noopener noreferrer" class="repo-title">${escapeHtml(repo.nameWithOwner || repo.name)}</a>
+            <div class="repo-header-badges">${typeBadge}${archivedBadge}</div>
+          </div>
+          <div class="repo-desc" title="${escapeHtml(repo.description || '')}">${escapeHtml(repo.description || 'No description provided.')}</div>
+          <div class="repo-tags">${langBadges}${tagBadges}</div>
+          <div class="repo-meta">
+            <span class="repo-stat">${starI} ${formatNumber(repo.starCount || 0)}</span>
+            <span class="repo-stat">${forkI} ${formatNumber(repo.forkCount || 0)}</span>
+            <span class="repo-stat">${calI} ${formatDate(repo.updatedAt)}</span>
+          </div>
+        `;
+
+        return card;
+      }
+
+      function renderCategorySection(name, node, container, level = 2) {
+        const section = document.createElement('section');
+        section.className = 'category-section';
+        section.dataset.path = node._path;
+
+        const sectionId = 'cat-' + slugify(node._path);
+        const header = document.createElement('div');
+        header.className = 'category-header';
+        const heading = document.createElement('h' + Math.min(level, 4));
+        heading.id = sectionId;
+        heading.textContent = node._path;
+
+        const count = document.createElement('span');
+        count.className = 'category-count';
+        count.textContent = `${node._repos.length} repo${node._repos.length !== 1 ? 's' : ''}`;
+
+        header.appendChild(heading);
+        header.appendChild(count);
+        section.appendChild(header);
+
+        if (node._repos.length) {
+          const cardGrid = document.createElement('div');
+          cardGrid.className = 'repo-grid';
+          cardGrid.setAttribute('data-view', 'card');
+          node._repos.forEach(repo => cardGrid.appendChild(renderRepoCard(repo)));
+
+          const simpleList = document.createElement('div');
+          simpleList.className = 'repo-simple-list';
+          simpleList.setAttribute('data-view', 'simple');
+          node._repos.forEach(repo => simpleList.appendChild(renderRepoCard(repo)));
+
+          section.appendChild(cardGrid);
+          section.appendChild(simpleList);
+          applyViewDisplay(section, currentView);
+        }
+
+        if (node._childrenSorted && node._childrenSorted.length) {
+          node._childrenSorted.forEach(([childName, childNode]) => {
+            section.appendChild(renderCategorySection(childName, childNode, section, level + 1));
+          });
+        }
+
+        container.appendChild(section);
+        return section;
+      }
+
+      function applyViewDisplay(container, view) {
+        container.querySelectorAll('[data-view]').forEach(el => {
+          el.style.display = el.getAttribute('data-view') === view ? '' : 'none';
+        });
+      }
+
+      function renderContent(entries) {
+        contentEl.innerHTML = '';
+        entries.forEach(([name, node]) => {
+          renderCategorySection(name, node, contentEl);
+        });
+      }
+
+      function updateStats(repos) {
+        repos = repos || allRepos;
+        const categories = new Set();
+        repos.forEach(r => categories.add(r.category));
+        const languages = new Set();
+        repos.forEach(r => (r.languages || []).forEach(l => languages.add(l)));
+        const tagsSet = new Set();
+        repos.forEach(r => (r.tags || []).forEach(t => tagsSet.add(t)));
+
+        statsEl.innerHTML = `
+          <span><i data-lucide="warehouse" class="icon-14"></i> ${formatNumber(repos.length)} repos</span>
+          <span><i data-lucide="book-type" class="icon-14"></i> ${formatNumber(categories.size)} categories</span>
+          <span><i data-lucide="code" class="icon-14"></i> ${formatNumber(languages.size)} languages</span>
+          <span><i data-lucide="hash" class="icon-14"></i> ${formatNumber(tagsSet.size)} tags</span>
+        `;
+        if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+      }
+
+      function applySearch(query) {
+        const q = query.trim().toLowerCase();
+        const sections = contentEl.querySelectorAll('.category-section');
+        const itemSelector = '.repo-card';
+
+        if (!q) {
+          sections.forEach(s => {
+            s.classList.remove('hidden');
+            s.querySelectorAll('.repo-card.hidden').forEach(c => c.classList.remove('hidden'));
+          });
+          tocEl.querySelectorAll('.toc-link').forEach(a => a.classList.remove('active'));
+          tocEl.querySelectorAll('.toc-item').forEach(el => el.style.display = '');
+          restoreOriginalTocCounts();
+          updateCategoryCounts(sections);
+          updateStats(allRepos);
+          return;
+        }
+
+        const filteredRepos = [];
+        sections.forEach(section => {
+          section.querySelectorAll('.repo-card').forEach(el => {
+            const match = el.dataset.search.includes(q);
+            el.classList.toggle('hidden', !match);
+          });
+        });
+
+        allRepos.forEach(repo => {
+          const searchText = ((repo.name || '') + ' ' + (repo.description || '') + ' ' + (repo.category || '') + ' ' + (repo.tags || []).join(' ')).toLowerCase();
+          if (searchText.includes(q)) filteredRepos.push(repo);
+        });
+
+        Array.from(sections).reverse().forEach(section => {
+          const viewContainer = section.querySelector(':scope > [data-view="' + currentView + '"]');
+          const hasVisibleCards = viewContainer ? viewContainer.querySelectorAll(itemSelector + ':not(.hidden)').length > 0 : false;
+          const childSections = section.querySelectorAll(':scope > .category-section');
+          const hasVisibleChildren = Array.from(childSections).some(s => !s.classList.contains('hidden'));
+          section.classList.toggle('hidden', !hasVisibleCards && !hasVisibleChildren);
+        });
+
+        updateCategoryCounts(sections);
+        updateTocCounts(q);
+        updateStats(filteredRepos);
+      }
+
+      function updateCategoryCounts(sections) {
+        const itemSelector = '.repo-card';
+        sections.forEach(section => {
+          const countEl = section.querySelector(':scope > .category-header > .category-count');
+          if (!countEl) return;
+          const viewContainer = section.querySelector(':scope > [data-view="' + currentView + '"]');
+          const visible = viewContainer ? viewContainer.querySelectorAll(itemSelector + ':not(.hidden)').length : 0;
+          countEl.textContent = visible + ' repo' + (visible !== 1 ? 's' : '');
+        });
+      }
+
+      function updateTocCounts(query) {
+        tocEl.querySelectorAll('.toc-count').forEach(el => {
+          const parent = el.closest('.toc-item');
+          if (!parent) return;
+          const path = parent.dataset.path;
+          if (!path) return;
+          const count = allRepos.filter(r => {
+            const searchText = ((r.name || '') + ' ' + (r.description || '') + ' ' + (r.category || '') + ' ' + (r.tags || []).join(' ')).toLowerCase();
+            return (r.category || '').startsWith(path) && searchText.includes(query);
+          }).length;
+          el.textContent = count;
+          const tocItem = el.closest('.toc-item');
+          if (tocItem) tocItem.style.display = count === 0 ? 'none' : '';
+        });
+      }
+
+      function restoreOriginalTocCounts() {
+        function walk(nodes) {
+          nodes.forEach(([name, node]) => {
+            const path = node._path;
+            const el = tocEl.querySelector('[data-path="' + path.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"]');
+            if (el) {
+              const countEl = el.querySelector('.toc-count');
+              if (countEl) countEl.textContent = countRepos(node);
+            }
+            if (node._childrenSorted) walk(node._childrenSorted);
+          });
+        }
+        walk(sortedEntries);
+      }
+
+      function setView(view) {
+        currentView = view;
+        viewSwitcherLabel.textContent = view.charAt(0).toUpperCase() + view.slice(1);
+        viewOptions.forEach(opt => {
+          const isActive = opt.dataset.view === view;
+          opt.classList.toggle('active', isActive);
+          opt.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+        viewSwitcher.classList.remove('open');
+        viewSwitcherBtn.setAttribute('aria-expanded', 'false');
+
+        contentEl.querySelectorAll('.category-section').forEach(section => {
+          applyViewDisplay(section, view);
+        });
+        if (advancedFilteredUrls) {
+          const allItems = contentEl.querySelectorAll('.repo-card');
+          allItems.forEach(el => {
+            el.classList.toggle('hidden', !advancedFilteredUrls.has(el.dataset.repoUrl));
+          });
+          const sections = contentEl.querySelectorAll('.category-section');
+          const itemSelector = '.repo-card';
+          Array.from(sections).reverse().forEach(section => {
+            const vc = section.querySelector(':scope > [data-view="' + currentView + '"]');
+            const hasVisible = vc ? vc.querySelectorAll(itemSelector + ':not(.hidden)').length > 0 : false;
+            const childSections = section.querySelectorAll(':scope > .category-section');
+            const hasVisibleChildren = Array.from(childSections).some(s => !s.classList.contains('hidden'));
+            section.classList.toggle('hidden', !hasVisible && !hasVisibleChildren);
+          });
+          updateCategoryCounts(sections);
+          updateStats(allRepos.filter(r => advancedFilteredUrls.has(r.url)));
+        } else {
+          applySearch(searchInput.value);
+        }
+        setupIntersectionObserver();
+      }
+
+      function setupIntersectionObserver() {
+        if (!window.IntersectionObserver) return;
+
+        if (intersectionObserver) {
+          intersectionObserver.disconnect();
+        }
+
+        const headings = contentEl.querySelectorAll('h2[id], h3[id], h4[id]');
+        if (!headings.length) return;
+
+        intersectionObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const id = entry.target.id;
+              const path = entry.target.closest('.category-section')?.dataset.path;
+              if (path) {
+                tocEl.querySelectorAll('.toc-link').forEach(a => a.classList.remove('active'));
+                const activeLink = tocEl.querySelector(`.toc-link[href="#${id}"]`);
+                if (activeLink) {
+                  activeLink.classList.add('active');
+                  let parent = activeLink.closest('.toc-children');
+                  while (parent) {
+                    parent.classList.remove('hidden');
+                    const toggle = parent.parentElement.querySelector('.toc-toggle');
+                    if (toggle) toggle.classList.add('open');
+                    parent = parent.parentElement.closest('.toc-children');
+                  }
+                }
+              }
+            }
+          });
+        }, {
+          rootMargin: '-80px 0px -70% 0px',
+          threshold: 0
+        });
+
+        headings.forEach(h => intersectionObserver.observe(h));
+      }
+
+      function setupAlaSQL() {
+        const sqlData = allRepos.map((repo, i) => ({
+          _id: i,
+          name: repo.name,
+          description: repo.description,
+          stars: repo.starCount,
+          forks: repo.forkCount,
+          category: repo.category,
+          type: (repo.type || []).join('/'),
+          tags: (repo.tags || []).join(','),
+          languages: (repo.languages || []).join(','),
+          archived: repo.isArchived ? 1 : 0,
+          updatedat: repo.updatedAt,
+          createdat: repo.createdAt,
+          pushedat: repo.pushedAt,
+          url: repo.url,
+          namewithowner: repo.nameWithOwner
+        }));
+        if (typeof alasql === 'undefined') {
+          advSearchBtn.disabled = true;
+          advSearchBtn.title = 'AlaSQL library not loaded';
+          return;
+        }
+        alasql('CREATE TABLE IF NOT EXISTS repos');
+        alasql.tables.repos.data = sqlData;
+        advSearchBtn.disabled = false;
+      }
+
+      function generateFieldRef() {
+        const tbody = fieldRefTable.querySelector('tbody');
+        tbody.innerHTML = '';
+
+        const row = (alasql.tables.repos && alasql.tables.repos.data || [])[0];
+        if (!row) return;
+
+        for (const key of Object.keys(row)) {
+          if (key === '_id') continue;
+          const val = row[key];
+          let type = typeof val;
+          if (key === 'archived')   type = 'int (0/1)';
+          if (key === 'tags' || key === 'languages') type = 'string (CSV)';
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${key}</td><td>${type}</td>`;
+          tbody.appendChild(tr);
+        }
+      }
+
+      function generatePresets() {
+        presetList.innerHTML = '';
+        PRESET_QUERIES.forEach(p => {
+          const btn = document.createElement('button');
+          btn.className = 'preset-btn';
+          btn.innerHTML = `${p.label}<code>${p.sql}</code>`;
+          btn.addEventListener('click', () => {
+            sqlTextarea.value = p.sql;
+            sqlError.hidden = true;
+          });
+          presetList.appendChild(btn);
+        });
+      }
+
+      function openAdvancedSearch() {
+        if (advSearchBtn.disabled) return;
+        generateFieldRef();
+        generatePresets();
+        sqlError.hidden = true;
+        advSearchModal.hidden = false;
+        setTimeout(() => sqlTextarea.focus(), 100);
+      }
+
+      function closeAdvancedSearch() {
+        advSearchModal.hidden = true;
+      }
+
+      function executeAdvancedSearch() {
+        const sql = sqlTextarea.value.trim();
+        if (!sql) {
+          sqlError.textContent = 'Please enter a SQL query.';
+          sqlError.hidden = false;
+          return;
+        }
+        try {
+          const result = alasql(sql);
+          if (!Array.isArray(result) || result.length === 0) {
+            sqlError.textContent = 'No repos matched.';
+            sqlError.hidden = false;
+            return;
+          }
+          if (!result[0].hasOwnProperty('_id')) {
+            sqlError.textContent = 'Query must SELECT from the repos table. Try: SELECT * FROM repos WHERE ...';
+            sqlError.hidden = false;
+            return;
+          }
+          sqlError.hidden = true;
+          applyAdvancedSearchFilter(result);
+          closeAdvancedSearch();
+        } catch (e) {
+          sqlError.textContent = 'SQL error: ' + e.message;
+          sqlError.hidden = false;
+        }
+      }
+
+      function applyAdvancedSearchFilter(result) {
+        searchInput.value = '';
+        searchClearBtn.hidden = true;
+
+        const matchedUrls = new Set();
+        result.forEach(row => {
+          const repo = allRepos[row._id];
+          if (repo && repo.url) matchedUrls.add(repo.url);
+        });
+
+        if (matchedUrls.size === 0) return;
+
+        advancedFilteredUrls = matchedUrls;
+        advSearchBtn.classList.add('has-filter');
+
+        const sections = contentEl.querySelectorAll('.category-section');
+        const itemSelector = '.repo-card';
+
+        sections.forEach(section => {
+          section.querySelectorAll('.repo-card').forEach(el => {
+            el.classList.toggle('hidden', !matchedUrls.has(el.dataset.repoUrl));
+          });
+        });
+
+        const filteredRepos = allRepos.filter(r => matchedUrls.has(r.url));
+
+        Array.from(sections).reverse().forEach(section => {
+          const viewContainer = section.querySelector(':scope > [data-view="' + currentView + '"]');
+          const hasVisibleItems = viewContainer ? viewContainer.querySelectorAll(itemSelector + ':not(.hidden)').length > 0 : false;
+          const childSections = section.querySelectorAll(':scope > .category-section');
+          const hasVisibleChildren = Array.from(childSections).some(s => !s.classList.contains('hidden'));
+          section.classList.toggle('hidden', !hasVisibleItems && !hasVisibleChildren);
+        });
+
+        updateCategoryCounts(sections);
+        updateStats(filteredRepos);
+        tocEl.querySelectorAll('.toc-link').forEach(a => a.classList.remove('active'));
+        tocEl.querySelectorAll('.toc-item').forEach(el => el.style.display = '');
+        restoreOriginalTocCounts();
+      }
+
+      function clearAdvancedFilter() {
+        advancedFilteredUrls = null;
+        advSearchBtn.classList.remove('has-filter');
+
+        const sections = contentEl.querySelectorAll('.category-section');
+        sections.forEach(s => {
+          s.classList.remove('hidden');
+          s.querySelectorAll('.repo-card.hidden')
+            .forEach(c => c.classList.remove('hidden'));
+        });
+        tocEl.querySelectorAll('.toc-link').forEach(a => a.classList.remove('active'));
+        tocEl.querySelectorAll('.toc-item').forEach(el => el.style.display = '');
+        restoreOriginalTocCounts();
+        updateCategoryCounts(sections);
+        updateStats(allRepos);
+      }
+
+      function loadData() {
+        if (!REPO_DATA || !REPO_DATA.length) {
+          contentEl.innerHTML = `<div class="empty-state">No repositories found. Run the generator to populate data.</div>`;
+          return;
+        }
+
+        allRepos = REPO_DATA.map(normalizeRepo);
+        categoryTree = buildCategoryTree(allRepos);
+        sortedEntries = sortTree(categoryTree);
+        flatCategories = collectCategories(sortedEntries);
+
+        setupAlaSQL();
+
+        renderTOC(sortedEntries, tocEl);
+        renderContent(sortedEntries);
+        if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+        updateStats();
+        setupIntersectionObserver();
+      }
+
+      searchInput.addEventListener('input', debounce((e) => {
+        if (advancedFilteredUrls) clearAdvancedFilter();
+        applySearch(e.target.value);
+      }, 200));
+
+      mobileMenuBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+      });
+
+      backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      window.addEventListener('scroll', () => {
+        backToTop.classList.toggle('visible', window.scrollY > 400);
+      });
+
+      viewSwitcherBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = viewSwitcher.classList.toggle('open');
+        viewSwitcherBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+
+      viewOptions.forEach(opt => {
+        opt.addEventListener('click', () => {
+          setView(opt.dataset.view);
+        });
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!viewSwitcher.contains(e.target)) {
+          viewSwitcher.classList.remove('open');
+          viewSwitcherBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      // Advanced search button
+      advSearchBtn.addEventListener('click', openAdvancedSearch);
+
+      // Modal buttons
+      modalCloseBtn.addEventListener('click', closeAdvancedSearch);
+      sqlCancelBtn.addEventListener('click', closeAdvancedSearch);
+      sqlSubmitBtn.addEventListener('click', executeAdvancedSearch);
+      sqlClearBtn.addEventListener('click', () => {
+        sqlTextarea.value = '';
+        sqlError.hidden = true;
+        sqlTextarea.focus();
+      });
+      clearAllBtn.addEventListener('click', () => {
+        const hasFilter = advancedFilteredUrls || searchInput.value.trim();
+        if (!hasFilter) return;
+        if (advancedFilteredUrls) clearAdvancedFilter();
+        searchInput.value = '';
+        searchClearBtn.hidden = true;
+        applySearch('');
+      });
+
+      // Basic search clear button
+      searchClearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        searchClearBtn.hidden = true;
+        searchInput.focus();
+        if (advancedFilteredUrls) clearAdvancedFilter();
+        applySearch('');
+      });
+
+      // Show/hide basic search clear button
+      searchInput.addEventListener('input', () => {
+        searchClearBtn.hidden = !searchInput.value;
+      });
+
+      // Escape key handling
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (!advSearchModal.hidden) {
+            closeAdvancedSearch();
+            return;
+          }
+          if (document.activeElement === searchInput && searchInput.value) {
+            searchInput.value = '';
+            searchClearBtn.hidden = true;
+            searchInput.focus();
+            if (advancedFilteredUrls) clearAdvancedFilter();
+            applySearch('');
+          }
+        }
+      });
+
+      // Close modal on backdrop click
+      advSearchModal.addEventListener('click', (e) => {
+        if (e.target === advSearchModal) closeAdvancedSearch();
+      });
+
+      // Ctrl+Enter to submit SQL
+      sqlTextarea.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.key === 'Enter') executeAdvancedSearch();
+      });
+
+      loadData();
+    })();
+  </script>
+</body>
+</html>
