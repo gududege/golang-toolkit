@@ -6,23 +6,44 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"slices"
+	"sort"
 	"strings"
 
 	"github.com/spf13/pflag"
 )
 
+// blockRef represents a single cross-reference from one block to another.
 type blockRef struct {
 	Name string `json:"name"`
 	Type string `json:"type"`
 }
 
+// blockInfo represents a scanned block and all blocks it references.
 type blockInfo struct {
 	Name string     `json:"name"`
 	Type string     `json:"type"`
 	Use  []blockRef `json:"use"`
 }
 
-var version string
+var version = "dev"
+
+// outputFilePerm is the file permission for the JSON output.
+const outputFilePerm os.FileMode = 0644
+
+// blockTypeOrder defines the sort order for JSON output — OB first, UNKNOWN last.
+var blockTypeOrder = map[string]int{
+	"OB":      0,
+	"FC":      1,
+	"FB":      2,
+	"DB":      3,
+	"UDT":     4,
+	"DI":      5,
+	"UNKNOWN": 6,
+}
+
+// allowedExts restricts file scanning to known TIA Portal block extensions.
+var allowedExts = []string{".db", ".udt", ".scl", ".awl", ".s7dcl"}
 
 var (
 	reBlockOB    = regexp.MustCompile(`^ORGANIZATION_BLOCK\s+"`)
@@ -36,12 +57,13 @@ var (
 	reEND_STRUCT = regexp.MustCompile(`\bEND_STRUCT\b`)
 )
 
+// detectBlockType determines the TIA Portal block type from its source content.
+// It reads the first line for the block header and checks for VAR/STRUCT
+// presence to distinguish DB from DI (instance data block).
 func detectBlockType(content string) string {
 	content = strings.TrimLeft(content, "\uFEFF")
-	firstLine := content
-	if idx := strings.IndexAny(content, "\r\n"); idx >= 0 {
-		firstLine = content[:idx]
-	}
+	firstLine, _, _ := strings.Cut(content, "\n")
+	firstLine = strings.TrimRight(firstLine, "\r")
 
 	switch {
 	case reBlockOB.MatchString(firstLine):
@@ -64,15 +86,21 @@ func detectBlockType(content string) string {
 	}
 }
 
+// isBlockFile checks whether the file extension is in the allowed list.
+func isBlockFile(path string) bool {
+	return slices.Contains(allowedExts, strings.ToLower(filepath.Ext(path)))
+}
+
+// walkFiles recursively scans directories and returns all block file paths found.
 func walkFiles(paths []string) ([]string, error) {
-	// intentionally nil — append works fine on nil, and this is never serialized
+	// nil slice intentional — append works fine on nil
 	var files []string
 	for _, root := range paths {
 		err := filepath.Walk(root, func(path string, fi os.FileInfo, err error) error {
 			if err != nil {
 				return fmt.Errorf("access %q: %w", path, err)
 			}
-			if !fi.IsDir() {
+			if !fi.IsDir() && isBlockFile(path) {
 				files = append(files, path)
 			}
 			return nil
@@ -84,6 +112,8 @@ func walkFiles(paths []string) ([]string, error) {
 	return files, nil
 }
 
+// collectBlockNames extracts block names from file paths by stripping
+// directory and extension — the block name is the file's base name.
 func collectBlockNames(files []string) []string {
 	blockNames := make([]string, 0, len(files))
 	for _, f := range files {
@@ -92,6 +122,8 @@ func collectBlockNames(files []string) []string {
 	return blockNames
 }
 
+// buildRefRegex compiles a regex that matches any block name as a whole word.
+// Each name is escaped to handle special characters.
 func buildRefRegex(blockNames []string) *regexp.Regexp {
 	escaped := make([]string, len(blockNames))
 	for i, name := range blockNames {
@@ -100,6 +132,8 @@ func buildRefRegex(blockNames []string) *regexp.Regexp {
 	return regexp.MustCompile(`\b(?:` + strings.Join(escaped, "|") + `)\b`)
 }
 
+// resolveRefType looks up the block type of a referenced block by scanning
+// the file list for a matching name, then detecting its type.
 func resolveRefType(files []string, match string) string {
 	for _, f := range files {
 		if strings.TrimSuffix(filepath.Base(f), filepath.Ext(f)) != match {
@@ -114,9 +148,11 @@ func resolveRefType(files []string, match string) string {
 	return "UNKNOWN"
 }
 
+// scanBlockRefs reads every block file, detects its type, and finds all
+// cross-references to other blocks by matching against the compiled regex.
+// Self-references are silently skipped.
 func scanBlockRefs(
 	files []string,
-	blockNames []string,
 	re *regexp.Regexp,
 ) []blockInfo {
 	results := make([]blockInfo, 0, len(files))
@@ -140,8 +176,13 @@ func scanBlockRefs(
 		seen := make(map[string]bool)
 		refs := []blockRef{}
 
-		for _, match := range re.FindAllString(string(content), -1) {
-			if match == fileName || seen[match] {
+		matches := re.FindAllIndex(content, -1)
+		for _, loc := range matches {
+			match := string(content[loc[0]:loc[1]])
+			if match == fileName {
+				continue
+			}
+			if seen[match] {
 				continue
 			}
 			seen[match] = true
@@ -162,9 +203,10 @@ func scanBlockRefs(
 	return results
 }
 
-func parseFlags() (outputFile, scanPaths string, help, showVersion bool) {
+// parseFlags registers and parses command-line flags using pflag.
+func parseFlags() (outputFile string, scanPaths []string, help, showVersion bool) {
 	pflag.StringVarP(&outputFile, "output-file", "o", "", "Path to the output JSON file")
-	pflag.StringVarP(&scanPaths, "scan-paths", "p", "", "Comma-separated directories to scan")
+	pflag.StringSliceVarP(&scanPaths, "scan-path", "p", nil, "Directories to scan (can be specified multiple times)")
 	pflag.BoolVarP(&help, "help", "h", false, "Show this help message")
 	pflag.BoolVarP(&showVersion, "version", "v", false, "Show version")
 
@@ -177,14 +219,12 @@ Description:
 
 Flags:
   -o, --output-file <path>   Path to the output JSON file
-  -p, --scan-paths <dir,...> Comma-separated directories to scan
+  -p, --scan-path <dir>      Directories to scan (can be specified multiple times)
   -v, --version              Show version
   -h, --help                 Show this help message
 
 Examples:
-  scan-calls --output-file result.json
-  scan-calls -p udts,blocks\Function
-  scan-calls -p myDir -o out.json
+  tia-scan-calls -p ./udts -p ./blocks/Function -o ./out.json
 `)
 	}
 	pflag.Parse()
@@ -202,12 +242,18 @@ func main() {
 		return
 	}
 
-	paths := strings.Split(scanPaths, ",")
-	for i := range paths {
-		paths[i] = strings.TrimSpace(paths[i])
+	if outputFile == "" {
+		fmt.Fprintln(os.Stderr, "Error: --output-file (-o) is required")
+		pflag.Usage()
+		os.Exit(1)
+	}
+	if len(scanPaths) == 0 {
+		fmt.Fprintln(os.Stderr, "Error: --scan-paths (-p) is required")
+		pflag.Usage()
+		os.Exit(1)
 	}
 
-	files, err := walkFiles(paths)
+	files, err := walkFiles(scanPaths)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
@@ -218,11 +264,18 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Collect block names and build the reference-matching regex.
 	blockNames := collectBlockNames(files)
 	fmt.Printf("Found %d files to scan\n", len(files))
 
 	re := buildRefRegex(blockNames)
-	out := scanBlockRefs(files, blockNames, re)
+	out := scanBlockRefs(files, re)
+
+	// Sort output by block type order (OB → FC → FB → DB → UDT → UNKNOWN),
+	// preserving original order within the same type.
+	sort.SliceStable(out, func(i, j int) bool {
+		return blockTypeOrder[out[i].Type] < blockTypeOrder[out[j].Type]
+	})
 
 	data, err := json.MarshalIndent(out, "", "  ")
 	if err != nil {
@@ -230,7 +283,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := os.WriteFile(outputFile, data, 0644); err != nil {
+	if err := os.WriteFile(outputFile, data, outputFilePerm); err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		os.Exit(1)
 	}

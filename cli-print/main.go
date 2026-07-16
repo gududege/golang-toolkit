@@ -1,3 +1,5 @@
+// cli-print prints all CLI input (args, env, CWD) and exits with a computed code.
+// It is used as a test/debug target for argument forwarding and environment propagation.
 package main
 
 import (
@@ -7,8 +9,13 @@ import (
 	"strings"
 )
 
-var version string
+// version is set at build time via -ldflags, e.g.:
+//
+//	go build -ldflags="-X main.version=1.0.0"
+var version = "dev"
 
+// quoteString returns s wrapped in double quotes with C-style escaping.
+// Special characters (", \, \n, \r, \t) are escaped; an empty string returns "<empty>".
 func quoteString(s string) string {
 	if len(s) == 0 {
 		return "<empty>"
@@ -38,6 +45,7 @@ func quoteString(s string) string {
 }
 
 func main() {
+	// Print binary path, working directory, and argument count.
 	exePath, _ := os.Executable()
 	cwd, _ := os.Getwd()
 	args := os.Args[1:]
@@ -46,31 +54,34 @@ func main() {
 	fmt.Printf("cwd: %s\n", cwd)
 	fmt.Printf("argc: %d\n", len(args))
 
+	// Print each argument with C-style escaping.
 	for i, arg := range args {
 		fmt.Printf("argv[%d]: %s\n", i, quoteString(arg))
 	}
 
+	// Default exit code is the argument count
 	exitCode := len(args)
-	if exitCode > 127 {
-		exitCode = 127
-	}
 
+	// Support --exit-code N override
 	for i := 0; i < len(args)-1; i++ {
 		if args[i] == "--exit-code" {
 			var parsed int
 			if _, err := fmt.Sscanf(args[i+1], "%d", &parsed); err == nil {
-				if parsed < 0 {
-					parsed = 0
-				}
-				if parsed > 255 {
-					parsed = 255
-				}
 				exitCode = parsed
-				break
 			}
+			break
 		}
 	}
 
+	// Clamp exit code to 0-255 range
+	if exitCode < 0 {
+		exitCode = 0
+	}
+	if exitCode > 255 {
+		exitCode = 255
+	}
+
+	// Read and sort environment variables case-insensitively, then print them.
 	env := os.Environ()
 	sort.Slice(env, func(i, j int) bool {
 		ki, _, _ := strings.Cut(env[i], "=")
@@ -84,6 +95,7 @@ func main() {
 		fmt.Printf("env:%s: %s\n", key, quoteString(value))
 	}
 
+	// Print final exit code and exit.
 	fmt.Printf("exit_code: %d\n", exitCode)
 	os.Exit(exitCode)
 }

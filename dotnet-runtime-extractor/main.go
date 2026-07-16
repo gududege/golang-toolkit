@@ -13,13 +13,30 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"runtime/debug"
 	"strings"
+	"time"
 
 	"github.com/tidwall/gjson"
 )
 
-var version string
+// version is injected at build time via goreleaser ldflags or falls back to
+// runtime/debug.ReadBuildInfo when built with go install.
+var version = "dev"
 
+// httpClient is used for all outbound HTTP requests (releases metadata + SDK downloads).
+var httpClient = &http.Client{Timeout: 5 * time.Minute}
+
+// osExit is overridable for testing. Production code should never call os.Exit directly.
+var osExit = os.Exit
+
+func init() {
+	if info, ok := debug.ReadBuildInfo(); ok && info.Main.Version != "" {
+		version = info.Main.Version
+	}
+}
+
+// Config holds all parsed CLI flags and derived state for the extraction workflow.
 type Config struct {
 	version        string
 	file           string
@@ -32,6 +49,8 @@ type Config struct {
 	showVersion    bool
 }
 
+// main is the entry point. It either downloads + extracts from a remote SDK archive
+// or extracts from a local archive file, depending on which flags were set.
 func main() {
 	cfg := parseFlags()
 
@@ -43,16 +62,18 @@ func main() {
 	if cfg.download {
 		if err := downloadAndExtract(cfg); err != nil {
 			slog.Error("Failed to download and extract", "error", err)
-			os.Exit(1)
+			osExit(1)
 		}
 	} else {
 		if err := extractFromArchive(cfg); err != nil {
 			slog.Error("Failed to extract from archive", "error", err)
-			os.Exit(1)
+			osExit(1)
 		}
 	}
 }
 
+// parseFlags reads and validates CLI flags, returning a Config.
+// On validation failure or conflicting flags it prints usage and exits.
 func parseFlags() *Config {
 	showVersion := flag.Bool("version", false, "Show version information")
 	releaseVersion := flag.String("release-version", "", ".NET release version to download (e.g., 10, 10.0, or 10.0.5)")
@@ -71,28 +92,28 @@ func parseFlags() *Config {
 	if (*releaseVersion == "" && *file == "") || (*releaseVersion != "" && *file != "") {
 		slog.Error("Either --release-version or --file must be provided, not both")
 		flag.Usage()
-		os.Exit(1)
+		osExit(1)
 	}
 
 	validRuntimes := map[string]bool{"none": true, "aspnet": true, "desktop": true, "all": true}
 	if !validRuntimes[*runtimeType] {
 		slog.Error("Invalid --runtime value, must be none, aspnet, desktop, or all")
 		flag.Usage()
-		os.Exit(1)
+		osExit(1)
 	}
 
 	validOS := map[string]bool{"win": true, "linux": true, "osx": true}
 	if !validOS[*targetOS] {
 		slog.Error("Invalid --os value, must be win, linux, or osx")
 		flag.Usage()
-		os.Exit(1)
+		osExit(1)
 	}
 
 	validArch := map[string]bool{"x86": true, "x64": true, "arm": true, "arm64": true}
 	if !validArch[*arch] {
 		slog.Error("Invalid --arch value, must be x86, x64, arm, or arm64")
 		flag.Usage()
-		os.Exit(1)
+		osExit(1)
 	}
 
 	cfg := &Config{
@@ -110,7 +131,7 @@ func parseFlags() *Config {
 		if cfg.runtimeType == "desktop" {
 			slog.Error("Desktop runtime is not available on Linux/OSX")
 			flag.Usage()
-			os.Exit(1)
+			osExit(1)
 		}
 		slog.Warn("Desktop runtime is not available on Linux/OSX, only ASP.NET Core will be extracted")
 		cfg.runtimeType = "aspnet"
@@ -121,6 +142,7 @@ func parseFlags() *Config {
 	return cfg
 }
 
+// downloadAndExtract resolves the download URL, fetches the SDK archive, then extracts it.
 func downloadAndExtract(cfg *Config) error {
 	url, version, fileHash, err := resolveDownloadURL(cfg.version, cfg.os, cfg.arch, cfg.releaseVersion)
 	if err != nil {
@@ -139,17 +161,28 @@ func downloadAndExtract(cfg *Config) error {
 	return extractFromArchive(cfg)
 }
 
-func resolveDownloadURL(version, targetOS, arch, releaseVersion string) (string, string, string, error) {
-	versionBand := version
-
+// resolveVersionBand maps user input to a version band used for releases.json lookup:
+//
+//	"10"    → "10.0"
+//	"10.0"  → "10.0"
+//	"10.0.5" → "10.0"
+func resolveVersionBand(version string) string {
 	parts := strings.Split(version, ".")
 	if len(parts) == 1 {
-		versionBand = version + ".0"
-	} else if len(parts) == 2 {
-		versionBand = version
-	} else if len(parts) >= 3 {
-		versionBand = parts[0] + "." + parts[1]
+		return version + ".0"
 	}
+	if len(parts) == 2 {
+		return version
+	}
+	return parts[0] + "." + parts[1]
+}
+
+// resolveDownloadURL fetches the .NET release metadata for the given version band and
+// finds the SDK download URL matching the target OS and architecture.
+// Supports fuzzy versioning (e.g. "10" → "10.0.5") and exact version pinning.
+func resolveDownloadURL(version, targetOS, arch, releaseVersion string) (string, string, string, error) {
+	parts := strings.Split(version, ".")
+	versionBand := resolveVersionBand(version)
 
 	releasesURL := fmt.Sprintf("https://builds.dotnet.microsoft.com/dotnet/release-metadata/%s/releases.json", versionBand)
 
@@ -167,6 +200,7 @@ func resolveDownloadURL(version, targetOS, arch, releaseVersion string) (string,
 
 	targetReleaseVersion := releaseVersion
 
+	// Fuzzy matching: if user gave fewer than 3 version parts or the patch doesn't match latest, resolve to latest
 	isFuzzy := len(parts) < 3 || (len(parts) >= 3 && parts[2] != strings.Split(latestRelease, ".")[2])
 	if targetReleaseVersion == "" || isFuzzy {
 		targetReleaseVersion = latestRelease
@@ -186,13 +220,10 @@ func resolveDownloadURL(version, targetOS, arch, releaseVersion string) (string,
 	return downloadURL, actualVersion, fileHash, nil
 }
 
+// findSDKByRID searches the releases JSON for the matching release-version and RID,
+// returning the download URL, the actual SDK version string, and the file hash.
 func findSDKByRID(data, releaseVersion, targetOS, rid string) (string, string, string) {
-	var fileExt string
-	if targetOS == "win" {
-		fileExt = ".zip"
-	} else {
-		fileExt = ".tar.gz"
-	}
+	fileExt := archiveExt(targetOS)
 
 	releases := gjson.Get(data, "releases").Array()
 	for _, release := range releases {
@@ -218,8 +249,9 @@ func findSDKByRID(data, releaseVersion, targetOS, rid string) (string, string, s
 	return "", "", ""
 }
 
+// fetchURL is a simple helper that GETs a URL and returns the response body as a string.
 func fetchURL(url string) (string, error) {
-	resp, err := http.Get(url)
+	resp, err := httpClient.Get(url)
 	if err != nil {
 		return "", err
 	}
@@ -237,17 +269,15 @@ func fetchURL(url string) (string, error) {
 	return string(data), nil
 }
 
+// downloadToTarget downloads the SDK archive to the target directory.
+// It verifies the cached file's SHA512 hash against the expected metadata hash to skip
+// redundant downloads when possible.
 func downloadToTarget(url, version, expectedHash, target, targetOS string) (string, error) {
 	if err := os.MkdirAll(target, 0755); err != nil {
 		return "", fmt.Errorf("failed to create target directory: %w", err)
 	}
 
-	var fileExt string
-	if targetOS == "win" {
-		fileExt = ".zip"
-	} else {
-		fileExt = ".tar.gz"
-	}
+	fileExt := archiveExt(targetOS)
 
 	filename := fmt.Sprintf("dotnet-sdk-%s%s", version, fileExt)
 	archivePath := filepath.Join(target, filename)
@@ -270,7 +300,7 @@ func downloadToTarget(url, version, expectedHash, target, targetOS string) (stri
 		}
 	}
 
-	resp, err := http.Get(url)
+	resp, err := httpClient.Get(url)
 	if err != nil {
 		return "", err
 	}
@@ -295,6 +325,9 @@ func downloadToTarget(url, version, expectedHash, target, targetOS string) (stri
 	return archivePath, nil
 }
 
+// computeFileHash computes the SHA512 hash of a file and returns it as a hex string.
+// This is used to validate locally cached SDK archives against the metadata hash from
+// the Microsoft release API.
 func computeFileHash(path string) (string, error) {
 	file, err := os.Open(path)
 	if err != nil {
@@ -310,6 +343,27 @@ func computeFileHash(path string) (string, error) {
 	return hex.EncodeToString(hash.Sum(nil)), nil
 }
 
+// isSafePath checks that the given name does not escape the target directory via ".."
+// segments or absolute paths.
+func isSafePath(name string) bool {
+	cleaned := filepath.Clean(filepath.FromSlash(name))
+	return !filepath.IsAbs(cleaned) &&
+		!strings.HasPrefix(cleaned, "..") &&
+		!strings.HasPrefix(cleaned, string(filepath.Separator))
+}
+
+// archiveExt returns the file extension used by the .NET SDK archive for the given OS.
+func archiveExt(targetOS string) string {
+	if targetOS == "win" {
+		return ".zip"
+	}
+	return ".tar.gz"
+}
+
+// shouldExtractShared determines whether a file under the shared/ directory should be
+// extracted based on its runtime framework name and the configured runtime type.
+// Microsoft.NETCore.App is always included; AspNetCore.App and WindowsDesktop.App
+// are included only when the corresponding runtime type is selected.
 func shouldExtractShared(name, runtimeType string) bool {
 	if strings.Contains(name, "Microsoft.NETCore.App/") {
 		return true
@@ -323,10 +377,11 @@ func shouldExtractShared(name, runtimeType string) bool {
 	return false
 }
 
+// extractFromArchive opens the SDK archive (zip or tar.gz) and extracts the selected
+// runtime components (shared frameworks, host/fxr, and dotnet binary) into the target
+// directory. Selection logic is governed by cfg.runtimeType.
 func extractFromArchive(cfg *Config) error {
 	slog.Info("Extracting from archive", "file", cfg.file, "target", cfg.target, "runtime", cfg.runtimeType)
-
-	extractedFiles := make(map[string]string)
 
 	if strings.HasSuffix(cfg.file, ".zip") {
 		r, err := zip.OpenReader(cfg.file)
@@ -355,19 +410,15 @@ func extractFromArchive(cfg *Config) error {
 				targetName = filepath.Base(archiveName)
 			}
 
-			if targetName != "" && !strings.Contains(targetName, "..") {
-				extractedFiles[targetName] = name
-			}
-		}
-
-		for targetName, zipName := range extractedFiles {
-			targetPath := filepath.Join(cfg.target, targetName)
-			if err := os.MkdirAll(filepath.Dir(targetPath), 0755); err != nil {
-				return fmt.Errorf("failed to create directory for %s: %w", targetName, err)
-			}
-			slog.Info("Extracting", "from", zipName, "to", targetPath)
-			if err := extractZipFile(r, zipName, targetPath); err != nil {
-				return fmt.Errorf("failed to extract %s: %w", zipName, err)
+			if targetName != "" && isSafePath(targetName) {
+				targetPath := filepath.Join(cfg.target, targetName)
+				if err := os.MkdirAll(filepath.Dir(targetPath), 0755); err != nil {
+					return fmt.Errorf("failed to create directory for %s: %w", targetName, err)
+				}
+				slog.Info("Extracting", "from", name, "to", targetPath)
+				if err := extractZipEntry(f, targetPath); err != nil {
+					return fmt.Errorf("failed to extract %s: %w", name, err)
+				}
 			}
 		}
 	} else if strings.HasSuffix(cfg.file, ".tar.gz") {
@@ -413,13 +464,14 @@ func extractFromArchive(cfg *Config) error {
 				targetName = filepath.Base(archiveName)
 			}
 
-			if targetName != "" && !strings.Contains(targetName, "..") {
+			if targetName != "" && isSafePath(targetName) {
 				targetPath := filepath.Join(cfg.target, targetName)
 				if err := os.MkdirAll(filepath.Dir(targetPath), 0755); err != nil {
 					return fmt.Errorf("failed to create directory for %s: %w", targetName, err)
 				}
 				slog.Info("Extracting", "from", name, "to", targetPath)
 
+				// Handle symlink entries (common in Linux/OSX SDK archives)
 				if header.Typeflag == tar.TypeSymlink {
 					if err := os.Symlink(header.Linkname, targetPath); err != nil {
 						return fmt.Errorf("failed to create symlink %s: %w", targetName, err)
@@ -431,11 +483,13 @@ func extractFromArchive(cfg *Config) error {
 				if err != nil {
 					return fmt.Errorf("failed to create file %s: %w", targetName, err)
 				}
-				defer dst.Close()
 
 				if _, err := io.Copy(dst, tr); err != nil {
+					dst.Close()
 					return fmt.Errorf("failed to extract %s: %w", name, err)
 				}
+
+				dst.Close()
 			}
 		}
 	} else {
@@ -446,58 +500,20 @@ func extractFromArchive(cfg *Config) error {
 	return nil
 }
 
-func extractZipFile(r *zip.ReadCloser, name, dest string) error {
-	for _, f := range r.File {
-		if f.Name == name {
-			src, err := f.Open()
-			if err != nil {
-				return err
-			}
-			defer src.Close()
-
-			dst, err := os.Create(dest)
-			if err != nil {
-				return err
-			}
-			defer dst.Close()
-
-			_, err = io.Copy(dst, src)
-			return err
-		}
+// extractZipEntry extracts a single file from a zip archive to the given destination path.
+func extractZipEntry(f *zip.File, dest string) error {
+	src, err := f.Open()
+	if err != nil {
+		return err
 	}
-	return fmt.Errorf("file not found in archive: %s", name)
-}
+	defer src.Close()
 
-func extractTarFile(tr *tar.Reader, name, dest string) error {
-	for {
-		header, err := tr.Next()
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			return err
-		}
-
-		if header.Name == name {
-			if header.Typeflag == tar.TypeSymlink {
-				linkDest := header.Linkname
-				return os.Symlink(linkDest, dest)
-			}
-
-			_, err := os.Stat(dest)
-			if err == nil {
-				return nil
-			}
-
-			dst, err := os.Create(dest)
-			if err != nil {
-				return err
-			}
-			defer dst.Close()
-
-			_, err = io.Copy(dst, tr)
-			return err
-		}
+	dst, err := os.Create(dest)
+	if err != nil {
+		return err
 	}
-	return fmt.Errorf("file not found in archive: %s", name)
+	defer dst.Close()
+
+	_, err = io.Copy(dst, src)
+	return err
 }

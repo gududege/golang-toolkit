@@ -18,6 +18,9 @@ archives:
     format_overrides:
       - goos: windows
         formats: [zip]
+    files:
+      - template.html
+      - template.json
 
 upx:
   - enabled: true

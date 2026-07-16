@@ -26,9 +26,11 @@ import (
 
 const batchSize = 50
 
-var version string
+var version = "dev"
 
 var reRepoData = regexp.MustCompile(`(?s)// __REPO_DATA_START__.*?// __REPO_DATA_END__`)
+
+var apiBase = "https://api.github.com/graphql"
 
 type batchTarget struct {
 	owner string
@@ -125,16 +127,12 @@ func (f graphqlRepoFields) toOutputRepo(input InputRepo) OutputRepo {
 var queryFragmentCached = graphqlRepoFields{}.queryFragment()
 
 func parseOwnerRepo(rawURL string) (owner, name string, err error) {
+	if !strings.Contains(rawURL, "://") {
+		rawURL = "https://" + rawURL
+	}
 	u, err := url.Parse(rawURL)
 	if err != nil {
-		if !strings.Contains(rawURL, "://") {
-			u, err = url.Parse("https://" + rawURL)
-			if err != nil {
-				return "", "", fmt.Errorf("parsing url: %w", err)
-			}
-		} else {
-			return "", "", fmt.Errorf("parsing url: %w", err)
-		}
+		return "", "", fmt.Errorf("parsing url: %w", err)
 	}
 	parts := strings.SplitN(strings.TrimPrefix(u.Path, "/"), "/", 2)
 	if len(parts) != 2 {
@@ -142,18 +140,26 @@ func parseOwnerRepo(rawURL string) (owner, name string, err error) {
 	}
 	owner = parts[0]
 	name = strings.TrimSuffix(parts[1], ".git")
+	name = strings.TrimRight(name, "/")
 	return
 }
 
+type graphQLError struct {
+	Message string   `json:"message"`
+	Type    string   `json:"type"`
+	Path    []string `json:"path"`
+}
+
 type graphQLResponse struct {
-	Data map[string]json.RawMessage `json:"data"`
+	Data   map[string]json.RawMessage `json:"data"`
+	Errors []graphQLError             `json:"errors"`
 }
 
 func doGraphQLQuery(ctx context.Context, client *http.Client, query string) (*graphQLResponse, error) {
 	const maxRetries = 3
 	for i := range maxRetries {
 		payload := fmt.Sprintf(`{"query":"%s"}`, escapeJSON(query))
-		req, err := http.NewRequestWithContext(ctx, "POST", "https://api.github.com/graphql", strings.NewReader(payload))
+		req, err := http.NewRequestWithContext(ctx, "POST", apiBase, strings.NewReader(payload))
 		if err != nil {
 			return nil, fmt.Errorf("creating request: %w", err)
 		}
@@ -167,9 +173,8 @@ func doGraphQLQuery(ctx context.Context, client *http.Client, query string) (*gr
 			}
 			return nil, fmt.Errorf("sending request: %w", err)
 		}
-		defer resp.Body.Close()
-
 		body, err := io.ReadAll(resp.Body)
+		resp.Body.Close()
 		if err != nil {
 			return nil, fmt.Errorf("reading response: %w", err)
 		}
@@ -264,13 +269,12 @@ func queryAllRepos(ctx context.Context, token string, inputs []InputRepo) ([]Out
 		query := buildBatchQuery(batch)
 		resp, err := doGraphQLQuery(ctx, client, query)
 		if err != nil {
-			for _, t := range batch {
-				if t.idx < len(outputs) && !validSet[t.idx] {
-					continue
-				}
-			}
 			fmt.Fprintf(os.Stderr, "  Warning: batch query error: %v\n", err)
 			continue
+		}
+
+		for _, e := range resp.Errors {
+			fmt.Fprintf(os.Stderr, "  Warning: GraphQL error for %v: %s\n", e.Path, e.Message)
 		}
 
 		for _, t := range batch {
@@ -280,6 +284,7 @@ func queryAllRepos(ctx context.Context, token string, inputs []InputRepo) ([]Out
 			key := fmt.Sprintf("r%d", t.idx)
 			raw, ok := resp.Data[key]
 			if !ok || string(raw) == "null" {
+				fmt.Fprintf(os.Stderr, "  Warning: repo not found or no access: %s\n", inputs[t.idx].Url)
 				continue
 			}
 			var fields graphqlRepoFields
@@ -330,32 +335,37 @@ func writeHTML(templatePath string, outputPath string, outputs []OutputRepo) err
 }
 
 func main() {
-	inputPath := flag.StringP("input", "i", "", "Path to input JSON file containing repos")
-	outputPath := flag.StringP("output", "o", "", "Path to output JSON file for enriched repos")
-	htmlTemplate := flag.StringP("html-template", "h", "", "Path to HTML template file with REPO_DATA sentinel")
-	htmlOutput := flag.StringP("html-output", "H", "", "Path to write HTML file with embedded repo data (requires --html-template)")
-	token := flag.StringP("token", "t", "", "GitHub personal access token")
-	showVersion := flag.BoolP("version", "v", false, "Show version")
-	flag.Parse()
+	if err := run(os.Args[1:]); err != nil {
+		fmt.Fprintln(os.Stderr, "Error:", err)
+		os.Exit(1)
+	}
+}
+
+func run(args []string) error {
+	fs := flag.NewFlagSet("track-repository", flag.ContinueOnError)
+	inputPath := fs.StringP("input", "i", "", "Path to input JSON file containing repos")
+	outputPath := fs.StringP("output", "o", "", "Path to output JSON file for enriched repos")
+	htmlTemplate := fs.StringP("html-template", "h", "", "Path to HTML template file with REPO_DATA sentinel")
+	htmlOutput := fs.StringP("html-output", "H", "", "Path to write HTML file with embedded repo data (requires --html-template)")
+	token := fs.StringP("token", "t", "", "GitHub personal access token")
+	showVersion := fs.BoolP("version", "v", false, "Show version")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
 
 	if *showVersion {
 		fmt.Println("track-repository", version)
-		return
+		return nil
 	}
 
 	if *inputPath == "" {
-		fmt.Fprintln(os.Stderr, "Error: --input/-i is required")
-		flag.Usage()
-		os.Exit(1)
+		return fmt.Errorf("--input/-i is required")
 	}
 	if *outputPath == "" {
-		fmt.Fprintln(os.Stderr, "Error: --output/-o is required")
-		flag.Usage()
-		os.Exit(1)
+		return fmt.Errorf("--output/-o is required")
 	}
 	if *htmlOutput != "" && *htmlTemplate == "" {
-		fmt.Fprintln(os.Stderr, "Error: --html-template is required when --html-output is set")
-		os.Exit(1)
+		return fmt.Errorf("--html-template is required when --html-output is set")
 	}
 
 	if *token == "" {
@@ -365,13 +375,11 @@ func main() {
 	fmt.Println("Step 1 - Parse input JSON file:", *inputPath)
 	inputBytes, err := os.ReadFile(*inputPath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error reading input file: %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("reading input file: %w", err)
 	}
 	var inputs []InputRepo
 	if err := json.Unmarshal(inputBytes, &inputs); err != nil {
-		fmt.Fprintf(os.Stderr, "Error parsing input JSON: %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("parsing input JSON: %w", err)
 	}
 	fmt.Printf("  Read %d repos from input file.\n", len(inputs))
 
@@ -379,30 +387,27 @@ func main() {
 	ctx := context.Background()
 	outputs, err := queryAllRepos(ctx, *token, inputs)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error querying GitHub: %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("querying GitHub: %w", err)
 	}
 
 	fmt.Println("Step 3 - Write output JSON file:", *outputPath)
 	outputBytes, err := json.MarshalIndent(outputs, "", "  ")
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error marshaling output: %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("marshaling output: %w", err)
 	}
 	if err := os.WriteFile(*outputPath, outputBytes, 0644); err != nil {
-		fmt.Fprintf(os.Stderr, "Error writing output file: %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("writing output file: %w", err)
 	}
 	fmt.Printf("  Written %d repos to output file.\n", len(outputs))
 
 	if *htmlOutput != "" {
 		if err := writeHTML(*htmlTemplate, *htmlOutput, outputs); err != nil {
-			fmt.Fprintf(os.Stderr, "Error writing output html: %v\n", err)
-			os.Exit(1)
+			return fmt.Errorf("writing output html: %w", err)
 		}
 	} else {
 		fmt.Println("Step 4 - Skipped (no --html-output specified)")
 	}
 
 	fmt.Println("Finished!")
+	return nil
 }

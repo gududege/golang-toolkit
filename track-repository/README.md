@@ -35,6 +35,9 @@ Open `index.html` — you get a searchable, categorized catalog with live GitHub
 | `-H`  | `--html-output`   |         | Output HTML with embedded data (minified)               |
 | `-v`  | `--version`       |         | Show version                                            |
 
+> Warnings and errors (invalid URLs, skipped repos, API failures) are printed to **stderr**,
+> so stdout stays clean for scripting or piping.
+
 ## Input format
 
 Input is a JSON array. Each entry specifies a repo and its classification:

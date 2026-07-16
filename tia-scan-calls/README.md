@@ -11,17 +11,17 @@ tia-scan-calls [flags]
 Scan custom directories and write to a specific file:
 
 ```bash
-tia-scan-calls -p udts,blocks/Function -o result.json
+tia-scan-calls -p udts -p blocks/Function -o result.json
 ```
 
 ## Flags
 
-| Short | Long            | Description                         |
-|-------|-----------------|-------------------------------------|
-| `-p`  | `--scan-paths`  | Comma-separated directories to scan |
-| `-o`  | `--output-file` | Path to the output JSON file        |
-| `-v`  | `--version`     | Show version                        |
-| `-h`  | `--help`        | Show this help message              |
+| Short | Long            | Description                                         |
+|-------|-----------------|-----------------------------------------------------|
+| `-p`  | `--scan-path`   | Directories to scan (can be specified multiple times) |
+| `-o`  | `--output-file` | Path to the output JSON file                        |
+| `-v`  | `--version`     | Show version                                        |
+| `-h`  | `--help`        | Show this help message                              |
 
 ## Output
 
@@ -47,15 +47,16 @@ The output is a JSON array where each element represents a block:
 | DB   | Data block (with VAR/STRUCT) |
 | DI   | Instance data block          |
 | UDT  | User-defined type            |
+| UNKNOWN | Unrecognized block type   |
 
 ## Version
 
 ```bash
-scan-calls -v
+tia-scan-calls -v
 ```
 
 The version is injected at build time:
 
 ```bash
-go build -ldflags="-X main.version=1.0.0" ./scan-calls
+go build -ldflags="-X main.version=1.0.0" ./tia-scan-calls
 ```

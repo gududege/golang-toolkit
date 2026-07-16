@@ -19,7 +19,7 @@ go build -o dotnet-runtime-extractor.exe main.go
 ## Usage
 
 ```bash
-# Download and extract all runtimes (default)
+# Download and extract .NET runtime with fuzzy version matching
 dotnet-runtime-extractor.exe -release-version 10
 
 # Download and extract only ASP.NET Core runtime
@@ -42,11 +42,12 @@ dotnet-runtime-extractor.exe -release-version 10 -os linux -arch x64
 
 | Flag | Description | Default |
 |------|-------------|---------|
+| `-version` | Show version information | - |
 | `-release-version` | .NET release version (e.g., 10, 10.0, 10.0.5) | - |
 | `-file` | Path to local SDK archive | - |
-| `-runtime` | Runtime type: aspnet, desktop, all | all |
-| `-os` | Target platform: windows, linux, osx | windows |
-| `-arch` | Target architecture: x64, arm64 | amd64 |
+| `-runtime` | Runtime type to extract: none, aspnet, desktop, all | none |
+| `-os` | Target platform: win, linux, osx | win |
+| `-arch` | Target architecture: x86, x64, arm, arm64 | x64 |
 | `-target` | Extraction target directory | runtime |
 
 ## Output Structure
