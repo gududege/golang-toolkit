@@ -1,0 +1,149 @@
+# =============================================================================
+# Extractor Configuration File (TOML)
+# =============================================================================
+# Priority: CLI flags > Config file > Defaults
+# All fields are optional; defaults are noted below.
+# =============================================================================
+
+# ---------------------------------------------------------------------------
+# Dry Run — preview without writing files
+#   Output is printed to stdout.
+#   Split: text blocks    JSON/XML: formatted string
+#   CSV: raw text         SQLite: table preview (schema + first 10 rows)
+# ---------------------------------------------------------------------------
+dry-run = false
+
+# ---------------------------------------------------------------------------
+# Input — where and how to read source files
+#   file vs directory: mutually exclusive, one is required (unless --config
+#   satisfies all required fields via file/directory + regex.pattern)
+# ---------------------------------------------------------------------------
+[input]
+# Single input file path. Mutually exclusive with directory.
+file = ""
+
+# Input directory. Mutually exclusive with file.
+directory = ""
+
+# File glob pattern for directory mode (e.g. "*.txt", "log-*.csv").
+# Uses path/filepath glob syntax, NOT regex.
+# Default: "*" (matches all files)
+pattern = "*"
+
+# Input file encoding.
+# Supported: utf8 (default), utf8bom, gbk
+# UTF-16 is NOT supported. Aliases: utf-8 → utf8, utf-8-bom → utf8bom
+encoding = "utf8"
+
+# ---------------------------------------------------------------------------
+# Regex — the extraction pattern
+#   pattern: required unless --config provides it
+# ---------------------------------------------------------------------------
+[regex]
+# Regular expression with named groups: (?P<name>pattern)
+# Uses regexp2 engine (supports lookahead/lookbehind/backreferences).
+pattern = ""
+
+# Regex flags. Combine any of:
+#   m — multiline (^/$ match line start/end)
+#   s — dotall (. matches newlines)
+#   i — ignore case
+# Default: "" (no flags)
+flags = ""
+
+# ---------------------------------------------------------------------------
+# Split — extract matched group content into separate text files
+#   Enabled when group is set.
+# ---------------------------------------------------------------------------
+[split]
+# Named group whose value triggers split output.
+# Leave empty to disable split mode.
+group = ""
+
+# Output directory for split files. Created automatically if missing.
+# Default: "." (current directory)
+output-dir = "."
+
+# File name template. Supports {group_name} placeholders.
+#   "{reader}.txt"        → uses the value of named group "reader"
+#   ".txt"                → uses source filename: source_1.txt, source_2.txt, ...
+#   "" (empty)            → uses the matched group content as filename + ".txt"
+# Duplicate names get _1, _2 suffix automatically.
+file = ""
+
+# Output encoding for split files.
+# Supported: utf8 (default), utf8bom, gbk
+encoding = "utf8"
+
+# ---------------------------------------------------------------------------
+# Export — structured output formats
+#   Each format is enabled when its file path is set.
+#   All exports use UTF-8 encoding.
+# ---------------------------------------------------------------------------
+[export]
+# Append to existing export files instead of overwriting.
+# When the target file does not exist, append degrades to create.
+# Default: false
+append = false
+
+# Sort order of output properties.
+#   none — preserve regex group definition order (default)
+#   asc  — alphabetical ascending
+#   desc — alphabetical descending
+sort = "none"
+
+# --- JSON Export ---
+[export.json]
+# Output file path. Set to enable JSON export. (empty = disabled)
+file = ""
+
+# Indentation level.
+#   0 — compact (single line, no spaces)
+#   1 — one-level indent (default)
+#   2 — full indent (2-space nesting)
+pretty-level = 1
+
+# --- XML Export ---
+[export.xml]
+# Output file path. Set to enable XML export. (empty = disabled)
+file = ""
+
+# Root element name. Must be a valid XML name: [A-Za-z_][\w.\-]*
+# Default: "records"
+root = "records"
+
+# Record element name. Must be a valid XML name: [A-Za-z_][\w.\-]*
+# Default: "record"
+element = "record"
+
+# Indentation level (same as JSON).
+#   0 — compact    1 — one-level (default)    2 — full indent
+pretty-level = 1
+
+# --- CSV Export ---
+[export.csv]
+# Output file path. Set to enable CSV export. (empty = disabled)
+file = ""
+
+# Delimiter character.
+# Supported: "," (default), "|", ";", "\t" (tab)
+delimiter = ","
+
+# --- SQLite Export ---
+[export.sqlite]
+# Output file path. Set to enable SQLite export. (empty = disabled)
+file = ""
+
+# Table name.
+# Default: "data"
+table = "data"
+
+# Column type overrides (comma-separated).
+# Format:  col:type,col:type,...
+# Types:   string, int, int32, int64, float, double, bool, boolean, date, datetime
+# Datetime layout example:
+#   "time:datetime:\"2006-01-02 15:04:05\",stamp:datetime:'2006-01-02'"
+# Layout must be quoted (single or double quotes).
+# Priority: Override > Auto-detect (int/float/bool) > TEXT
+# Default: "" (auto-detect)
+override-type = ""

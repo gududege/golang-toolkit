@@ -6,4 +6,5 @@ use (
 	./tia-scan-calls
 	./tia-tree-calls
 	./track-repository
+	./extractor
 )
