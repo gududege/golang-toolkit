@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"sync"
 
 	regexp2 "github.com/dlclark/regexp2"
 )
@@ -54,10 +55,15 @@ func exitCodeOf(err error) int {
 
 // execute runs the full processing pipeline.
 func execute(cfg *Config) error {
-	// 1. Collect and decode input files.
+	// 1. Collect and decode input files (shared by all tasks).
 	files, err := readInputs(cfg)
 	if err != nil {
 		return err
+	}
+
+	// Multi-regex parallel mode.
+	if len(cfg.Regexes) > 0 {
+		return executeRegexTasks(cfg, files)
 	}
 
 	// 2. Compile the regex.
@@ -75,45 +81,146 @@ func execute(cfg *Config) error {
 		return &exitErr{msg: "No matches found", code: 3}
 	}
 
+	// 4-6. Output (stats, split, exports).
+	return emitOutputs(cfg, "", files, map[string]bool{}, allRecords, recordSources, groupNames)
+}
+
+// taskMatch holds the phase-1 result of one regex task. During the parallel
+// phase each goroutine writes only its own slot, so no synchronization is
+// required to read the slice afterwards.
+type taskMatch struct {
+	records    []Record
+	sources    []string
+	groupNames []string
+	err        error
+}
+
+// executeRegexTasks runs the multi-regex pipeline in two phases:
+//
+//	Phase 1 (parallel): compile every task regex up front (first failure exits
+//	with code 4), then match the shared input files with one goroutine per task.
+//	Phase 2 (sequential): emit outputs (split/export/stats) in configuration
+//	order. Sequential emission guarantees that tasks writing the same export
+//	file never race — each task's own export.append decides whether it
+//	overwrites or appends — and makes stats/dry-run output deterministic.
+//	Exit code 3 is returned only when no task matched anything, while a single
+//	no-match task only produces a warning.
+func executeRegexTasks(cfg *Config, files []inputFile) error {
+	type task struct {
+		label string
+		cfg   *Config
+		re    *regexp2.Regexp
+	}
+	tasks := make([]task, 0, len(cfg.Regexes))
+	for i, t := range cfg.Regexes {
+		re, err := compileRegex(RegexConfig{Pattern: t.Pattern, Flags: t.Flags})
+		if err != nil {
+			return regexParseErr(fmt.Sprintf("invalid regex in %s: %v", taskLabel(t.Name, i), err))
+		}
+		tasks = append(tasks, task{label: taskLabel(t.Name, i), cfg: taskConfig(cfg, t), re: re})
+	}
+
+	// Phase 1: parallel matching.
+	matches := make([]taskMatch, len(tasks))
+	var wg sync.WaitGroup
+	for i, tk := range tasks {
+		wg.Add(1)
+		go func(i int, tk task) {
+			defer wg.Done()
+			records, sources, groupNames, err := matchFiles(files, tk.re)
+			matches[i] = taskMatch{records: records, sources: sources, groupNames: groupNames, err: err}
+		}(i, tk)
+	}
+	wg.Wait()
+
+	anyMatch := false
+	for i := range tasks {
+		m := matches[i]
+		if m.err != nil {
+			return m.err
+		}
+		if len(m.records) == 0 {
+			fmt.Fprintf(stderr, "warning: %s: No matches found\n", tasks[i].label)
+			continue
+		}
+		anyMatch = true
+	}
+	if !anyMatch {
+		return &exitErr{msg: "No matches found", code: 3}
+	}
+
+	// Phase 2: sequential output in configuration order. The shared used map
+	// gives split files unique _1/_2 suffixes across tasks.
+	used := map[string]bool{}
+	for i, tk := range tasks {
+		m := matches[i]
+		if len(m.records) == 0 {
+			continue
+		}
+		if err := emitOutputs(tk.cfg, tk.label, files, used, m.records, m.sources, m.groupNames); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// taskConfig builds the per-task Config consumed by the split/export code paths.
+func taskConfig(base *Config, t RegexTaskConfig) *Config {
+	tcfg := &Config{
+		Input:  base.Input,
+		DryRun: base.DryRun,
+		Regex:  RegexConfig{Pattern: t.Pattern, Flags: t.Flags},
+	}
+	if t.Split != nil {
+		tcfg.Split = *t.Split
+	}
+	if t.Export != nil {
+		tcfg.Export = *t.Export
+	}
+	return tcfg
+}
+
+// emitOutputs applies the configured output modes (stats, split, exports) to
+// the matched records. label prefixes the stats header in multi-regex mode;
+// used is the shared split-path registry enabling cross-task _1/_2 suffixes.
+func emitOutputs(cfg *Config, label string, files []inputFile, used map[string]bool, records []Record, sources []string, groupNames []string) error {
 	// Apply the export sort order to the output property list.
 	groupNames = sortedGroupNames(groupNames, cfg.Export.Sort)
 
-	// 4. Decide the output mode.
+	// Decide the output mode.
 	splitEnabled := cfg.Split.Group != ""
-	exportEnabled := cfg.Export.JSON.Enabled || cfg.Export.XML.Enabled ||
+	exportEnabled := cfg.Export.JSON.Enabled ||
 		cfg.Export.CSV.Enabled || cfg.Export.SQLite.Enabled
 
 	if !splitEnabled && !exportEnabled {
 		// Only print statistics to stdout.
-		printStats(allRecords, groupNames)
+		if label != "" {
+			fmt.Printf("==== %s ====\n", label)
+		}
+		printStats(records, groupNames)
 		return nil
 	}
 
-	// 5. Split output.
+	// Split output.
 	if splitEnabled {
-		if err := runSplit(cfg, files, allRecords, recordSources); err != nil {
+		if err := runSplit(cfg, files, used, records, sources); err != nil {
 			return err
 		}
 	}
 
-	// 6. Exports.
+	// Exports.
 	if cfg.Export.JSON.Enabled {
-		if err := runJSONExport(cfg, allRecords, groupNames); err != nil {
-			return err
-		}
-	}
-	if cfg.Export.XML.Enabled {
-		if err := runXMLExport(cfg, allRecords, groupNames); err != nil {
+		if err := runJSONExport(cfg, records, groupNames); err != nil {
 			return err
 		}
 	}
 	if cfg.Export.CSV.Enabled {
-		if err := runCSVExport(cfg, allRecords, groupNames); err != nil {
+		if err := runCSVExport(cfg, records, groupNames); err != nil {
 			return err
 		}
 	}
 	if cfg.Export.SQLite.Enabled {
-		if err := runSQLiteExport(cfg, allRecords, groupNames); err != nil {
+		if err := runSQLiteExport(cfg, records, groupNames); err != nil {
 			return err
 		}
 	}

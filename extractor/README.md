@@ -1,6 +1,6 @@
 # Extractor
 
-基于正则 Named Group 的文本提取 CLI 工具。将非结构化文本（日志、配置文件、数据导出等）通过正则匹配转换为结构化数据（JSON / XML / CSV / SQLite）或分割为独立文本文件。
+基于正则 Named Group 的文本提取 CLI 工具。将非结构化文本（日志、配置文件、数据导出等）通过正则匹配转换为结构化数据（JSON / CSV / SQLite）或分割为独立文本文件。
 
 ## 处理流程
 
@@ -21,7 +21,7 @@ Named Groups Records
         v                            v
    Split 文本输出               结构化导出
   (可指定输出编码)              (统一 UTF-8)
-                            JSON / XML / CSV / SQLite
+                            JSON / CSV / SQLite
 ```
 
 ## 安装
@@ -83,6 +83,12 @@ extractor -d ./logs --input-pattern '*.log' \
 extractor --config config.yaml
 ```
 
+也可以把配置文件直接拖拽到可执行文件上运行，等价于 `--config`：
+
+```bash
+extractor config.yaml
+```
+
 ## CLI 参数
 
 ### 输入 (Input)
@@ -113,14 +119,14 @@ extractor --config config.yaml
 | 参数 | 说明 | 默认值 |
 |------|------|--------|
 | `--split-group` | 触发分割的 group 名称 | — |
-| `--split-output-dir` | 输出目录 | `.` |
+| `--split-output-dir` | 输出目录（支持 `{group_name}` 模板） | `.` |
 | `--split-file` | 文件名模板 | `{group}.txt` |
 | `--split-encoding` | 输出编码 | `utf8` |
 
 - 设置 `--split-group` 即启用分割模式
-- 文件名支持 `{group_name}` 占位符
+- 文件名与输出目录均支持 `{group_name}` 占位符，输出目录可按记录值写入不同子目录（如 `out/{level}`）
 - 仅指定扩展名（如 `.txt`）时使用 `源文件名_序号.ext`
-- 重名自动追加 `_1` `_2` 后缀
+- 重名自动追加 `_1` `_2` 后缀；多正则模式下该去重跨任务生效，不同任务产生的同名文件不会互相覆盖
 
 ### 导出 (Export)
 
@@ -135,15 +141,6 @@ extractor --config config.yaml
 |------|------|--------|
 | `--export-json-file` | 输出路径（设置即启用）| — |
 | `--export-json-pretty-level` | 缩进: 0=紧凑 1=一级 2=完整 | `1` |
-
-**XML**
-
-| 参数 | 说明 | 默认值 |
-|------|------|--------|
-| `--export-xml-file` | 输出路径（设置即启用）| — |
-| `--export-xml-root` | 根元素名 | `records` |
-| `--export-xml-element` | 记录元素名 | `record` |
-| `--export-xml-pretty-level` | 缩进: 0=紧凑 1=一级 2=完整 | `1` |
 
 **CSV**
 
@@ -171,17 +168,49 @@ extractor --config config.yaml
 
 | 参数 | 简写 | 说明 |
 |------|------|------|
-| `--config` | `-c` | 配置文件路径 (YAML / TOML / JSON) |
+| `--config` | `-c` | 配置文件路径 (YAML / TOML) |
 | `--dry-run` | | 仅输出到 stdout，不写文件 |
 
 ## 配置文件
 
-支持 YAML、TOML、JSON。优先级：**CLI > Config File > Default**。
+支持 YAML、TOML（JSON 配置格式已移除）。优先级：**CLI > Config File > Default**。
 
 示例配置参考 `docs/` 目录：
 - [`config.yaml`](docs/config.yaml) — 完整注释
 - [`config.toml`](docs/config.toml) — TOML 格式
-- [`config.json`](docs/config.json) — JSON 格式
+
+## 多正则并行处理（regexes）
+
+在配置文件中定义 `regexes` 数组即可启用多正则模式：输入文件只读取/解码一次，每个正则任务并行执行匹配，并各自搭配独立的 `split` / `export` 输出。
+
+```yaml
+input:
+  file: access.log
+
+regexes:
+  - name: errors              # 可选，用于错误与警告定位
+    pattern: '(?P<level>ERR): (?P<msg>.+)'
+    export:
+      json:
+        file: errors.json
+  - name: all
+    pattern: '(?P<level>\w+): (?P<msg>.+)'
+    split:
+      group: level
+      output-dir: 'out/{level}'   # 输出目录同样支持 {group_name} 模板
+```
+
+规则：
+
+- `regexes` 与顶层 `regex` / `split` / `export` 互斥，同时配置报参数错误（退出码 2）
+- 每个任务必须提供 `pattern`；`name` 可选（缺省用 `regexes[i]` 标识）
+- **输出冲突规则**：
+  - 不同导出类别（json / csv / sqlite）不得指向同一个文件（含 Windows 大小写变体与 `./` 前缀等规范化等价路径），冲突报参数错误（退出码 2）
+  - 同一类别不同任务允许指向同一个文件：正则匹配并行执行，输出按配置顺序串行写入，由各任务自身的 `export.append` 决定覆盖还是追加（如 task1 `append: false` 写入、task2 `append: true` 追加，最终文件 = 两者内容之和）；共享时向 stderr 打印提示警告
+- 单个任务无匹配仅打印警告继续执行；全部任务无匹配才报 "No matches found"（退出码 3）
+- 任一任务正则编译错误立即退出（退出码 4），错误信息带任务名
+- 未在任务内指定的导出选项（`sort`、`pretty-level`、`delimiter` 等）沿用与单正则模式相同的默认值
+- 多正则模式仅通过配置文件启用，CLI 单正则参数行为不变
 
 ## 退出码
 
@@ -198,6 +227,6 @@ extractor --config config.yaml
 `--dry-run` 模式下不创建任何文件，输出到 stdout：
 
 - **Split**: 文本块，标注目标路径
-- **JSON / XML**: 格式化字符串
+- **JSON**: 格式化字符串
 - **CSV**: 原始 CSV 文本
 - **SQLite**: 表格预览（Schema + 前 10 行）

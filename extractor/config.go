@@ -3,8 +3,12 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"runtime"
+	"sort"
 	"strings"
 
+	"github.com/go-viper/mapstructure/v2"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
@@ -17,8 +21,23 @@ type Config struct {
 	Export ExportConfig `mapstructure:"export"`
 	DryRun bool         `mapstructure:"dry-run"`
 
-	// ConfigPath is used only with --config and does not participate in mapstructure unmarshaling.
+	// Regexes enables multi-regex parallel mode. Each task carries its own
+	// regex and optional split/export outputs. Mutually exclusive with the
+	// top-level regex/split/export configuration.
+	Regexes []RegexTaskConfig `mapstructure:"regexes"`
+
+	// ConfigPath is used only with --config (or the positional argument) and
+	// does not participate in mapstructure unmarshaling.
 	ConfigPath string `mapstructure:"-"`
+}
+
+// RegexTaskConfig is a single extraction task in multi-regex mode.
+type RegexTaskConfig struct {
+	Name    string        `mapstructure:"name"`    // Optional label used in errors and warnings.
+	Pattern string        `mapstructure:"pattern"` // Required regex pattern with named groups.
+	Flags   string        `mapstructure:"flags"`   // Regex flags: m, s, i.
+	Split   *SplitConfig  `mapstructure:"split"`   // Optional split output for this task.
+	Export  *ExportConfig `mapstructure:"export"`  // Optional structured exports for this task.
 }
 
 type InputConfig struct {
@@ -44,7 +63,6 @@ type ExportConfig struct {
 	Append bool               `mapstructure:"append"`
 	Sort   string             `mapstructure:"sort"`
 	JSON   JSONExportConfig   `mapstructure:"json"`
-	XML    XMLExportConfig    `mapstructure:"xml"`
 	CSV    CSVExportConfig    `mapstructure:"csv"`
 	SQLite SQLiteExportConfig `mapstructure:"sqlite"`
 }
@@ -52,14 +70,6 @@ type ExportConfig struct {
 type JSONExportConfig struct {
 	Enabled     bool   `mapstructure:"enabled"`
 	File        string `mapstructure:"file"`
-	PrettyLevel int    `mapstructure:"pretty-level"`
-}
-
-type XMLExportConfig struct {
-	Enabled     bool   `mapstructure:"enabled"`
-	File        string `mapstructure:"file"`
-	Root        string `mapstructure:"root"`
-	Element     string `mapstructure:"element"`
 	PrettyLevel int    `mapstructure:"pretty-level"`
 }
 
@@ -84,7 +94,7 @@ func setupFlags(args []string) (*pflag.FlagSet, []string, error) {
 	fs.SortFlags = false
 
 	// Required (with short names)
-	fs.StringP("config", "c", "", "Config file path (YAML, TOML, JSON)")
+	fs.StringP("config", "c", "", "Config file path (YAML, TOML)")
 	fs.StringP("input-file", "i", "", "Input file path (required unless --config or --input-directory is set)")
 	fs.StringP("input-directory", "d", "", "Input directory (required unless --config or --input-file is set; mutually exclusive with --input-file)")
 	fs.StringP("regex-pattern", "r", "", "Regular expression pattern with named groups (required unless --config is set)")
@@ -109,12 +119,6 @@ func setupFlags(args []string) (*pflag.FlagSet, []string, error) {
 	// JSON
 	fs.String("export-json-file", "", "JSON export file path (enables JSON export when set)")
 	fs.Int("export-json-pretty-level", 0, "JSON indentation: 0=compact, 1=one-level, 2=full (default: 1)")
-
-	// XML
-	fs.String("export-xml-file", "", "XML export file path (enables XML export when set)")
-	fs.String("export-xml-root", "", "XML root element name (default: \"records\")")
-	fs.String("export-xml-element", "", "XML record element name (default: \"record\")")
-	fs.Int("export-xml-pretty-level", 0, "XML indentation: 0=compact, 1=one-level, 2=full (default: 1)")
 
 	// CSV
 	fs.String("export-csv-file", "", "CSV export file path (enables CSV export when set)")
@@ -163,10 +167,6 @@ var flagToKey = map[string]string{
 	"export-sort":                 "export.sort",
 	"export-json-file":            "export.json.file",
 	"export-json-pretty-level":    "export.json.pretty-level",
-	"export-xml-file":             "export.xml.file",
-	"export-xml-root":             "export.xml.root",
-	"export-xml-element":          "export.xml.element",
-	"export-xml-pretty-level":     "export.xml.pretty-level",
 	"export-csv-file":             "export.csv.file",
 	"export-csv-delimiter":        "export.csv.delimiter",
 	"export-sqlite-file":          "export.sqlite.file",
@@ -188,6 +188,23 @@ func loadConfig(args []string) (*Config, error) {
 		return nil, &exitErr{msg: "", code: 0}
 	}
 
+	// A single positional argument is treated as the config file path. This
+	// makes "extractor config.yaml" work and enables dragging a config file
+	// onto the executable (Windows passes the path as the first argument).
+	configPath := ""
+	if cf := fs.Lookup("config"); cf != nil {
+		configPath = cf.Value.String()
+	}
+	if positional := fs.Args(); len(positional) > 0 {
+		if configPath != "" {
+			return nil, argErr("config file cannot be provided both via --config and as a positional argument")
+		}
+		if len(positional) > 1 {
+			return nil, argErr(fmt.Sprintf("unexpected positional arguments %q; at most one config file path is allowed", strings.Join(positional, " ")))
+		}
+		configPath = positional[0]
+	}
+
 	v := viper.New()
 
 	// 1. Set all default values (lowest priority).
@@ -195,18 +212,15 @@ func loadConfig(args []string) (*Config, error) {
 	v.SetDefault("input.pattern", "*")
 	v.SetDefault("export.sort", "none")
 	v.SetDefault("export.json.pretty-level", 1)
-	v.SetDefault("export.xml.pretty-level", 1)
-	v.SetDefault("export.xml.root", "records")
-	v.SetDefault("export.xml.element", "record")
 	v.SetDefault("export.csv.delimiter", ",")
 	v.SetDefault("export.sqlite.table", "data")
 
-	// 2. Read the config file specified by --config (medium priority).
-	configPath := ""
-	if cf := fs.Lookup("config"); cf != nil {
-		configPath = cf.Value.String()
-	}
+	// 2. Read the config file specified by --config or the positional argument (medium priority).
+	// JSON is no longer supported as a config format.
 	if configPath != "" {
+		if strings.EqualFold(filepath.Ext(configPath), ".json") {
+			return nil, argErr(fmt.Sprintf("config file %q: JSON config format is no longer supported; use YAML or TOML", configPath))
+		}
 		v.SetConfigFile(configPath)
 		if err := v.ReadInConfig(); err != nil {
 			return nil, fmt.Errorf("read config file %q: %w", configPath, err)
@@ -230,10 +244,35 @@ func loadConfig(args []string) (*Config, error) {
 
 	// Semantics: export formats are enabled when their output file is set.
 	cfg.Export.JSON.Enabled = cfg.Export.JSON.File != ""
-	cfg.Export.XML.Enabled = cfg.Export.XML.File != ""
 	cfg.Export.CSV.Enabled = cfg.Export.CSV.File != ""
 	cfg.Export.SQLite.Enabled = cfg.Export.SQLite.File != ""
 	cfg.Export.CSV.DelimiterExplicit = fs.Changed("export-csv-delimiter")
+
+	// Multi-regex mode: viper defaults do not reach array items, so per-task
+	// export defaults are injected into the raw maps and the tasks are decoded
+	// explicitly.
+	if raw := v.Get("regexes"); raw != nil {
+		items, ok := raw.([]any)
+		if !ok {
+			return nil, argErr("regexes must be a list of task objects")
+		}
+		for _, item := range items {
+			if m, ok := item.(map[string]any); ok {
+				setNestedDefault(m, []string{"export", "json", "pretty-level"}, 1)
+			}
+		}
+		cfg.Regexes = nil
+		dec, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
+			Result:           &cfg.Regexes,
+			WeaklyTypedInput: true,
+		})
+		if err != nil {
+			return nil, fmt.Errorf("decode regexes: %w", err)
+		}
+		if err := dec.Decode(items); err != nil {
+			return nil, fmt.Errorf("decode regexes: %w", err)
+		}
+	}
 
 	// Validate encoding values.
 	if cfg.Input.Encoding != "" {
@@ -250,9 +289,6 @@ func loadConfig(args []string) (*Config, error) {
 	// Validate pretty-level values.
 	if cfg.Export.JSON.PrettyLevel < 0 || cfg.Export.JSON.PrettyLevel > 2 {
 		return nil, argErr("--export-json-pretty-level must be 0, 1, or 2")
-	}
-	if cfg.Export.XML.PrettyLevel < 0 || cfg.Export.XML.PrettyLevel > 2 {
-		return nil, argErr("--export-xml-pretty-level must be 0, 1, or 2")
 	}
 
 	// Validate regex flags contain only supported characters.
@@ -292,13 +328,200 @@ func loadConfig(args []string) (*Config, error) {
 		}
 	}
 
+	// Multi-regex mode validation and per-task normalization.
+	if len(cfg.Regexes) > 0 {
+		if err := validateRegexTasks(cfg); err != nil {
+			return nil, err
+		}
+	} else if configPath != "" && cfg.Regex.Pattern == "" {
+		return nil, argErr("regex.pattern is required when the config file does not define regexes")
+	}
+
 	return cfg, nil
+}
+
+// validateRegexTasks validates multi-regex mode configuration and normalizes
+// per-task export defaults and enabled flags. It reports an error when the
+// top-level single-regex configuration is mixed in, when a task is incomplete,
+// or when two tasks write to the same export file.
+func validateRegexTasks(cfg *Config) error {
+	if cfg.Regex.Pattern != "" || cfg.Split.Group != "" || cfg.Split.File != "" ||
+		cfg.Export.JSON.File != "" ||
+		cfg.Export.CSV.File != "" || cfg.Export.SQLite.File != "" {
+		return argErr("regexes cannot be combined with top-level regex, split, or export configuration")
+	}
+
+	// Export output conflict rules: one normalized path must never be shared
+	// by different export categories (json/csv/sqlite). Sharing a path
+	// within the same category across tasks is allowed — writes follow
+	// configuration order and each task's export.append decides overwrite vs
+	// append.
+	type sharedExport struct {
+		category string
+		norm     string
+		orig     string
+		labels   []string
+	}
+	pathCategory := map[string]string{} // normalized path -> category
+	var shared []sharedExport
+	sharedIdx := map[string]int{} // category \x00 norm -> index into shared
+
+	for i := range cfg.Regexes {
+		t := &cfg.Regexes[i]
+		label := taskLabel(t.Name, i)
+
+		if t.Pattern == "" {
+			return argErr(fmt.Sprintf("%s: pattern is required", label))
+		}
+		for _, f := range t.Flags {
+			if f != 'm' && f != 's' && f != 'i' {
+				return argErr(fmt.Sprintf("%s: flags contains unsupported flag %q; supported: m, s, i", label, string(f)))
+			}
+		}
+
+		if t.Split != nil {
+			if t.Split.Encoding != "" && !isSupportedEncoding(t.Split.Encoding) {
+				return argErr(fmt.Sprintf("%s: split.encoding must be one of: utf8, utf8bom, gbk", label))
+			}
+		}
+
+		if t.Export != nil {
+			applyExportDefaults(t.Export)
+			if err := validateExportConfig(t.Export, label); err != nil {
+				return err
+			}
+			for _, tgt := range exportTargets(t.Export) {
+				norm := normalizeExportPath(tgt.Path)
+				if prevCat, ok := pathCategory[norm]; ok {
+					if prevCat != tgt.Category {
+						return argErr(fmt.Sprintf("export file %q is used by both %s and %s export", tgt.Path, prevCat, tgt.Category))
+					}
+					idx := sharedIdx[tgt.Category+"\x00"+norm]
+					shared[idx].labels = append(shared[idx].labels, label)
+					continue
+				}
+				pathCategory[norm] = tgt.Category
+				sharedIdx[tgt.Category+"\x00"+norm] = len(shared)
+				shared = append(shared, sharedExport{category: tgt.Category, norm: norm, orig: tgt.Path, labels: []string{label}})
+			}
+		}
+	}
+
+	// Warn (non-fatal) about same-category files written by multiple tasks.
+	sort.Slice(shared, func(a, b int) bool {
+		return shared[a].category+"\x00"+shared[a].norm < shared[b].category+"\x00"+shared[b].norm
+	})
+	for _, s := range shared {
+		if len(s.labels) > 1 {
+			fmt.Fprintf(stderr, "warning: export %s file %q is written by multiple tasks (%s); writes follow configuration order and each task's export.append decides overwrite vs append\n",
+				s.category, s.orig, strings.Join(s.labels, ", "))
+		}
+	}
+	return nil
+}
+
+// taskLabel returns the display name of a regex task for error messages.
+func taskLabel(name string, index int) string {
+	if name != "" {
+		return name
+	}
+	return fmt.Sprintf("regexes[%d]", index)
+}
+
+// applyExportDefaults fills task-level export defaults that mirror the viper
+// defaults applied in single-regex mode.
+func applyExportDefaults(ec *ExportConfig) {
+	if ec.Sort == "" {
+		ec.Sort = "none"
+	}
+	if ec.CSV.Delimiter == "" {
+		ec.CSV.Delimiter = ","
+	}
+}
+
+// validateExportConfig validates one task's export configuration and enables
+// the formats whose output file is configured.
+func validateExportConfig(ec *ExportConfig, label string) error {
+	if ec.JSON.PrettyLevel < 0 || ec.JSON.PrettyLevel > 2 {
+		return argErr(fmt.Sprintf("%s: export.json.pretty-level must be 0, 1, or 2", label))
+	}
+	switch ec.Sort {
+	case "asc", "desc", "none":
+	default:
+		return argErr(fmt.Sprintf("%s: export.sort must be one of asc, desc, or none", label))
+	}
+	if ec.CSV.File != "" {
+		switch ec.CSV.Delimiter {
+		case ",", "|", ";", "\t":
+		default:
+			return argErr(fmt.Sprintf("%s: export.csv.delimiter only supports , | ; \\t", label))
+		}
+	}
+	ec.JSON.Enabled = ec.JSON.File != ""
+	ec.CSV.Enabled = ec.CSV.File != ""
+	ec.SQLite.Enabled = ec.SQLite.File != ""
+	return nil
+}
+
+// exportTarget is one configured export output with its format category.
+type exportTarget struct {
+	Category string // "json" | "csv" | "sqlite"
+	Path     string // raw path (used in messages)
+}
+
+// exportTargets returns the configured export outputs of a task.
+func exportTargets(ec *ExportConfig) []exportTarget {
+	targets := make([]exportTarget, 0, 3)
+	if ec.JSON.File != "" {
+		targets = append(targets, exportTarget{"json", ec.JSON.File})
+	}
+	if ec.CSV.File != "" {
+		targets = append(targets, exportTarget{"csv", ec.CSV.File})
+	}
+	if ec.SQLite.File != "" {
+		targets = append(targets, exportTarget{"sqlite", ec.SQLite.File})
+	}
+	return targets
+}
+
+// normalizeExportPath canonicalizes an export path for conflict comparison:
+// filepath.Clean plus case folding on case-insensitive platforms (Windows),
+// so "./out.json" vs "out.json" and "Out.JSON" vs "out.json" are detected as
+// the same file.
+func normalizeExportPath(p string) string {
+	p = filepath.Clean(p)
+	if runtime.GOOS == "windows" {
+		p = strings.ToLower(p)
+	}
+	return p
+}
+
+// setNestedDefault sets value at the nested key path when the leaf is absent.
+func setNestedDefault(m map[string]any, path []string, value any) {
+	cur := m
+	for i, k := range path {
+		if i == len(path)-1 {
+			if _, ok := cur[k]; !ok {
+				cur[k] = value
+			}
+			return
+		}
+		next, ok := cur[k].(map[string]any)
+		if !ok {
+			next = map[string]any{}
+			cur[k] = next
+		}
+		cur = next
+	}
 }
 
 // customUsage prints grouped help in the order: Input, Regex, Config, Split, Export.
 // Sections are separated by a single blank line.
 func customUsage(fs *pflag.FlagSet) {
-	fmt.Fprintf(stderr, "Usage:\n  %s [flags]\n\n", fs.Name())
+	fmt.Fprintf(stderr, "Usage:\n  %s [flags] [config-file]\n\n", fs.Name())
+	fmt.Fprintln(stderr, "A single positional argument is treated as the config file path,")
+	fmt.Fprintln(stderr, "so a config file can be dragged onto the executable to run.")
+	fmt.Fprintln(stderr)
 
 	sections := []struct {
 		name  string
@@ -314,7 +537,7 @@ func customUsage(fs *pflag.FlagSet) {
 		{"Split flags", "",
 			[]string{"split-group", "split-output-dir", "split-file", "split-encoding"}},
 		{"Export flags", "",
-			[]string{"export-append", "export-sort", "export-json-file", "export-json-pretty-level", "export-xml-file", "export-xml-root", "export-xml-element", "export-xml-pretty-level", "export-csv-file", "export-csv-delimiter", "export-sqlite-file", "export-sqlite-table", "export-sqlite-override-type"}},
+			[]string{"export-append", "export-sort", "export-json-file", "export-json-pretty-level", "export-csv-file", "export-csv-delimiter", "export-sqlite-file", "export-sqlite-table", "export-sqlite-override-type"}},
 	}
 
 	for i, sec := range sections {

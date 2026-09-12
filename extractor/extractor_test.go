@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"testing"
@@ -230,43 +231,6 @@ func TestJSONExportSort(t *testing.T) {
 	}
 }
 
-// 3c. XML pretty-level: validate compact, one-level, and full indentation.
-func TestXMLPrettyLevel(t *testing.T) {
-	dir := t.TempDir()
-	src := filepath.Join(dir, "in.txt")
-	mustWrite(t, src, "a,1\nb,2\n")
-	pattern := `(?P<k>\w+),(?P<v>\d)`
-
-	cases := []struct {
-		pretty  int
-		wantSub string
-		wantNot string
-	}{
-		{0, "<records><record>", "\n"},
-		{1, "\n <record><k>", "\n  <"},
-		{2, "\n  <record>\n    <k>", ""},
-	}
-
-	for _, tc := range cases {
-		out := filepath.Join(dir, "pretty_"+strconv.Itoa(tc.pretty)+".xml")
-		code := runExit(t, "-i", src, "--regex-pattern", pattern,
-			"--export-xml-file", out, "--export-xml-pretty-level", strconv.Itoa(tc.pretty))
-		if code != 0 {
-			t.Fatalf("pretty=%d exit %d", tc.pretty, code)
-		}
-		data, err := os.ReadFile(out)
-		if err != nil {
-			t.Fatalf("pretty=%d read: %v", tc.pretty, err)
-		}
-		s := string(data)
-		if !strings.Contains(s, tc.wantSub) {
-			t.Fatalf("pretty=%d missing %q in:\n%s", tc.pretty, tc.wantSub, s)
-		}
-		if tc.wantNot != "" && strings.Contains(s, tc.wantNot) {
-			t.Fatalf("pretty=%d unexpected %q in:\n%s", tc.pretty, tc.wantNot, s)
-		}
-	}
-}
 func extractJSONObjectKeys(s string) []string {
 	// Trim array wrapper and take the first object.
 	s = strings.TrimSpace(s)
@@ -599,48 +563,18 @@ func TestSplitExtOnlyPerSource(t *testing.T) {
 	}
 }
 
-// 13. XML root/element name validation rejects invalid names.
-func TestXMLInvalidNames(t *testing.T) {
+// JSON is no longer supported as a config file format (YAML/TOML only).
+func TestJSONConfigRejected(t *testing.T) {
 	dir := t.TempDir()
-	src := filepath.Join(dir, "in.txt")
-	mustWrite(t, src, "a\n")
-	cases := []struct {
-		flag  string
-		value string
-	}{
-		{"--export-xml-root", "1bad"},
-		{"--export-xml-element", "bad name"},
-	}
-	for _, tc := range cases {
-		out := filepath.Join(dir, "invalid.xml")
-		code := runExit(t, "-i", src, "--regex-pattern", `(?P<v>\w)`,
-			"--export-xml-file", out, tc.flag, tc.value)
-		if code == 0 {
-			t.Fatalf("expected non-zero exit for %s=%s", tc.flag, tc.value)
-		}
-	}
-}
+	cfgPath := filepath.Join(dir, "cfg.json")
+	mustWrite(t, cfgPath, "{}")
 
-// 14. XML append merges new records into the existing file.
-func TestXMLAppend(t *testing.T) {
-	dir := t.TempDir()
-	src := filepath.Join(dir, "in.txt")
-	mustWrite(t, src, "a\nb\n")
-	out := filepath.Join(dir, "o.xml")
-	code := runExit(t, "-i", src, "--regex-pattern", `(?P<v>\w)`, "--regex-flags", "m",
-		"--export-xml-file", out)
-	if code != 0 {
-		t.Fatalf("first export exit %d", code)
+	if code := runExit(t, "--config", cfgPath); code != 2 {
+		t.Fatalf("--config json: expected exit 2, got %d", code)
 	}
-	code = runExit(t, "-i", src, "--regex-pattern", `(?P<v>\w)`, "--regex-flags", "m",
-		"--export-xml-file", out, "--export-append")
-	if code != 0 {
-		t.Fatalf("append export exit %d", code)
-	}
-	data, _ := os.ReadFile(out)
-	count := strings.Count(string(data), "<record>")
-	if count != 4 {
-		t.Fatalf("expected 4 records, got %d", count)
+	// Same via positional argument (drag-and-drop).
+	if code := runExit(t, cfgPath); code != 2 {
+		t.Fatalf("positional json config: expected exit 2, got %d", code)
 	}
 }
 
@@ -695,10 +629,10 @@ func TestConfigOverrideDefaults(t *testing.T) {
 	src := filepath.Join(dir, "in.txt")
 	mustWrite(t, src, "b,2\na,1\n")
 
-	// First: config file sets sort=desc, json-pretty-level=2, xml-root, csv-delimiter, sqlite-table.
+	// First: config file sets sort=desc, json-pretty-level=2, csv-delimiter, sqlite-table.
 	cfgPath := filepath.Join(dir, "cfg.yaml")
 	out := filepath.Join(dir, "out.json")
-	cfg := fmt.Sprintf("input:\n  file: %s\nregex:\n  pattern: '(?P<k>\\w+),(?P<v>\\d)'\nexport:\n  sort: desc\n  json:\n    file: %s\n    pretty-level: 2\n  xml:\n    root: cfgroot\n    element: cfgel\n  csv:\n    delimiter: '|'\n  sqlite:\n    table: cfgtbl\n", src, out)
+	cfg := fmt.Sprintf("input:\n  file: %s\nregex:\n  pattern: '(?P<k>\\w+),(?P<v>\\d)'\nexport:\n  sort: desc\n  json:\n    file: %s\n    pretty-level: 2\n  csv:\n    delimiter: '|'\n  sqlite:\n    table: cfgtbl\n", src, out)
 	os.WriteFile(cfgPath, []byte(cfg), 0o644)
 
 	code := runExit(t, "--config", cfgPath)
@@ -751,6 +685,17 @@ func mustDecodeJSON(t *testing.T, path string, v any) {
 	}
 	if err := json.Unmarshal(data, v); err != nil {
 		t.Fatalf("unmarshal %s: %v", path, err)
+	}
+}
+
+func assertFileContent(t *testing.T, path, want string) {
+	t.Helper()
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("read %s: %v", path, err)
+	}
+	if strings.TrimSpace(string(data)) != want {
+		t.Fatalf("file %s: expected %q, got %q", path, want, string(data))
 	}
 }
 
@@ -815,4 +760,428 @@ func TestSplitSCLFile(t *testing.T) {
 	}
 	t.Logf("Blocks: TYPE=%d FUNCTION=%d FUNCTION_BLOCK=%d DATA_BLOCK=%d",
 		counts["TYPE"], counts["FUNCTION"], counts["FUNCTION_BLOCK"], counts["DATA_BLOCK"])
+}
+
+// ===========================================================================
+// Issue #2: multi-regex parallel mode, split.output-dir template, and
+// positional-argument config (drag-and-drop onto the executable).
+// ===========================================================================
+
+// Multi-regex mode: two tasks with independent outputs run in parallel.
+func TestMultiRegexMode(t *testing.T) {
+	dir := t.TempDir()
+	src := filepath.Join(dir, "in.txt")
+	mustWrite(t, src, "ERR: boom\nERR: bang\nINFO: ok\nWARN: meh\n")
+
+	cfgPath := filepath.Join(dir, "cfg.yaml")
+	jsonOut := filepath.Join(dir, "errors.json")
+	jsonCompact := filepath.Join(dir, "errors-compact.json")
+	splitDir := filepath.Join(dir, "split")
+	cfg := fmt.Sprintf(`input:
+  file: %s
+regexes:
+  - name: errors
+    pattern: '(?P<level>ERR): (?P<msg>.+)'
+    export:
+      json:
+        file: %s
+  - name: errors-compact
+    pattern: '(?P<level>ERR): (?P<msg>.+)'
+    export:
+      json:
+        file: %s
+        pretty-level: 0
+  - name: all-levels
+    pattern: '(?P<level>\w+): (?P<msg>.+)'
+    split:
+      group: level
+      output-dir: %s
+`, src, jsonOut, jsonCompact, splitDir)
+	mustWrite(t, cfgPath, cfg)
+
+	code := runExit(t, "--config", cfgPath)
+	if code != 0 {
+		t.Fatalf("exit %d", code)
+	}
+
+	// JSON export: 2 records with the default one-level pretty indent.
+	var arr []map[string]any
+	mustDecodeJSON(t, jsonOut, &arr)
+	if len(arr) != 2 {
+		t.Fatalf("expected 2 json records, got %d", len(arr))
+	}
+	data, _ := os.ReadFile(jsonOut)
+	if !strings.Contains(string(data), "\n {") {
+		t.Fatalf("expected default one-level indent, got:\n%s", string(data))
+	}
+
+	// Explicit pretty-level: 0 stays compact (defaults must not override it).
+	dataCompact, _ := os.ReadFile(jsonCompact)
+	if strings.Contains(string(dataCompact), "\n") {
+		t.Fatalf("expected compact json, got:\n%s", string(dataCompact))
+	}
+
+	// Split output: one file per level value.
+	for _, name := range []string{"ERR.txt", "INFO.txt", "WARN.txt"} {
+		if _, err := os.Stat(filepath.Join(splitDir, name)); err != nil {
+			t.Fatalf("split file %s: %v", name, err)
+		}
+	}
+}
+
+// Multi-regex dry-run works and produces no files beyond the inputs.
+func TestMultiRegexDryRun(t *testing.T) {
+	dir := t.TempDir()
+	src := filepath.Join(dir, "in.txt")
+	mustWrite(t, src, "ERR: boom\nINFO: ok\n")
+
+	cfgPath := filepath.Join(dir, "cfg.yaml")
+	jsonOut := filepath.Join(dir, "errors.json")
+	splitDir := filepath.Join(dir, "split")
+	cfg := fmt.Sprintf(`input:
+  file: %s
+regexes:
+  - pattern: '(?P<level>ERR): (?P<msg>.+)'
+    export:
+      json:
+        file: %s
+  - pattern: '(?P<level>\w+): (?P<msg>.+)'
+    split:
+      group: level
+      output-dir: %s
+`, src, jsonOut, splitDir)
+	mustWrite(t, cfgPath, cfg)
+
+	code := runExit(t, "--config", cfgPath, "--dry-run")
+	if code != 0 {
+		t.Fatalf("exit %d", code)
+	}
+	if _, err := os.Stat(jsonOut); !os.IsNotExist(err) {
+		t.Fatalf("dry-run must not write files")
+	}
+	if _, err := os.Stat(splitDir); !os.IsNotExist(err) {
+		t.Fatalf("dry-run must not create split dir")
+	}
+}
+
+// regexes is mutually exclusive with the top-level regex/split/export config.
+func TestMultiRegexMutualExclusion(t *testing.T) {
+	dir := t.TempDir()
+	cfgPath := filepath.Join(dir, "cfg.yaml")
+
+	// Top-level regex alongside regexes.
+	cfg := fmt.Sprintf("input:\n  file: %s\nregex:\n  pattern: 'x'\nregexes:\n  - pattern: 'y'\n", logFile)
+	mustWrite(t, cfgPath, cfg)
+	if code := runExit(t, "--config", cfgPath); code != 2 {
+		t.Fatalf("top-level regex conflict: expected exit 2, got %d", code)
+	}
+
+	// CLI export flag alongside regexes.
+	cfg2 := fmt.Sprintf("input:\n  file: %s\nregexes:\n  - pattern: 'x'\n", logFile)
+	mustWrite(t, cfgPath, cfg2)
+	if code := runExit(t, "--config", cfgPath, "--export-json-file", filepath.Join(dir, "o.json")); code != 2 {
+		t.Fatalf("CLI flag conflict: expected exit 2, got %d", code)
+	}
+}
+
+// Same-category export files may be shared across tasks: writes follow
+// configuration order and each task's export.append decides overwrite vs
+// append (task1 overwrite-creates, task2 appends → merged content).
+func TestMultiRegexSharedExport(t *testing.T) {
+	dir := t.TempDir()
+	src := filepath.Join(dir, "in.txt")
+	mustWrite(t, src, "ERR: boom\nERR: bang\nINFO: ok\n")
+
+	cfgPath := filepath.Join(dir, "cfg.yaml")
+	out := filepath.Join(dir, "out.json")
+	cfg := fmt.Sprintf(`input:
+  file: %s
+regexes:
+  - name: errors
+    pattern: '(?P<level>ERR): (?P<msg>.+)'
+    export:
+      append: false
+      json:
+        file: %s
+  - name: info
+    pattern: '(?P<level>INFO): (?P<msg>.+)'
+    export:
+      append: true
+      json:
+        file: %s
+`, src, out, out)
+	mustWrite(t, cfgPath, cfg)
+
+	code := runExit(t, "--config", cfgPath)
+	if code != 0 {
+		t.Fatalf("expected exit 0, got %d", code)
+	}
+	var arr []map[string]any
+	mustDecodeJSON(t, out, &arr)
+	if len(arr) != 3 {
+		t.Fatalf("expected 3 merged records (2 overwrite + 1 append), got %d", len(arr))
+	}
+	if arr[2]["msg"] != "ok" {
+		t.Fatalf("expected appended record to come last, got %v", arr[2])
+	}
+}
+
+// Different export categories must not share the same file path (across tasks
+// or within one task), and paths are compared normalized.
+func TestMultiRegexCrossCategoryConflict(t *testing.T) {
+	dir := t.TempDir()
+	src := filepath.Join(dir, "in.txt")
+	mustWrite(t, src, "ERR: boom\n")
+
+	// Across tasks: json vs csv on the same path.
+	cfgPath := filepath.Join(dir, "cfg.yaml")
+	out := filepath.Join(dir, "o")
+	cfg := fmt.Sprintf(`input:
+  file: %s
+regexes:
+  - pattern: '(?P<a>\w+)'
+    export:
+      json:
+        file: %s.json
+  - pattern: '(?P<b>\w+)'
+    export:
+      csv:
+        file: %s.json
+`, src, out, out)
+	mustWrite(t, cfgPath, cfg)
+	if code := runExit(t, "--config", cfgPath); code != 2 {
+		t.Fatalf("cross-category across tasks: expected exit 2, got %d", code)
+	}
+
+	// Within one task: json and csv on the same path.
+	cfg2 := fmt.Sprintf(`input:
+  file: %s
+regexes:
+  - pattern: '(?P<a>\w+)'
+    export:
+      json:
+        file: %s
+      csv:
+        file: %s
+`, src, out, out)
+	mustWrite(t, cfgPath, cfg2)
+	if code := runExit(t, "--config", cfgPath); code != 2 {
+		t.Fatalf("cross-category within task: expected exit 2, got %d", code)
+	}
+
+	// Normalization: "./o.json" vs "o.json" is the same file.
+	cfg3 := fmt.Sprintf(`input:
+  file: %s
+regexes:
+  - pattern: '(?P<a>\w+)'
+    export:
+      json:
+        file: ./o.json
+  - pattern: '(?P<b>\w+)'
+    export:
+      csv:
+        file: o.json
+`, src)
+	mustWrite(t, cfgPath, cfg3)
+	if code := runExit(t, "--config", cfgPath); code != 2 {
+		t.Fatalf("normalized path conflict: expected exit 2, got %d", code)
+	}
+}
+
+// On case-insensitive filesystems (Windows), path comparison folds case.
+func TestMultiRegexPathCaseConflict(t *testing.T) {
+	if runtime.GOOS != "windows" {
+		t.Skip("case folding applies to Windows only")
+	}
+	dir := t.TempDir()
+	src := filepath.Join(dir, "in.txt")
+	mustWrite(t, src, "ERR: boom\n")
+
+	cfgPath := filepath.Join(dir, "cfg.yaml")
+	cfg := fmt.Sprintf(`input:
+  file: %s
+regexes:
+  - pattern: '(?P<a>\w+)'
+    export:
+      json:
+        file: Out.JSON
+  - pattern: '(?P<b>\w+)'
+    export:
+      csv:
+        file: out.json
+`, src)
+	mustWrite(t, cfgPath, cfg)
+	if code := runExit(t, "--config", cfgPath); code != 2 {
+		t.Fatalf("case-variant path conflict: expected exit 2, got %d", code)
+	}
+}
+
+// Split files with the same name produced by different tasks get unique
+// _1/_2 suffixes instead of overwriting each other.
+func TestMultiRegexSplitSharedDir(t *testing.T) {
+	dir := t.TempDir()
+	src := filepath.Join(dir, "in.txt")
+	mustWrite(t, src, "ERR: one\nINFO: two\n")
+
+	cfgPath := filepath.Join(dir, "cfg.yaml")
+	splitDir := filepath.Join(dir, "split")
+	cfg := fmt.Sprintf(`input:
+  file: %s
+regexes:
+  - name: errors
+    pattern: '(?P<level>ERR): (?P<msg>.+)'
+    split:
+      group: level
+      output-dir: %s
+      file: 'same.txt'
+  - name: info
+    pattern: '(?P<level>INFO): (?P<msg>.+)'
+    split:
+      group: level
+      output-dir: %s
+      file: 'same.txt'
+`, src, splitDir, splitDir)
+	mustWrite(t, cfgPath, cfg)
+
+	code := runExit(t, "--config", cfgPath)
+	if code != 0 {
+		t.Fatalf("expected exit 0, got %d", code)
+	}
+	assertFileContent(t, filepath.Join(splitDir, "same.txt"), "ERR")
+	assertFileContent(t, filepath.Join(splitDir, "same_1.txt"), "INFO")
+}
+
+// A task without a pattern is rejected.
+func TestMultiRegexMissingPattern(t *testing.T) {
+	dir := t.TempDir()
+	cfgPath := filepath.Join(dir, "cfg.yaml")
+	cfg := fmt.Sprintf("input:\n  file: %s\nregexes:\n  - name: empty\n    flags: m\n", logFile)
+	mustWrite(t, cfgPath, cfg)
+	if code := runExit(t, "--config", cfgPath); code != 2 {
+		t.Fatalf("expected exit 2, got %d", code)
+	}
+}
+
+// A compile error in any task exits with code 4 and names the task.
+func TestMultiRegexCompileError(t *testing.T) {
+	dir := t.TempDir()
+	cfgPath := filepath.Join(dir, "cfg.yaml")
+	cfg := fmt.Sprintf(`input:
+  file: %s
+regexes:
+  - name: good
+    pattern: '(?P<a>\w+)'
+  - name: bad
+    pattern: '(?P<unclosed'
+`, logFile)
+	mustWrite(t, cfgPath, cfg)
+	if code := runExit(t, "--config", cfgPath); code != 4 {
+		t.Fatalf("expected exit 4, got %d", code)
+	}
+}
+
+// A single no-match task only warns; all no-match tasks exit with code 3.
+func TestMultiRegexNoMatches(t *testing.T) {
+	dir := t.TempDir()
+	src := filepath.Join(dir, "in.txt")
+	mustWrite(t, src, "ERR: boom\nINFO: ok\n")
+
+	cfgPath := filepath.Join(dir, "cfg.yaml")
+	out := filepath.Join(dir, "o.json")
+	base := "input:\n  file: " + src + "\n"
+
+	// One matching task + one no-match task: exit 0.
+	cfg := base + fmt.Sprintf(`regexes:
+  - pattern: '(?P<level>ERR): (?P<msg>.+)'
+    export:
+      json:
+        file: %s
+  - name: nomatch
+    pattern: '(?P<level>DEBUG): (?P<msg>.+)'
+    export:
+      json:
+        file: %s
+`, out, filepath.Join(dir, "o2.json"))
+	mustWrite(t, cfgPath, cfg)
+	if code := runExit(t, "--config", cfgPath); code != 0 {
+		t.Fatalf("partial no-match: expected exit 0, got %d", code)
+	}
+	var arr []map[string]any
+	mustDecodeJSON(t, out, &arr)
+	if len(arr) != 1 {
+		t.Fatalf("expected 1 json record, got %d", len(arr))
+	}
+
+	// All tasks without matches: exit 3.
+	cfg = base + `regexes:
+  - pattern: '(?P<level>DEBUG): (?P<msg>.+)'
+  - pattern: '(?P<level>TRACE): (?P<msg>.+)'
+`
+	mustWrite(t, cfgPath, cfg)
+	if code := runExit(t, "--config", cfgPath); code != 3 {
+		t.Fatalf("all no-match: expected exit 3, got %d", code)
+	}
+}
+
+// split.output-dir supports {group_name} templates like split.file.
+func TestSplitOutputDirTemplate(t *testing.T) {
+	dir := t.TempDir()
+	src := filepath.Join(dir, "in.txt")
+	mustWrite(t, src, "ERR: boom\nINFO: ok\n")
+
+	splitDir := filepath.Join(dir, "out")
+	code := runExit(t, "-i", src,
+		"--regex-pattern", `(?P<level>\w+): (?P<msg>.+)`,
+		"--split-group", "level",
+		"--split-output-dir", filepath.Join(splitDir, "{level}"),
+		"--split-file", "{msg}.txt")
+	if code != 0 {
+		t.Fatalf("exit %d", code)
+	}
+	for _, p := range []string{
+		filepath.Join(splitDir, "ERR", "boom.txt"),
+		filepath.Join(splitDir, "INFO", "ok.txt"),
+	} {
+		if _, err := os.Stat(p); err != nil {
+			t.Fatalf("expected %s: %v", p, err)
+		}
+	}
+}
+
+// A single positional argument is treated as the config file path
+// (drag-and-drop onto the executable).
+func TestConfigPositionalArg(t *testing.T) {
+	dir := t.TempDir()
+	src := filepath.Join(dir, "in.txt")
+	mustWrite(t, src, "a,1\n")
+
+	cfgPath := filepath.Join(dir, "cfg.yaml")
+	out := filepath.Join(dir, "o.json")
+	cfg := fmt.Sprintf("input:\n  file: %s\nregex:\n  pattern: '(?P<k>\\w+),(?P<v>\\d)'\nexport:\n  json:\n    file: %s\n", src, out)
+	mustWrite(t, cfgPath, cfg)
+
+	code := runExit(t, cfgPath)
+	if code != 0 {
+		t.Fatalf("expected exit 0, got %d", code)
+	}
+	var arr []map[string]any
+	mustDecodeJSON(t, out, &arr)
+	if len(arr) != 1 {
+		t.Fatalf("expected 1 json record, got %d", len(arr))
+	}
+}
+
+// The positional config argument conflicts with --config and with more than
+// one positional argument.
+func TestConfigPositionalConflict(t *testing.T) {
+	dir := t.TempDir()
+	cfgPath := filepath.Join(dir, "cfg.yaml")
+	mustWrite(t, cfgPath, "input:\n  file: x\n")
+
+	if code := runExit(t, "--config", cfgPath, cfgPath); code != 2 {
+		t.Fatalf("--config + positional: expected exit 2, got %d", code)
+	}
+	if code := runExit(t, cfgPath, cfgPath); code != 2 {
+		t.Fatalf("two positionals: expected exit 2, got %d", code)
+	}
 }

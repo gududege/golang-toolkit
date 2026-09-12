@@ -8,7 +8,7 @@
 # ---------------------------------------------------------------------------
 # Dry Run — preview without writing files
 #   Output is printed to stdout.
-#   Split: text blocks    JSON/XML: formatted string
+#   Split: text blocks    JSON: formatted string
 #   CSV: raw text         SQLite: table preview (schema + first 10 rows)
 # ---------------------------------------------------------------------------
 dry-run = false
@@ -61,6 +61,7 @@ flags = ""
 group = ""
 
 # Output directory for split files. Created automatically if missing.
+# Supports {group_name} placeholders like `file` (e.g. "out/{level}").
 # Default: "." (current directory)
 output-dir = "."
 
@@ -103,23 +104,6 @@ file = ""
 #   2 — full indent (2-space nesting)
 pretty-level = 1
 
-# --- XML Export ---
-[export.xml]
-# Output file path. Set to enable XML export. (empty = disabled)
-file = ""
-
-# Root element name. Must be a valid XML name: [A-Za-z_][\w.\-]*
-# Default: "records"
-root = "records"
-
-# Record element name. Must be a valid XML name: [A-Za-z_][\w.\-]*
-# Default: "record"
-element = "record"
-
-# Indentation level (same as JSON).
-#   0 — compact    1 — one-level (default)    2 — full indent
-pretty-level = 1
-
 # --- CSV Export ---
 [export.csv]
 # Output file path. Set to enable CSV export. (empty = disabled)
@@ -147,3 +131,28 @@ table = "data"
 # Priority: Override > Auto-detect (int/float/bool) > TEXT
 # Default: "" (auto-detect)
 override-type = ""
+
+# ---------------------------------------------------------------------------
+# Regexes — multi-regex parallel mode (optional)
+#   Each task carries its own regex and optional split/export outputs.
+#   Input files are read/decoded once and shared by all tasks, which then run
+#   in parallel. Mutually exclusive with [regex]/[split]/[export] above.
+#   - Task without matches only prints a warning; exit code 3 only when ALL
+#     tasks match nothing. Any regex compile error exits with code 4.
+#   - Export output files must not repeat across tasks.
+#   Example:
+#
+# [[regexes]]
+# name = "errors"
+# pattern = '(?P<level>ERR): (?P<msg>.+)'
+# [regexes.export.json]
+# file = "errors.json"
+# pretty-level = 1
+#
+# [[regexes]]
+# name = "all"
+# pattern = '(?P<level>\w+): (?P<msg>.+)'
+# [regexes.split]
+# group = "level"
+# output-dir = "out/{level}"
+# ---------------------------------------------------------------------------

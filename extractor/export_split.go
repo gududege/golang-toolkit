@@ -8,7 +8,10 @@ import (
 )
 
 // runSplit writes the content of the specified named group to separate text files.
-func runSplit(cfg *Config, files []inputFile, records []Record, sources []string) error {
+// used is the shared path registry across all regex tasks: a path claimed by
+// one task is visible to the others, so colliding split file names get unique
+// _1/_2 suffixes instead of silently overwriting each other.
+func runSplit(cfg *Config, files []inputFile, used map[string]bool, records []Record, sources []string) error {
 	group := cfg.Split.Group
 
 	// Validate the group exists in the matched records.
@@ -26,8 +29,11 @@ func runSplit(cfg *Config, files []inputFile, records []Record, sources []string
 	if outputDir == "" {
 		outputDir = "."
 	}
+	// The output directory may contain {group_name} placeholders, in which
+	// case each record is written to its own rendered (and sanitized) directory.
+	outputDirTemplated := strings.Contains(outputDir, "{")
 
-	if !cfg.DryRun {
+	if !cfg.DryRun && !outputDirTemplated {
 		if err := os.MkdirAll(outputDir, 0o755); err != nil {
 			return execErr(fmt.Sprintf("create output dir %q: %v", outputDir, err))
 		}
@@ -37,8 +43,6 @@ func runSplit(cfg *Config, files []inputFile, records []Record, sources []string
 	// When the template is just an extension (e.g. ".txt"), use sourceFile_index.ext.
 	extOnly := tmpl != "" && strings.HasPrefix(tmpl, ".")
 
-	// Track used file names; append _index suffix on collisions.
-	used := map[string]bool{}
 	// Per-source counters for extension-only templates.
 	counters := map[string]int{}
 
@@ -46,6 +50,14 @@ func runSplit(cfg *Config, files []inputFile, records []Record, sources []string
 		text, ok := rec[group]
 		if !ok {
 			text = ""
+		}
+		// Render and sanitize the output directory per record when templated.
+		dir := outputDir
+		if outputDirTemplated {
+			dir = safeDirPath(renderTemplateName(outputDir, rec))
+			if dir == "" || dir == "." {
+				dir = "."
+			}
 		}
 		var name string
 		switch {
@@ -61,7 +73,7 @@ func runSplit(cfg *Config, files []inputFile, records []Record, sources []string
 		}
 		name = safeFileName(name)
 
-		full := filepath.Join(outputDir, name)
+		full := filepath.Join(dir, name)
 		// Handle duplicate names: name -> name_1, name_2, ...
 		full = resolveDuplicate(used, full)
 
@@ -124,4 +136,40 @@ func safeFileName(name string) string {
 		name = strings.ReplaceAll(name, c, "_")
 	}
 	return name
+}
+
+// safeDirPath sanitizes each segment of a rendered directory path, preserving
+// separators, Windows drive prefixes, and root markers. Segments that reduce
+// to "." or ".." are replaced to prevent escaping the output root.
+func safeDirPath(path string) string {
+	if path == "" || path == "." || path == ".." {
+		return path
+	}
+	var b strings.Builder
+	// Preserve a Windows drive prefix like "C:" verbatim.
+	if len(path) >= 2 && path[1] == ':' && isDriveLetter(path[0]) {
+		b.WriteString(path[:2])
+		path = path[2:]
+	}
+	for i := 0; i < len(path); {
+		if path[i] == '/' || path[i] == '\\' {
+			b.WriteByte(path[i])
+			i++
+			continue
+		}
+		start := i
+		for i < len(path) && path[i] != '/' && path[i] != '\\' {
+			i++
+		}
+		seg := safeFileName(path[start:i])
+		if seg == "." || seg == ".." {
+			seg = "_"
+		}
+		b.WriteString(seg)
+	}
+	return b.String()
+}
+
+func isDriveLetter(c byte) bool {
+	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
 }

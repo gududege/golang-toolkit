@@ -38,13 +38,13 @@ Named Groups Records
 
 - `github.com/spf13/pflag`
 - `github.com/spf13/viper`
-- `github.com/mitchellh/mapstructure`
+- `github.com/go-viper/mapstructure/v2`
   **功能库**:
 - `modernc.org/sqlite` (Pure Go SQLite)
 - `golang.org/x/text` (Encoding Conversion)
 - `github.com/jedib0t/go-pretty/v6` (Table Output)
   **标准库**:
-- `regexp`, `encoding/json`, `encoding/xml`, `encoding/csv`
+- `regexp`, `encoding/json`, `encoding/csv`
 - `database/sql`, `path/filepath`, `time`, `os`, `bufio`, `io`
 
 ## CLI 参数规则
@@ -68,6 +68,18 @@ Named Groups Records
 --input-file和--input-directory必须指定一个，且**二者互斥，不能同时指定**；同时指定时报错退出（Exit Code 2）
 没有split，没有任何export时，输出regex正则匹配结果统计到stdout（不输出结果）
 
+### Positional Argument (Drag & Drop)
+
+支持将配置文件直接拖拽到可执行文件上运行：
+
+- 允许**至多一个**位置参数，作为 config 文件路径，等价于 `--config`
+- 位置参数与 `--config` 同时指定报参数错误（Exit Code 2）
+- 多于一个位置参数报参数错误（Exit Code 2）
+
+```text
+extractor config.yaml        # 等价于 extractor --config config.yaml
+```
+
 ### 简写规则
 
 - 移除旧版中省略 section 的简写（如 `--file`）。
@@ -75,7 +87,7 @@ Named Groups Records
 
 ## Config File
 
-支持格式：`toml`, `yaml`, `json`。
+支持格式：`toml`, `yaml`（JSON 配置格式已移除，`.json` 配置文件报参数错误 Exit Code 2）。
 优先级：
 
 ```text
@@ -92,8 +104,36 @@ type Config struct {
     Split  SplitConfig  `mapstructure:"split"`
     Export ExportConfig `mapstructure:"export"`
     DryRun bool         `mapstructure:"dry-run"`
+    Regexes []RegexTaskConfig `mapstructure:"regexes"`
 }
 ```
+
+## Regexes (Multi-Regex Mode)
+
+配置文件中定义 `regexes` 数组即启用多正则并行模式。输入文件只读取/解码一次，被所有任务共享；每个任务并行执行正则匹配，输出（split / export / 统计）按配置顺序串行执行。
+
+### Struct
+
+```go
+type RegexTaskConfig struct {
+    Name    string        `mapstructure:"name"`    // 可选，用于错误与警告定位
+    Pattern string        `mapstructure:"pattern"` // 必填
+    Flags   string        `mapstructure:"flags"`
+    Split   *SplitConfig  `mapstructure:"split"`   // 可选，任务独立 split
+    Export  *ExportConfig `mapstructure:"export"`  // 可选，任务独立 export
+}
+```
+
+### Rules
+
+- **互斥**：`regexes` 与顶层 `regex` / `split` / `export` 互斥，同时配置报参数错误（Exit Code 2）。CLI 单正则参数不受影响。
+- **必填**：每个任务必须提供 `pattern`，否则 Exit Code 2。
+- **输出冲突规则**：
+  - 不同导出类别（json / csv / sqlite）不得指向同一个文件，冲突报参数错误（Exit Code 2）。路径比较先做 `filepath.Clean` 规范化，并在大小写不敏感平台（Windows）折叠大小写，`./out.json` 与 `out.json`、`Out.JSON` 与 `out.json` 视为同一文件。
+  - 同一类别不同任务允许指向同一个文件：匹配并行执行，输出按配置顺序串行写入，由各任务自身的 `export.append` 决定覆盖还是追加；共享时向 stderr 打印提示警告（非致命）。
+- **默认值**：任务未指定的导出选项（`sort`、`pretty-level`、`delimiter`）沿用与单正则模式相同的默认值。
+- **执行模型（两阶段）**：先串行编译所有正则（任一编译失败立即 Exit Code 4，错误信息带任务名）；阶段 1 各任务以 goroutine 并行执行正则匹配（CPU 密集部分共享输入文件）；阶段 2 按配置顺序串行执行各任务的 split / export / 统计输出，保证同文件多次写入无竞态、结果确定，dry-run 与统计输出顺序可预测。
+- **无匹配**：单个任务无匹配仅打印 `warning: <task>: No matches found` 并继续；**全部**任务均无匹配才报 "No matches found"（Exit Code 3）。其余执行错误取第一个（按任务顺序），Exit Code 1。
 
 ## Input
 
@@ -163,7 +203,7 @@ type RegexConfig struct {
 
 ### Unmatched Optional Group
 
-若某条记录中因分支未命中导致某个 Named Group 未捕获到值（可选分组），该字段在输出中**保留字段，值为空**（CSV/JSON/XML/SQLite 均输出空字符串，不省略该字段），而不是跳过该字段。
+若某条记录中因分支未命中导致某个 Named Group 未捕获到值（可选分组），该字段在输出中**保留字段，值为空**（CSV/JSON/SQLite 均输出空字符串，不省略该字段），而不是跳过该字段。
 
 ### Error Handling
 
@@ -189,6 +229,18 @@ type SplitConfig struct {
     Encoding  string `mapstructure:"encoding"`
 }
 ```
+
+### Output Dir
+
+`output-dir` 与 `file` 一样支持 `{group_name}` 简单占位符替换（非 go template），可将不同记录写入不同子目录，例如：
+
+```text
+out/{level} → out/ERR/...、out/INFO/...
+```
+
+- 渲染后的目录路径逐段清洗非法文件名字符（保留分隔符与 Windows 盘符），渲染结果为空时回退 `.`。
+- 子目录按记录自动递归创建；`dry-run` 模式下仅打印目标路径，不创建目录。
+- 重名去重（`_1`、`_2` 后缀）跨任务生效：多正则模式下所有任务共享已占用路径登记，不同任务产生的同名 split 文件不会互相覆盖。
 
 ### CLI
 
@@ -251,7 +303,6 @@ type ExportConfig struct {
     Append bool              `mapstructure:"append"`
     Sort   string            `mapstructure:"sort"`
     JSON   JSONExportConfig  `mapstructure:"json"`
-    XML    XMLExportConfig   `mapstructure:"xml"`
     CSV    CSVExportConfig   `mapstructure:"csv"`
     SQLite SQLiteExportConfig `mapstructure:"sqlite"`
 }
@@ -259,7 +310,7 @@ type ExportConfig struct {
 
 ### Common Behavior
 
-- **编码强制**：所有 Export 输出（JSON/XML/CSV/SQLite）强制使用 **UTF-8**。
+- **编码强制**：所有 Export 输出（JSON/CSV/SQLite）强制使用 **UTF-8**。
 - **目录创建**：自动创建输出文件所在目录。
 - **文件覆盖**：非 Append 模式下，文件存在则直接覆盖。
 
@@ -288,12 +339,6 @@ CLI: `--export-sort`
 2. 检查第一条记录的字段结构。
 3. 若结构兼容，将新记录追加到 Array 末尾并重新写入。
 
-**XML Append**:
-
-1. 读取现有 XML DOM。
-2. 检查第一条记录的字段结构。
-3. 若结构兼容，将新记录追加到 DOM 末尾并重新写入。
-
 ## JSON Export
 
 ### Struct
@@ -314,44 +359,6 @@ type JSONExportConfig struct {
 ```
 
 省略enabled，有--export-json-file表示要导出json
-
-### Pretty Level
-
-| 值  | 格式     |
-| --- | -------- |
-| 0   | compact  |
-| 1   | 一级缩进 |
-| 2   | 完整缩进 |
-
-默认值1
-
-## XML Export
-
-### Struct
-
-```go
-type XMLExportConfig struct {
-    Enabled bool `mapstructure:"enabled"`
-    File string `mapstructure:"file"`
-    Root string `mapstructure:"root"`
-    Element string `mapstructure:"element"`
-    PrettyLevel int `mapstructure:"pretty-level"`}
-```
-
-### CLI
-
-```
---export-xml-file
---export-xml-root
---export-xml-element
---export-xml-pretty-level
-```
-
-`--export-xml-element` 默认值为 `record`，用于自定义记录元素名。
-
-`--export-xml-root` 默认值为 `records`，用于自定义根元素名。
-
-CLI省略enabled，有--export-xml-file表示要导出xml
 
 ### Pretty Level
 
@@ -524,7 +531,6 @@ Datetime 字段示例（通过 override 指定）：
 
 - **Split**: 标准文本块。
 - **JSON**: 标准 JSON 字符串。
-- **XML**: 标准 XML 字符串。
 - **CSV**: **原始 CSV 文本**（不使用表格格式）。
 
 ```csv
@@ -545,6 +551,8 @@ Datetime 字段示例（通过 override 指定）：
 | 2    | 参数解析错误     |
 | 3    | 正则无匹配       |
 | 4    | 正则编译错误     |
+
+多正则（`regexes`）模式下：任一任务编译错误 → 4；全部任务无匹配 → 3；单个任务无匹配仅警告（不影响退出码）；执行错误取第一个任务错误 → 1。
 
 ## Package Selection (Go)
 
@@ -576,8 +584,6 @@ github.com/spf13/pflag
 
 - TOML
 - YAML
-- JSON
-- INI
 - CLI override
 
 Package:
@@ -591,7 +597,7 @@ github.com/spf13/viper
 Package:
 
 ```
-github.com/mitchellh/mapstructure
+github.com/go-viper/mapstructure/v2
 ```
 
 ### Regex
@@ -616,14 +622,6 @@ Go Standard:
 
 ```
 encoding/json
-```
-
-### XML
-
-Go Standard:
-
-```
-encoding/xml
 ```
 
 ### CSV
@@ -688,7 +686,7 @@ time
 ```
 github.com/spf13/pflag
 github.com/spf13/viper
-github.com/mitchellh/mapstructure
+github.com/go-viper/mapstructure/v2
 github.com/dlclark/regexp2
 modernc.org/sqlite
 golang.org/x/text
@@ -699,7 +697,6 @@ github.com/jedib0t/go-pretty/v6
 
 ```
 encoding/json
-encoding/xml
 encoding/csv
 database/sql
 path/filepath
